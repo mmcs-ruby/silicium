@@ -9,5 +9,6 @@ before_deploy: bundle exec rake test
 deploy:
   provider: rubygems
   api_key: $API_KEY
+  gemspec: silicium.gemspec
   on:
     tags: true
