@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["mmcs-ruby"]
   spec.email         = ["poganesyan@sfedu.ru"]
 
-  spec.summary       = %q{Ruby math library made as excersize by MMCS students .}
+  spec.summary       = %q{Ruby math library made as exercise by MMCS students .}
   spec.description   = %q{Long list of applied functions}
  # spec.homepage      = "TODO: Put your gem's website or public repo URL here."
   spec.license       = "MIT"
