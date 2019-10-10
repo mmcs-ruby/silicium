@@ -8,6 +8,6 @@ before_install: gem install bundler -v 2.0.2
 before_deploy: bundle exec rake test
 deploy:
   provider: rubygems
-  api_key: API_KEY
+  api_key: $API_KEY
   on:
     tags: true
