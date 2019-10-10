@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mmcs-ruby/silicium.svg?branch=master)](https://travis-ci.org/mmcs-ruby/silicium)
+
 # Silicium
 
 Ruby Math Library written as exercise by MMCS students.
