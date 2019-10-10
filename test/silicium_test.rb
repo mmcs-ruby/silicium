@@ -5,4 +5,7 @@ class SiliciumTest < Minitest::Test
     refute_nil ::Silicium::VERSION
   end
 
+  def test_it_will_fall
+    assert false
+  end
 end
