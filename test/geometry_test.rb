@@ -17,5 +17,15 @@ class GeometryTest < Minitest::Test
     assert_equal([Geometry::Point.new(1, 1), Geometry::Point.new(6, 2)],
                  Geometry.minimal_convex_hull_2d([Geometry::Point.new(1, 1), Geometry::Point.new(6, 2)]))
   end
+
+  def test_general
+    assert_equal([Geometry::Point.new(-2, 1), Geometry::Point.new(-1, 1),
+                  Geometry::Point.new(1, -2), Geometry::Point.new(2, 2)],
+                 Geometry.minimal_convex_hull_2d([Geometry::Point.new(-2, -1),
+                                                  Geometry::Point.new(0, -1), Geometry::Point.new(-1, 0),
+                                                  Geometry::Point.new(-1, 1), Geometry::Point.new(2, 2),
+                                                  Geometry::Point.new(1, -2), Geometry::Point.new(2, 0),
+                                                  Geometry::Point.new(1, 1)]))
+  end
 end
 
