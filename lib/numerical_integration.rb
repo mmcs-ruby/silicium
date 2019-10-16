@@ -1,10 +1,10 @@
 module Silicium
   class NumericalIntegration
     # Delevoper: Dima
-    def self.three_eights_integration(a, b, &block)
-      n = 10000
+    def self.three_eights_integration(a, b, eps = 0.0001, &block)
+      n = (1 / eps).floor
       dx = 1.0 * (b - a) / n
-      result = 0.0
+      result = 0
       x = a
       n.times do
         result +=
