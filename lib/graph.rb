@@ -12,10 +12,12 @@ module Silicium
     class OrientedGraph
       @vertices
       @edge_labels
+      @vertex_labels
 
       def initialize(initializer = [])
         @vertices = {}
         @edge_labels = {}
+        @vertex_labels = {}
         initializer.each do |v|
           add_vertex!(v[:v])
           v[:i].each { |iv| add_edge_force!(v[:v], iv)}
@@ -35,6 +37,7 @@ module Silicium
         end
       end
 
+      # should only be used in constructor
       def add_edge_force!(from, to)
         add_vertex!(from)
         add_vertex!(to)
@@ -42,7 +45,7 @@ module Silicium
       end
 
       def adjacted_with(vertex)
-        if !@vertices.has_key?(vertex)
+        unless @vertices.has_key?(vertex)
           raise GraphError.new("Graph does not contain vertex #vertex")
         end
 
@@ -50,19 +53,35 @@ module Silicium
       end
 
       def label_edge!(from, to, label)
-        if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
+        unless @vertices.has_key?(from) && @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#from, #to)")
         end
 
         @edge_labels[Pair.new(from, to)] = label
       end
 
-      def get_label(from ,to)
+      def label_vertex!(vertex, label)
+        unless @vertices.has_key?(vertex)
+          raise GraphError.new("Graph does not contain vertex #vertex")
+        end
+
+        @vertex_labels[vertex] = label
+      end
+
+      def get_edge_label(from ,to)
         if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#from, #to)")
         end
 
         @edge_labels[Pair.new(from, to)]
+      end
+
+      def get_vertex_label(vertex)
+        unless @vertices.has_key?(vertex)
+          raise GraphError.new("Graph does not contain vertex #vertex")
+        end
+
+        @vertex_labels[vertex]
       end
 
       def vertex_number
@@ -76,6 +95,10 @@ module Silicium
       def has_edge?(from, to)
         @vertices.has_key?(from) && @vertices[from].include?(to)
       end
+    end
+
+    def dijkstra_algorythm(graph, starting_vertex)
+      #
     end
   end
 end
