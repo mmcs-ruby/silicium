@@ -68,7 +68,7 @@ module Silicium
         @vertex_labels[vertex] = label
       end
 
-      def get_edge_label(from ,to)
+      def get_edge_label(from, to)
         if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#from, #to)")
         end
@@ -94,6 +94,18 @@ module Silicium
 
       def has_edge?(from, to)
         @vertices.has_key?(from) && @vertices[from].include?(to)
+      end
+    end
+
+    class UnorientedGraph < OrientedGraph
+      def add_edge!(from, to)
+        super(from, to)
+        super(to, from)
+      end
+
+      def label_edge!(from, to, label)
+        super(from, to, label)
+        super(to, from, label)
       end
     end
 
