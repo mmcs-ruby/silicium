@@ -3,7 +3,7 @@ module Silicium
     # Delevoper: Dima
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
       n = (1 / eps).floor
-      dx = 1.0 * (b - a) / n
+      dx = (b - a) * eps
       result = 0
       x = a
       n.times do
