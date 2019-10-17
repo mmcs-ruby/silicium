@@ -17,5 +17,8 @@ module Silicium
 
     
     # Write your methods here
+    def simpson_integration(a, b, eps = 0.0001, &block)
+      result
+    end
   end
 end
