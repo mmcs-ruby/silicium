@@ -50,6 +50,7 @@ module Silicium
           i += 1
         end
       end
+      res2
     end
   end
 end
