@@ -2,23 +2,23 @@
 
 module Silicium
 
-  class Geometry
+  module Geometry
 
     Point = Struct.new(:x, :y)
 
-    def self.oriented_area(a, b, c)
+    def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
     end
 
-    def self.clockwise(a, b, c)
+    def clockwise(a, b, c)
       oriented_area(a, b, c).negative?
     end
 
-    def self.counter_clockwise(a, b, c)
+    def counter_clockwise(a, b, c)
       oriented_area(a, b, c).positive?
     end
 
-    def self.minimal_convex_hull_2d(points)
+    def minimal_convex_hull_2d(points)
       return points if points.empty? || points.size == 1 || points.size == 2
 
       points.sort_by! { |p| [p.x, p.y] }
