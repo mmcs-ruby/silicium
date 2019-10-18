@@ -1,6 +1,5 @@
 module Silicium
   class NumericalIntegration
-    # Delevoper: Dima
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
       n = (1 / eps).floor
       dx = (b - a) * eps

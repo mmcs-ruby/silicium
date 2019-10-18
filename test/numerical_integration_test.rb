@@ -48,7 +48,6 @@ class NumericalIntegrationTest < Minitest::Test
                     ::Silicium::NumericalIntegration.three_eights_integration(-10, 18) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
   end
 
-  # TODO: Write tests with non-determined function (such as intagral of 1/x from -1 to 1)
+# TODO: Write tests with non-determined function (such as integral of 1/x from -1 to 1)
 
-  # Write your tests here
 end
