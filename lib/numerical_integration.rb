@@ -49,5 +49,26 @@ module Silicium
       end
       res2
     end
+
+    # Left Rectangle Method and Right Rectangle Method
+    def self.left_rect_integration(left_p, right_p, eps = 0.0001, &block)
+      splits = 1
+      res1 = left_integration_n(left_p, right_p, 1, &block)
+      res2 = left_integration_n(left_p, right_p, 5, &block)
+      while (res1 - res2).abs > eps
+        res1 = simpson_integration_with_a_segment(left_p, right_p, splits, &block)
+        splits *= 5
+        res2 = simpson_integration_with_a_segment(left_p, right_p, splits, &block)
+      end
+      (res1 + res2) / 2
+    end
+
+    # Left Rectangle Auxiliary Method and Right Rectangle Auxiliary Method
+    def self.left_rect_integration_n(left_p, right_p, splits, &block)
+      # TODO: left integration function
+    end
+
   end
 end
+
+
