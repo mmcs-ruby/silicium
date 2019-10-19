@@ -29,6 +29,7 @@ module Silicium
       result
     end
 
+    # Simpson integration with specified accuracy
     def self.simpson_integration_with_eps(a, b, eps = 0.0001, &block)
       a, b = b, a if a > b
       dx = (b - a)
