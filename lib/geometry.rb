@@ -4,20 +4,32 @@ module Silicium
 
   module Geometry
 
+    ##
+    # Represents a point as two coordinates
+    # in two-dimensional space
     Point = Struct.new(:x, :y)
 
     def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
     end
 
+    ##
+    # Determines if a clockwise crawl is performed
+    # for defined order of points
     def clockwise(a, b, c)
       oriented_area(a, b, c).negative?
     end
 
+    ##
+    # Determines if a counter-clockwise crawl is
+    # performed for defined order of points
     def counter_clockwise(a, b, c)
       oriented_area(a, b, c).positive?
     end
 
+    ##
+    # Returns an array containing points that are included
+    # in the minimal convex hull for a given array of points
     # https://e-maxx.ru/algo/convex_hull_graham
     def minimal_convex_hull_2d(points)
       return points if points.empty? || points.size == 1 || points.size == 2
