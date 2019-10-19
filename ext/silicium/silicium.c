@@ -87,6 +87,6 @@ void Init_silicium()
 	rb_define_alloc_func(cMatrix, matrix_alloc);
 
 	rb_define_method(cMatrix, "initialize", matrix_initialize, 2);
-	rb_define_method(cMatrix, "get", matrix_get, 2);
-	rb_define_method(cMatrix, "set", matrix_set, 3);
+	rb_define_method(cMatrix, "[]", matrix_get, 2);
+	rb_define_method(cMatrix, "[]=", matrix_set, 3);
 }

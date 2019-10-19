@@ -10,6 +10,4 @@
 *.gem
 Gemfile.lock
 lib/silicium/silicium.so
-.git/
-.gitignore
 *.md
