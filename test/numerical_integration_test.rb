@@ -23,14 +23,20 @@ class NumericalIntegrationTest < Minitest::Test
                     ::Silicium::NumericalIntegration.three_eights_integration(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
   end
 
-  def test_arcsin_three_eights_integration
-    assert_in_delta Math::PI / 6,
-                    ::Silicium::NumericalIntegration.three_eights_integration(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
-  end
 
   def test_something_scary_three_eights_integration
     assert_in_delta 442.818,
                     ::Silicium::NumericalIntegration.three_eights_integration(2, 5, 0.001) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
+  end
+
+  def test_something_scary_accuracy_001_three_eights_integration
+    assert_in_delta 442.82,
+                    ::Silicium::NumericalIntegration.three_eights_integration(2, 5, 0.01) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.01
+  end
+
+  def test_something_scary_accuracy_01_three_eights_integration
+    assert_in_delta 442.8,
+                    ::Silicium::NumericalIntegration.three_eights_integration(2, 5, 0.1) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.1
   end
 
   def test_reverse_three_eights_integration
@@ -46,6 +52,11 @@ class NumericalIntegrationTest < Minitest::Test
   def test_polynom_three_eights_integration
     assert_in_delta 16519216 / 3.0,
                     ::Silicium::NumericalIntegration.three_eights_integration(-10, 18) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+  end
+
+  def test_polynom_accuracy_three_eights_integration
+    assert_in_delta 16519216 / 3.0,
+                    ::Silicium::NumericalIntegration.three_eights_integration(-10, 18,0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 
 # TODO: Write tests with non-determined function (such as integral of 1/x from -1 to 1)

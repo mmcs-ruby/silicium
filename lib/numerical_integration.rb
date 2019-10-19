@@ -1,8 +1,17 @@
 module Silicium
   class NumericalIntegration
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
-      n = (1 / eps).floor
-      dx = (b - a) * eps
+      n = 1
+      begin
+        integral0 = three_eights_integration_n(a, b, n, &block)
+        n *= 5
+        integral1 = three_eights_integration_n(a, b, n, &block)
+      end until (integral0 - integral1).abs < eps
+      (integral0 + integral1) / 2.0
+    end
+
+    def self.three_eights_integration_n(a, b, n, &block)
+      dx = (b - a) / n.to_f
       result = 0
       x = a
       n.times do
