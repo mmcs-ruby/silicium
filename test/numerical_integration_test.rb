@@ -1,4 +1,4 @@
-require "test_helper"
+require 'test_helper'
 
 class NumericalIntegrationTest < Minitest::Test
   @@delta = 0.0001
@@ -50,4 +50,8 @@ class NumericalIntegrationTest < Minitest::Test
 
 # TODO: Write tests with non-determined function (such as integral of 1/x from -1 to 1)
 
+  def test_log_simpson_integration_with_eps
+    assert_in_delta Math.log(3.5),
+                    ::Silicium::NumericalIntegration.simpson_integration_with_eps(2, 7) { |x| 1 / x }, @@delta
+  end
 end
