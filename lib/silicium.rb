@@ -1,4 +1,5 @@
 require "silicium/version"
+require "silicium/silicium"
 
 module Silicium
   class Error < StandardError; end
