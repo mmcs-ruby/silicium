@@ -7,17 +7,16 @@ module Silicium
       x = a
       n.times do
         result +=
-            (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
-                3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
+          (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
+              3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
         x += dx
       end
       result
     end
 
 
-    # Simpson Integration
-    def self.simpson_integration(a, b, n = 10_000, &block)
-      a, b = b, a if a > b
+    # Simpson integration with a segment
+    def self.simpson_integration_with_a_segment(a, b, n = 10_000, &block)
       dx = (b - a) / n.to_f
       result = 0
       i = 0
@@ -30,15 +29,14 @@ module Silicium
     end
 
     # Simpson integration with specified accuracy
-    def self.simpson_integration_with_eps(a, b, eps = 0.0001, &block)
-      a, b = b, a if a > b
+    def self.simpson_integration(a, b, eps = 0.0001, &block)
       n = 1
-      res1 = simpson_integration(a, b, 1, &block)
-      res2 = simpson_integration(a, b, 2, &block)
+      res1 = simpson_integration_with_a_segment(a, b, 1, &block)
+      res2 = simpson_integration_with_a_segment(a, b, 2, &block)
       while (res1 - res2).abs > eps
         n *= 5
         res1 = res2
-        res2 = simpson_integration(a, b, n, &block)
+        res2 = simpson_integration_with_a_segment(a, b, n, &block)
       end
       res2
     end
