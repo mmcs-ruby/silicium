@@ -3,6 +3,7 @@
 
 static VALUE matrix_eTypeError;
 static VALUE matrix_eIndexError;
+static VALUE cMatrix;
 
 struct matrix
 {
@@ -68,6 +69,13 @@ void raise_check_range(int v, int min, int max)
         rb_raise(matrix_eIndexError, "Index out of range");
 }
 
+void c_matrix_init(struct matrix* mtr, int m, int n)
+{
+    mtr->m = m;
+    mtr->n = n;
+    mtr->data = malloc(m * n * sizeof(double));
+}
+
 VALUE matrix_initialize(VALUE self, VALUE m, VALUE n)
 {
 	struct matrix* data;
@@ -79,9 +87,7 @@ VALUE matrix_initialize(VALUE self, VALUE m, VALUE n)
 
 	TypedData_Get_Struct(self, struct matrix, &matrix_type, data);
 
-	data->m = int_m;
-	data->n = int_n;
-	data->data = malloc(int_m * int_n * sizeof(double));
+    c_matrix_init(data, int_m, int_n);
 
 	return self;
 }
@@ -115,10 +121,48 @@ VALUE matrix_get(VALUE self, VALUE m, VALUE n)
     return DBL2NUM(data->data[int_m + data->m * int_n]);
 }
 
+// A - matrix k x n
+// B - matrix m x k
+// C - matrix m x n
+void c_matrix_multiply(int n, int k, int m, const double* A, const double* B, double* C)
+{
+    for(int i = 0; i < m; ++i)
+        for(int j = 0; j < n; ++j)
+        {
+            C[i + m * j] = 0;
+            for(int t = 0; t < k; ++t)
+                C[i + m * j] += A[t + k * j] * B[i + m * t];
+        }
+}
+
+VALUE matrix_multiply(VALUE self, VALUE other)
+{
+
+	struct matrix* A;
+    struct matrix* B;
+	TypedData_Get_Struct(self, struct matrix, &matrix_type, A);
+	TypedData_Get_Struct(other, struct matrix, &matrix_type, B);
+
+    if(A->m != B->n)
+        rb_raise(matrix_eIndexError, "First columns differs from second rows");
+
+    int m = B->m;
+    int k = A->m;
+    int n = A->n;
+
+    struct matrix* C;
+    VALUE result = TypedData_Make_Struct(cMatrix, struct matrix, &matrix_type, C);
+
+    c_matrix_init(C, m, n);
+    c_matrix_multiply(n, k, m, A->data, B->data, C->data);
+
+    return result;
+}
+
 void Init_silicium()
 {
     VALUE  mod = rb_define_module("Silicium");
-	VALUE cMatrix = rb_define_class_under(mod, "Matrix", rb_cObject);
+	cMatrix = rb_define_class_under(mod, "Matrix", rb_cData);
 
     matrix_eTypeError  = rb_define_class_under(cMatrix, "TypeError",  rb_eTypeError);
     matrix_eIndexError = rb_define_class_under(cMatrix, "IndexError", rb_eIndexError);
@@ -129,4 +173,5 @@ void Init_silicium()
 	rb_define_method(cMatrix, "initialize", matrix_initialize, 2);
 	rb_define_method(cMatrix, "get", matrix_get, 2);
 	rb_define_method(cMatrix, "set", matrix_set, 3);
+	rb_define_method(cMatrix, "*", matrix_multiply, 1);
 }
