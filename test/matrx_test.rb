@@ -17,17 +17,17 @@ class SiliciumMatrixTest < Minitest::Test
 
   def test_get_out_of_range
     m = Matrix.new(2, 4)
-    assert_raises(Error) { m[3, 5] }
+    assert_raises(Matrix::IndexError) { m[3, 5] }
   end
 
   def test_set_out_of_range
     m = Matrix.new(2, 4)
-    assert_raises(Error) { m[3, 5] = 0 }
+    assert_raises(Matrix::IndexError) { m[3, 5] = 0 }
   end
 
   def test_set_nan
     m = Matrix.new(2, 4)
-    assert_raises(TypeError) { m[1, 1] = 'not a number' }
+    assert_raises(Matrix::TypeError) { m[1, 1] = 'not a number' }
   end
 
 end
