@@ -5,8 +5,8 @@ class SiliciumMatrixTest < Minitest::Test
 
   def test_init
     m = Matrix.new(2, 4)
-    assert_equal 4, m.column_count
-    assert_equal 2, m.column_size
+    assert_equal 4, m.column_size
+    assert_equal 2, m.row_size
   end
 
   def test_get

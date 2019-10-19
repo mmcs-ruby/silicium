@@ -159,6 +159,20 @@ VALUE matrix_multiply(VALUE self, VALUE other)
     return result;
 }
 
+VALUE row_size(VALUE self)
+{
+	struct matrix* data;
+	TypedData_Get_Struct(self, struct matrix, &matrix_type, data);
+    return INT2NUM(data->m);
+}
+
+VALUE column_size(VALUE self)
+{
+	struct matrix* data;
+	TypedData_Get_Struct(self, struct matrix, &matrix_type, data);
+    return INT2NUM(data->n);
+}
+
 void Init_silicium()
 {
     VALUE  mod = rb_define_module("Silicium");
@@ -174,4 +188,6 @@ void Init_silicium()
 	rb_define_method(cMatrix, "[]", matrix_get, 2);
 	rb_define_method(cMatrix, "[]=", matrix_set, 3);
 	rb_define_method(cMatrix, "*", matrix_multiply, 1);
+	rb_define_method(cMatrix, "row_size", row_size, 0);
+	rb_define_method(cMatrix, "column_size", column_size, 0);
 }
