@@ -120,8 +120,8 @@ void Init_silicium()
     VALUE  mod = rb_define_module("Silicium");
 	VALUE cMatrix = rb_define_class_under(mod, "Matrix", rb_cObject);
 
-    matrix_eTypeError  = rb_define_class_under(mod, "SiliciumMatrixTypeError",  rb_eTypeError);
-    matrix_eIndexError = rb_define_class_under(mod, "SiliciumMatrixIndexError", rb_eIndexError);
+    matrix_eTypeError  = rb_define_class_under(cMatrix, "TypeError",  rb_eTypeError);
+    matrix_eIndexError = rb_define_class_under(cMatrix, "IndexError", rb_eIndexError);
 
 
 	rb_define_alloc_func(cMatrix, matrix_alloc);
