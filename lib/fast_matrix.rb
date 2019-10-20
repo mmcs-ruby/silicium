@@ -17,16 +17,16 @@ module Silicium
     end
 
     def each_with_indexes
-      (0...row_size).each do |i|
-        (0...column_size).each do |j|
+      (0...column_size).each do |i|
+        (0...row_size).each do |j|
           yield self[i, j], i, j
         end
       end
     end
 
     def each_with_indexes!
-      (0...row_size).each do |i|
-        (0...column_size).each do |j|
+      (0...column_size).each do |i|
+        (0...row_size).each do |j|
           self[i, j] = yield self[i, j], i, j
         end
       end

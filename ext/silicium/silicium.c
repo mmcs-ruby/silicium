@@ -5,10 +5,17 @@ static VALUE matrix_eTypeError;
 static VALUE matrix_eIndexError;
 static VALUE cMatrix;
 
+// matrix
+//     m --->
+//   [ 0,    1, ..,  m-1]
+// n [ m,  m+1, .., 2m-1]
+// | [2m, 2m+1, .., 3m-1]
+// V [ . . . . . 
+//         . . . .  nm-1]
 struct matrix
 {
-    int n;
     int m;
+    int n;
 
     double* data;
 };
@@ -76,50 +83,52 @@ void c_matrix_init(struct matrix* mtr, int m, int n)
     mtr->data = malloc(m * n * sizeof(double));
 }
 
-VALUE matrix_initialize(VALUE self, VALUE m, VALUE n)
+VALUE matrix_initialize(VALUE self, VALUE rows_count, VALUE columns_count)
 {
 	struct matrix* data;
-    int int_m = raise_rb_value_to_int(m);
-    int int_n = raise_rb_value_to_int(n);
+    int m = raise_rb_value_to_int(columns_count);
+    int n = raise_rb_value_to_int(rows_count);
 
-    if(int_m <= 0 || int_n <= 0)
+    if(m <= 0 || n <= 0)
         rb_raise(matrix_eIndexError, "Size cannot be negative or zero");
 
 	TypedData_Get_Struct(self, struct matrix, &matrix_type, data);
 
-    c_matrix_init(data, int_m, int_n);
+    c_matrix_init(data, m, n);
 
 	return self;
 }
 
-VALUE matrix_set(VALUE self, VALUE m, VALUE n, VALUE v)
+//  []=
+VALUE matrix_set(VALUE self, VALUE row, VALUE column, VALUE v)
 {
-    int int_m = raise_rb_value_to_int(m);
-    int int_n = raise_rb_value_to_int(n);
+    int m = raise_rb_value_to_int(column);
+    int n = raise_rb_value_to_int(row);
     double x = raise_rb_value_to_double(v);
 
 	struct matrix* data;
 	TypedData_Get_Struct(self, struct matrix, &matrix_type, data);
 
-    raise_check_range(int_m, 0, data->m);
-    raise_check_range(int_n, 0, data->n);
+    raise_check_range(m, 0, data->m);
+    raise_check_range(n, 0, data->n);
 
-    data->data[int_m + data->m * int_n] = x;
+    data->data[m + data->m * n] = x;
     return v;
 }
 
-VALUE matrix_get(VALUE self, VALUE m, VALUE n)
+//  []
+VALUE matrix_get(VALUE self, VALUE row, VALUE column)
 {
-    int int_m = raise_rb_value_to_int(m);
-    int int_n = raise_rb_value_to_int(n);
+    int m = raise_rb_value_to_int(column);
+    int n = raise_rb_value_to_int(row);
 
 	struct matrix* data;
 	TypedData_Get_Struct(self, struct matrix, &matrix_type, data);
 
-    raise_check_range(int_m, 0, data->m);
-    raise_check_range(int_n, 0, data->n);
+    raise_check_range(m, 0, data->m);
+    raise_check_range(n, 0, data->n);
 
-    return DBL2NUM(data->data[int_m + data->m * int_n]);
+    return DBL2NUM(data->data[m + data->m * n]);
 }
 
 // A - matrix k x n

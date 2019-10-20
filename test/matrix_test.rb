@@ -6,8 +6,8 @@ require 'matrix'
 class SiliciumMatrixTest < Minitest::Test
   def test_init
     m = Silicium::Matrix.new(2, 4)
-    assert_equal 2, m.row_size
-    assert_equal 4, m.column_size
+    assert_equal 2, m.column_size
+    assert_equal 4, m.row_size
   end
 
   def test_init_from_brackets
@@ -61,4 +61,11 @@ class SiliciumMatrixTest < Minitest::Test
     assert_raises(Silicium::Matrix::TypeError) { m[1, 1] = 'not a number' }
   end
 
+  def test_multiply
+    m1 = Silicium::Matrix[[1, 2], [3, 4], [7, 0], [-3, 1]]
+    m2 = Silicium::Matrix[[1, 0, 3], [4, 5, -2]]
+    m = Silicium::Matrix[[9, 10, -1], [19, 20, 1], [7, 0, 21], [1, 5, -11]]
+
+    assert m == m1 * m2
+  end
 end
