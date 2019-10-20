@@ -128,9 +128,17 @@ module Silicium
       matrix
     end
 
-    # todo
-    def ==(matrix)
-      true
+    # FIXME for compare with standard matrix
+    def ==(other)
+      # TODO check class and use fast compare from C if possibly
+      return false unless %i[row_size column_size \[\]].all? { |x| other.respond_to? x }
+      return false unless self.row_size == other.row_size && self.column_size == other.column_size
+
+      result = true
+      each_with_indexes do |elem, i, j|
+        result &&= elem == other[i, j].to_f
+      end
+      result
     end
   end
 end

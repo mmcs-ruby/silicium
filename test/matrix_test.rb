@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'test_helper'
 require 'fast_matrix'
 require 'matrix'
@@ -15,6 +16,16 @@ class SiliciumMatrixTest < Minitest::Test
     assert_equal 2, m[0, 1]
     assert_equal 3, m[1, 0]
     assert_equal 4, m[1, 1]
+  end
+
+  def test_equal_by_value
+    m1 = Silicium::Matrix[[1, 2], [3, 4]]
+    m2 = Silicium::Matrix[[1, 2], [3, 4]]
+    assert m1 == m2 && m2 == m1, 'Equals fast matrices'
+    m3 = ::Matrix[[1, 2], [3, 4]]
+    assert m1 == m3 && m3 == m1, 'Equals fast matrix and standard matrix'
+    m4 = Silicium::Matrix[[3, 4], [1, 2]]
+    assert m1 != m4 && m4 != m1, 'Different fast matrices'
   end
 
   def test_convert
