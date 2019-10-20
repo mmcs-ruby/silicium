@@ -9,6 +9,6 @@ COPY lib/silicium ./lib/silicium
 RUN bundle install
 
 COPY . .
-RUN rake compile
+RUN bundler exec rake compile
 
 CMD ["rake"]
