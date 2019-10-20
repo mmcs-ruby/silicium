@@ -105,6 +105,7 @@ VALUE matrix_set(VALUE self, VALUE m, VALUE n, VALUE v)
     raise_check_range(int_n, 0, data->n);
 
     data->data[int_m + data->m * int_n] = x;
+    return v;
 }
 
 VALUE matrix_get(VALUE self, VALUE m, VALUE n)
@@ -126,13 +127,21 @@ VALUE matrix_get(VALUE self, VALUE m, VALUE n)
 // C - matrix m x n
 void c_matrix_multiply(int n, int k, int m, const double* A, const double* B, double* C)
 {
-    for(int i = 0; i < m; ++i)
-        for(int j = 0; j < n; ++j)
+    for(int j = 0; j < n; ++j)
+    {
+        double* p_c = C + m * j;
+        for(int t = 0; t < k; ++t)
+            p_c[t] = 0;
+        for(int t = 0; t < k; ++t)
         {
-            C[i + m * j] = 0;
-            for(int t = 0; t < k; ++t)
-                C[i + m * j] += A[t + k * j] * B[i + m * t];
+            const double* p_b = B + m * t;
+            double d_a = A[t + k * j];
+            for(int i = 0; i < m; ++i)
+            {
+                p_c[i] += d_a * p_b[i];
+            }
         }
+    }
 }
 
 VALUE matrix_multiply(VALUE self, VALUE other)
