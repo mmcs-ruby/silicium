@@ -10,10 +10,6 @@ module Silicium
     end
 
     class OrientedGraph
-      @vertices
-      @edge_labels
-      @vertex_labels
-
       def initialize(initializer = [])
         @vertices = {}
         @edge_labels = {}
