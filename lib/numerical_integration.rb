@@ -1,5 +1,5 @@
 module Silicium
-  class MySpecialError < RuntimeError
+  class IntegralDoesntExistError < RuntimeError
 
   end
   class NumericalIntegration
@@ -12,8 +12,10 @@ module Silicium
           n *= 5
           integral1 = three_eights_integration_n(a, b, n, &block)
         end until (integral0 - integral1).abs < eps
+      rescue Math::DomainError
+        raise ::Silicium::IntegralDoesntExistError, "Domain error in math function"
       rescue ZeroDivisionError
-        raise ::Silicium::MySpecialError, "Divide by zero"
+        raise ::Silicium::IntegralDoesntExistError, "Divide by zero"
       end
       (integral0 + integral1) / 2.0
     end
