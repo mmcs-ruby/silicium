@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'numerical_integration'
 
 class NumericalIntegrationTest < Minitest::Test
   @@delta = 0.0001
@@ -6,6 +7,12 @@ class NumericalIntegrationTest < Minitest::Test
   def test_log_three_eights_integration
     assert_in_delta Math.log(3.5),
                     ::Silicium::NumericalIntegration.three_eights_integration(2, 7) { |x| 1 / x }, @@delta
+  end
+
+  def test_error_three_eights_integration
+    assert_raises ::Silicium::MySpecialError do
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 7) { |x| 1 / x }
+    end
   end
 
   def test_sin_three_eights_integration
@@ -40,7 +47,7 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_reverse_three_eights_integration
-    assert_in_delta -(Math.sin(3) + Math.sin(4)),
+    assert_in_delta (-(Math.sin(3) + Math.sin(4))),
                     ::Silicium::NumericalIntegration.three_eights_integration(4, -3) { |x| Math.cos(x) }, @@delta
   end
 
@@ -56,7 +63,7 @@ class NumericalIntegrationTest < Minitest::Test
 
   def test_polynom_accuracy_three_eights_integration
     assert_in_delta 16519216 / 3.0,
-                    ::Silicium::NumericalIntegration.three_eights_integration(-10, 18,0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+                    ::Silicium::NumericalIntegration.three_eights_integration(-10, 18, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 
 # TODO: Write tests with non-determined function (such as integral of 1/x from -1 to 1)
@@ -99,5 +106,51 @@ class NumericalIntegrationTest < Minitest::Test
   def test_polynom_simpson_integration
     assert_in_delta 16519216 / 3.0,
                     ::Silicium::NumericalIntegration.simpson_integration(-10, 18) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+  end
+#
+  def test_log_left_rect_integration
+    assert_in_delta Math.log(3.5),
+                    ::Silicium::NumericalIntegration.left_rect_integration(2, 7) { |x| 1 / x }, @@delta
+  end
+
+  def test_sin_left_rect_integration
+    assert_in_delta Math.sin(8) + Math.sin(10),
+                    ::Silicium::NumericalIntegration.left_rect_integration(-10, 8) { |x| Math.cos(x) }, @@delta
+  end
+
+  def test_arctan_left_rect_integration
+    assert_in_delta Math.atan(Math::PI),
+                    ::Silicium::NumericalIntegration.left_rect_integration(0, Math::PI) { |x| 1 / (1 + x ** 2) }, @@delta
+  end
+
+  def test_arcsin_left_rect_integration
+    assert_in_delta Math::PI / 6,
+                    ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
+  end
+
+  def test_something_scary_left_rect_integration
+    assert_in_delta 442.818,
+                    ::Silicium::NumericalIntegration.left_rect_integration(2, 5, 0.001) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
+  end
+
+  def test_reverse_left_rect_integration
+    assert_in_delta -(Math.sin(3) + Math.sin(4)),
+                    ::Silicium::NumericalIntegration.left_rect_integration(4, -3) { |x| Math.cos(x) }, @@delta
+  end
+
+  def test_one_point_left_rect_integration
+    assert_in_delta 0,
+                    ::Silicium::NumericalIntegration.left_rect_integration(42, 42) { |x| Math.sin(x) / x }, @@delta
+  end
+
+  def test_polynom_left_rect_integration
+    assert_in_delta -159.75,
+                    ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+  end
+
+
+  def test_polynom_accuracy_left_rect_integration
+    assert_in_delta -159.75,
+                    ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 end
