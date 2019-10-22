@@ -15,6 +15,12 @@ class NumericalIntegrationTest < Minitest::Test
     end
   end
 
+  def test_nan_error_three_eights_integration
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 1) { |x| 1 / Math::log(x) }
+    end
+  end
+
   def test_domain_error_three_eights_integration
     assert_raises ::Silicium::IntegralDoesntExistError do
       ::Silicium::NumericalIntegration.three_eights_integration(-8, 7) { |x| Math::sqrt(x) }
