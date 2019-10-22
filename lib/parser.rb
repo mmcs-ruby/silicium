@@ -1,33 +1,37 @@
 module Silicium
-  class Parser
 
-    def Differentiate(str) # string -> string
-      #   class - Elem - от скобки до скобки + степень (^Elem)
-      #   class - Multiplication - пара Elem со своей функцией диф.
-      #   class - Division - пара Elem со своей функцией диф.
-      #   Добавляем в очередь элементы.
-      #   Если видим умножение или деление - заменяем Elem на соответствующий класс
-      #   (удаляем из очереди, добавляем новый)
-      class Elem
-        @elem = new.Elem
-        @pow = 0
+  class Polynom
+    attr_reader :str
+
+    def initializer(str)
+      unless polycop(str)
+        raise PolynomError, 'Invalid string for polynom '
       end
-      class Multiplication
-        @elem1 = new.Elem
-        @elem2 = new.Elem
-        def diff
-          return @elem1.to_s + "*" + Differentiate(@elem2.to_s) + "+" + @elem2.to_s + "*" + Differentiate(@elem1.to_s)
-        end
-      end
-      class Division
-        @elem1 = new.Elem
-        @elem2 = new.Elem
-        def diff
-          return "(" + @elem2.to_s + "*" + Differentiate(@elem1.to_s) + "-" + @elem1.to_s + "*" + Differentiate(@elem2.to_s) + ")"
-           + "/" + "(" + @elem2.to_s + "*" + @elem2.to_s + ")"
-        end
-      end
+
+      str.gsub!('^','**')
+      str.gsub!('tg','tan')
+      str.gsub!(/(sin|cos|tan)/,'Math::\1')
+      @str = str
     end
 
+    def polycop(str)
+      allowed_w = ['sin','cos','tan','tg','ctg','arccos','arcsin']
+      parsed = str.split(/[-+]/)
+      parsed.each do |term|
+        if term[/(\s?\d*\s?\*\s?)?[a-z](\^\d*)?|\s?\d+$/].nil?
+          return false
+        end
+        #check for extra letters in term
+        letters = term.scan(/[a-z]{2,}/)
+        letters = letters.join
+        if letters.length != 0 && !allowed_w.include?(letters)
+          return false
+        end
+
+      end
+      return true
+    end
   end
+end
+class PolynomError < StandardError
 end
