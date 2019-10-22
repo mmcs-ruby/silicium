@@ -18,6 +18,10 @@ module Silicium
       Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2+(b.z-a.z)**2)
     end
 
+    def distance(a, b)
+      Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2)
+    end
+
     def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
     end
