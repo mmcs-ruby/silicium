@@ -1,3 +1,4 @@
+
 require 'test_helper'
 require 'geometry'
 
@@ -42,7 +43,6 @@ class GeometryTest < Minitest::Test
     assert_in_delta(589.7694464788761,
                     distance_point_to_point3d(Point3d.new(-222,-333,-444),Point3d.new(-2,-5,-6)),0.0001)
   end
-
 
 
 end
