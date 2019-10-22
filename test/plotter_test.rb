@@ -14,6 +14,6 @@ class SiliciumTest < Minitest::Test
     #todo encapsulate ChunkyPNG::Color into Plotter class
     plotter.rectangle(20, 30, 50, 60, ChunkyPNG::Color('black @ 0.5'))
     plotter.export(filename)
-  endg
+  end
 
 end
