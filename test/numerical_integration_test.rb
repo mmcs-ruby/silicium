@@ -50,13 +50,12 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_polynom_middle_rectangles
-    assert_in_delta 16519216 / 3.0,
-                    ::Silicium::NumericalIntegration.middle_rectangles(-10, 18) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+    assert_in_delta (-63.984),
+                    ::Silicium::NumericalIntegration.middle_rectangles(-0.2, 0.2) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
   end
 
   def test_polynom_accuracy_middle_rectangles
-    assert_in_delta 16519216 / 3.0,
-                    ::Silicium::NumericalIntegration.middle_rectangles(-10, 18, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+    assert_in_delta (-63.984),
+                    ::Silicium::NumericalIntegration.middle_rectangles(-0.2, 0.2, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
-
 end
