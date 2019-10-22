@@ -8,6 +8,16 @@ module Silicium
     # Represents a point as two coordinates
     # in two-dimensional space
     Point = Struct.new(:x, :y)
+    Point3d = Struct.new(:x,:y,:z)
+
+    def distance_point_to_point2d(a,b)
+      Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2)
+    end
+
+    def distance_point_to_point3d(a,b)
+      Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2+(b.z-a.z)**2)
+    end
+
 
     def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
@@ -66,5 +76,7 @@ module Silicium
       end
       hull
     end
+
+
   end
 end
