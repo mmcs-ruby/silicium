@@ -1,4 +1,5 @@
 require 'test_helper'
+require 'numerical_integration'
 
 class NumericalIntegrationTest < Minitest::Test
   @@delta = 0.0001
@@ -6,6 +7,12 @@ class NumericalIntegrationTest < Minitest::Test
   def test_log_three_eights_integration
     assert_in_delta Math.log(3.5),
                     ::Silicium::NumericalIntegration.three_eights_integration(2, 7) { |x| 1 / x }, @@delta
+  end
+
+  def test_error_three_eights_integration
+    assert_raises ::Silicium::MySpecialError do
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 7) { |x| 1 / x }
+    end
   end
 
   def test_sin_three_eights_integration
@@ -40,7 +47,7 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_reverse_three_eights_integration
-    assert_in_delta -(Math.sin(3) + Math.sin(4)),
+    assert_in_delta (-(Math.sin(3) + Math.sin(4))),
                     ::Silicium::NumericalIntegration.three_eights_integration(4, -3) { |x| Math.cos(x) }, @@delta
   end
 
@@ -56,7 +63,7 @@ class NumericalIntegrationTest < Minitest::Test
 
   def test_polynom_accuracy_three_eights_integration
     assert_in_delta 16519216 / 3.0,
-                    ::Silicium::NumericalIntegration.three_eights_integration(-10, 18,0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+                    ::Silicium::NumericalIntegration.three_eights_integration(-10, 18, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 
 # TODO: Write tests with non-determined function (such as integral of 1/x from -1 to 1)

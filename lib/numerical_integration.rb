@@ -1,12 +1,20 @@
 module Silicium
+  class MySpecialError < RuntimeError
+
+  end
   class NumericalIntegration
+
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
       n = 1
       begin
-        integral0 = three_eights_integration_n(a, b, n, &block)
-        n *= 5
-        integral1 = three_eights_integration_n(a, b, n, &block)
-      end until (integral0 - integral1).abs < eps
+        begin
+          integral0 = three_eights_integration_n(a, b, n, &block)
+          n *= 5
+          integral1 = three_eights_integration_n(a, b, n, &block)
+        end until (integral0 - integral1).abs < eps
+      rescue ZeroDivisionError
+        raise ::Silicium::MySpecialError, "Divide by zero"
+      end
       (integral0 + integral1) / 2.0
     end
 
@@ -16,8 +24,8 @@ module Silicium
       x = a
       n.times do
         result +=
-          (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
-              3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
+            (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
+                3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
         x += dx
       end
       result
