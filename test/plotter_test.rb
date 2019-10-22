@@ -5,6 +5,8 @@ require 'chunky_png'
 class SiliciumTest < Minitest::Test
   include Silicium::Plotter
 
+  @@dir_ready = File.directory?('tmp') || Dir.mkdir('tmp')
+
   def test_plotter_rectangle
     #todo write method to remove all *.png from tmp before and after running tests
     filename = 'tmp/rectangle.png'
