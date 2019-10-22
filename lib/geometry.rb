@@ -9,6 +9,10 @@ module Silicium
     # in two-dimensional space
     Point = Struct.new(:x, :y)
 
+    def distance(a, b)
+      Math.sqrt((a.x - b.x)**2 + (a.y - b.y)**2)
+    end
+
     def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
     end
