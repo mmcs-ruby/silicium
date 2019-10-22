@@ -226,12 +226,68 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_polynom_middle_rectangles
-    assert_in_delta (-63.984),
-                    ::Silicium::NumericalIntegration.middle_rectangles(-0.2, 0.2) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.middle_rectangles(-0.001, 0.001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
   end
 
   def test_polynom_accuracy_middle_rectangles
-    assert_in_delta (-63.984),
-                    ::Silicium::NumericalIntegration.middle_rectangles(-0.2, 0.2, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.middle_rectangles(-0.001, 0.001, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+  end
+
+  def test_log_trapezoid
+    assert_in_delta Math.log(3.5),
+                    ::Silicium::NumericalIntegration.trapezoid(2, 7) { |x| 1 / x }, @@delta
+  end
+
+  def test_sin_trapezoid
+    assert_in_delta Math.sin(8) + Math.sin(10),
+                    ::Silicium::NumericalIntegration.trapezoid(-10, 8) { |x| Math.cos(x) }, @@delta
+  end
+
+  def test_arctan_trapezoid
+    assert_in_delta Math.atan(Math::PI),
+                    ::Silicium::NumericalIntegration.trapezoid(0, Math::PI) { |x| 1 / (1 + x ** 2) }, @@delta
+  end
+
+  def test_arcsin_trapezoid
+    assert_in_delta Math::PI / 6,
+                    ::Silicium::NumericalIntegration.trapezoid(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
+  end
+
+
+  def test_something_scary_trapezoid
+    assert_in_delta 442.818,
+                    ::Silicium::NumericalIntegration.trapezoid(2, 5, 0.001) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
+  end
+
+  def test_something_scary_accuracy_001_trapezoid
+    assert_in_delta 442.82,
+                    ::Silicium::NumericalIntegration.trapezoid(2, 5, 0.01) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.01
+  end
+
+  def test_something_scary_accuracy_01_trapezoid
+    assert_in_delta 442.8,
+                    ::Silicium::NumericalIntegration.trapezoid(2, 5, 0.1) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.1
+  end
+
+  def test_reverse_trapezoid
+    assert_in_delta (-1 * (Math.sin(3) + Math.sin(4))),
+                    ::Silicium::NumericalIntegration.trapezoid(4, -3) { |x| Math.cos(x) }, @@delta
+  end
+
+  def test_one_point_trapezoid
+    assert_in_delta 0,
+                    ::Silicium::NumericalIntegration.trapezoid(42, 42) { |x| Math.sin(x) / x }, @@delta
+  end
+
+  def test_polynom_trapezoid
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.trapezoid(-0.001, 0.001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+  end
+
+  def test_polynom_accuracy_trapezoid
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.trapezoid(-0.001, 0.001, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 end
