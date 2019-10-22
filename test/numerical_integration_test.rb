@@ -177,6 +177,8 @@ class NumericalIntegrationTest < Minitest::Test
   def test_polynom_accuracy_left_rect_integration
     assert_in_delta -159.75,
                     ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+  end
+
   def test_log_middle_rectangles
     assert_in_delta Math.log(3.5),
                     ::Silicium::NumericalIntegration.middle_rectangles(2, 7) { |x| 1 / x }, @@delta
@@ -214,7 +216,7 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_reverse_middle_rectangles
-    assert_in_delta  ( -1 * (Math.sin(3) + Math.sin(4))),
+    assert_in_delta (-1 * (Math.sin(3) + Math.sin(4))),
                     ::Silicium::NumericalIntegration.middle_rectangles(4, -3) { |x| Math.cos(x) }, @@delta
   end
 
