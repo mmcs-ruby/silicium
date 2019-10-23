@@ -27,10 +27,15 @@ module Silicium
         if letters.length != 0 && !allowed_w.include?(letters)
           return false
         end
-
       end
       return true
     end
+
+    def evaluate(x)
+      res = str.gsub('x',x)
+      eval(res)
+    end
+
   end
 end
 class PolynomError < StandardError
