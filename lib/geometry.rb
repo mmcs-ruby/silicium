@@ -89,6 +89,8 @@ module Silicium
     # Creates an array- directing vector in three-dimensional space .
     # The equation is specified in the canonical form.
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
+    #
+    #Important: mandatory order of variables: x, y, z
     def directing_vector3d(c)
       c=c.gsub(' ','')
       c1=c.insert(c.length,'=')
@@ -118,6 +120,8 @@ module Silicium
     # Creates an array of coordinates of the point ([x, y, z] on the line
     # given by the equation in the canonical form.
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
+    #
+    #Important: mandatory order of variables: x, y, z
     def point_on_the_line3d(c)
       c2=c.gsub(' ','').insert(c.length,'=')
       m=Array.new() #line has point
@@ -141,6 +145,25 @@ module Silicium
         c2=c2.slice(c2.index('='),c2.length).sub('=','')
       else m[2]=0.0 end
       return m
+    end
+
+    ##
+    # Calculates the distance from a point given by a Point3d structure
+    # to a straight line given by a canonical equation.
+    # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
+    #
+    #Important: mandatory order of variables: x, y, z
+    def distance_point_to_line3d(a,c)
+      s=directing_vector3d(c)
+      m=point_on_the_line3d(c)
+      ma=Point3d.new(m[0]-a.x,m[1]-a.y,m[2]-a.z)
+
+      #Vector product of vectors.
+      sm=Array.new()
+      for i in 0..2
+        sm[i]=ma[(i+1)%3]*s[(i+2)%3]-ma[(i+2)%3]*s[(i+1)%3]
+      end
+      return (Math.sqrt(sm[0]**2+sm[1]**2+sm[2]**2)/Math.sqrt(s[0]**2+s[1]**2+s[2]**2))
     end
 
 
