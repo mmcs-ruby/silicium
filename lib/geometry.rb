@@ -114,6 +114,35 @@ module Silicium
       return res
     end
 
+    ##
+    # Creates an array of coordinates of the point ([x, y, z] on the line
+    # given by the equation in the canonical form.
+    # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
+    def point_on_the_line3d(c)
+      c2=c.gsub(' ','').insert(c.length,'=')
+      m=Array.new() #line has point
+
+      if c2.include?('x')
+        before=c2.index('x')+1
+        after=c2.index('/')
+        m[0]=c2.slice(before..after).gsub('/','').to_f*(-1)
+        c2=c2.slice(c2.index('='),c2.length).sub('=','')
+      else m[0]=0.0 end
+      if c2.include?('y')
+        before=c2.index('y')+1
+        after=c2.index('/')
+        m[1]=c2.slice(before..after).gsub('/','').to_f*(-1)
+        c2=c2.slice(c2.index('='),c2.length).sub('=','')
+      else m[1]=0.0 end
+      if c2.include?('z')
+        before=c2.index('z')+1
+        after=c2.index('/')
+        m[2]=c2.slice(before..after).gsub('/','').to_f*(-1)
+        c2=c2.slice(c2.index('='),c2.length).sub('=','')
+      else m[2]=0.0 end
+      return m
+    end
+
 
   end
 end

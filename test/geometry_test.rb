@@ -52,7 +52,14 @@ class GeometryTest < Minitest::Test
     assert_equal([0.0,0.0,1.0],directing_vector3d('(z-20)/1'))
   end
 
-
+  def test_point_on_the_line3d
+    assert_equal([3.0, 1.0, -1.0],point_on_the_line3d('(x-3)/2=(y-1)/1=(z+1)/2'))
+    assert_equal([5.0, -15.0, 20.0],point_on_the_line3d('(x-5)/5=(y+15)/3=(z-20)/2'))
+    assert_equal( [0.0, -300.0, 200.0],point_on_the_line3d('(x-0)/26=(y+300)/*(-15)=(z-200)/51'))
+    assert_equal([0.0, 0.0, 20.0],point_on_the_line3d('(x-0)/0=(y-0)/0=(z-20)/1'))
+    assert_equal([0.0,0.0,20.0],point_on_the_line3d('(z-20)/1'))
+    assert_equal([0.0, 0.0, 20.0],point_on_the_line3d('x/0=y/0=(z-20)/1'))
+  end
 
 end
 
