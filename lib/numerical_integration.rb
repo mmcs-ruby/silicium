@@ -41,7 +41,7 @@ module Silicium
 
 
     # Simpson integration with a segment
-    def self.simpson_integration_with_a_segment(a, b, n = 10_000, &block)
+    def self.simpson_integration_with_a_segment(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
       i = 0
@@ -56,12 +56,30 @@ module Silicium
     # Simpson integration with specified accuracy
     def self.simpson_integration(a, b, eps = 0.0001, &block)
       n = 1
-      res1 = simpson_integration_with_a_segment(a, b, 1, &block)
-      res2 = simpson_integration_with_a_segment(a, b, 2, &block)
-      while (res1 - res2).abs > eps
-        n *= 5
-        res1 = res2
-        res2 = simpson_integration_with_a_segment(a, b, n, &block)
+      begin
+        res1 = simpson_integration_with_a_segment(a, b, 1, &block)
+        res2 = simpson_integration_with_a_segment(a, b, 2, &block)
+        if res1.nan? || res2.nan?
+          raise ::Silicium::IntegralDoesntExistError, 'We have not-a-number result :('
+        end
+        if res1 == Float::INFINITY || res2 == Float::INFINITY
+          raise ::Silicium::IntegralDoesntExistError, 'We have infinity :('
+        end
+        while (res1 - res2).abs > eps
+          n *= 5
+          res1 = res2
+          res2 = simpson_integration_with_a_segment(a, b, n, &block)
+          if res1.nan? || res2.nan?
+            raise ::Silicium::IntegralDoesntExistError, 'We have not-a-number result :('
+          end
+          if res1 == Float::INFINITY || res2 == Float::INFINITY
+            raise ::Silicium::IntegralDoesntExistError, 'We have infinity :('
+          end
+        end
+      rescue Math::DomainError
+        raise ::Silicium::IntegralDoesntExistError, 'Domain error in math function'
+      rescue ZeroDivisionError
+        raise ::Silicium::IntegralDoesntExistError, 'Divide by zero'
       end
       res2
     end
@@ -91,30 +109,29 @@ module Silicium
       result * dx
     end
 
-	
 
-		# Method Middle Rectangles with a segment
-		def	self.middle_rectangles_with_a_segment(a, b, n = 10_000, &block)
-			dx = (b - a) / n.to_f
-			result = 0
-			i = 0
-			n.times do
-				result += block.call(a + dx * (i + 1 / 2)) * dx
-				i += 1
-			end
-			result
-		end
+    # Method Middle Rectangles with a segment
+    def self.middle_rectangles_with_a_segment(a, b, n = 10_000, &block)
+      dx = (b - a) / n.to_f
+      result = 0
+      i = 0
+      n.times do
+        result += block.call(a + dx * (i + 1 / 2)) * dx
+        i += 1
+      end
+      result
+    end
 
-		# Method Middle Rectangles with specified accuracy
-		def	self.middle_rectangles(a, b, eps = 0.0001, &block)
-			n = 1
-			begin
-				result = middle_rectangles_with_a_segment(a, b, n, &block)
-				n *= 5
-				result1 = middle_rectangles_with_a_segment(a, b, n, &block)
-			end	until (result - result1).abs < eps
-			(result + result1) / 2.0
-		end
+    # Method Middle Rectangles with specified accuracy
+    def self.middle_rectangles(a, b, eps = 0.0001, &block)
+      n = 1
+      begin
+        result = middle_rectangles_with_a_segment(a, b, n, &block)
+        n *= 5
+        result1 = middle_rectangles_with_a_segment(a, b, n, &block)
+      end until (result - result1).abs < eps
+      (result + result1) / 2.0
+    end
   end
 end
 
