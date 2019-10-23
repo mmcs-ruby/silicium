@@ -91,6 +91,26 @@ module Silicium
       def has_edge?(from, to)
         @vertices.has_key?(from) && @vertices[from].include?(to)
       end
+
+      def delete_vertex!(vertex)
+        if has_vertex?(vertex)
+          @vertices.each do |v|
+            if v.include?(vertex)
+              v.delete(vertex)
+            end
+          @vertices.delete(vertex)
+          end
+        end
+        return
+      end
+
+      def delete_edge!(from, to)
+        if has_edge?(from, to)
+          @vertices[from].delete(to)
+        end
+        return
+      end
+
     end
 
     class UnorientedGraph < OrientedGraph
@@ -109,4 +129,13 @@ module Silicium
       #
     end
   end
+
+  def delete_edge!(from, to)
+    if has_edge?(from, to)
+      @vertices[from].delete(to)
+      @vertices[to].delete(from)
+    end
+    return
+  end
+
 end
