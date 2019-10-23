@@ -71,7 +71,6 @@ module Silicium
         hull.push(up[j])
       end
       (1..(down.size - 2)).reverse_each do |j|
-        puts j
         hull.push(down[j])
       end
       hull
