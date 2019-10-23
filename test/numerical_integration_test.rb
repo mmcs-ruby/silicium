@@ -118,7 +118,7 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_reverse_simpson_integration
-    assert_in_delta -(Math.sin(3) + Math.sin(4)),
+    assert_in_delta (-(Math.sin(3) + Math.sin(4))),
                     ::Silicium::NumericalIntegration.simpson_integration(4, -3) { |x| Math.cos(x) }, @@delta
   end
 
@@ -159,7 +159,7 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_reverse_left_rect_integration
-    assert_in_delta -(Math.sin(3) + Math.sin(4)),
+    assert_in_delta (-(Math.sin(3) + Math.sin(4))),
                     ::Silicium::NumericalIntegration.left_rect_integration(4, -3) { |x| Math.cos(x) }, @@delta
   end
 
@@ -169,13 +169,13 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_polynom_left_rect_integration
-    assert_in_delta -159.75,
+    assert_in_delta (-159.75),
                     ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
   end
 
 
   def test_polynom_accuracy_left_rect_integration
-    assert_in_delta -159.75,
+    assert_in_delta (-159.75),
                     ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 
