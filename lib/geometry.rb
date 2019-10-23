@@ -8,12 +8,20 @@ module Silicium
     # Represents a point as two coordinates
     # in two-dimensional space
     Point = Struct.new(:x, :y)
+
+    ##
+    # Represents a point as three coordinates
+    # in three-dimensional space
     Point3d = Struct.new(:x,:y,:z)
 
+    ##
+    #Calculates the distance from given points in two-dimensional space
     def distance_point_to_point2d(a,b)
       Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2)
     end
 
+    ##
+    # Calculates the distance from given points in three-dimensional space
     def distance_point_to_point3d(a,b)
       Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2+(b.z-a.z)**2)
     end
@@ -71,9 +79,39 @@ module Silicium
         hull.push(up[j])
       end
       (1..(down.size - 2)).reverse_each do |j|
+        puts j
         hull.push(down[j])
       end
       hull
+    end
+
+    ##
+    # Creates an array- directing vector in three-dimensional space .
+    # The equation is specified in the canonical form.
+    # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
+    def directing_vector3d(c)
+      c=c.gsub(' ','')
+      c1=c.insert(c.length,'=')
+      res=Array.new()
+      if c1.include?('x')
+        before=c1.index('/')+1
+        after=c1.index('=')
+        res[0]=c1.slice(before..after).gsub('=','').sub('*','').gsub('(','').gsub(')','').to_f
+        c1=c1.slice(after,c1.length).sub('=','')
+      else res[0]=0.0 end
+      if c1.include?('y')
+        before=c1.index('/')+1
+        after=c1.index('=')
+        res[1]=c1.slice(before..after).gsub('=','').sub('*','').gsub('(','').gsub(')','').to_f
+        c1=c1.slice(after,c1.length).sub('=','')
+      else res[1]=0.0 end
+      if c1.include?('z')
+        before=c1.index('/')+1
+        after=c1.index('=')
+        res[2]=c1.slice(before..after).gsub('=','').sub('*','').gsub('(','').gsub(')','').to_f
+        c1=c1.slice(after,c1.length).sub('=','')
+      else res[1]=0.0 end
+      return res
     end
 
 
