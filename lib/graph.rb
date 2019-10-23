@@ -84,6 +84,14 @@ module Silicium
         @vertices.count
       end
 
+      def edge_number
+        res = 0
+        @vertices.values.each do |item|
+          res += item.count
+        end
+        res
+      end
+
       def has_vertex?(vertex)
         @vertices.has_key?(vertex)
       end
@@ -94,21 +102,19 @@ module Silicium
 
       def delete_vertex!(vertex)
         if has_vertex?(vertex)
-          @vertices.each do |v|
-            if v.include?(vertex)
-              v.delete(vertex)
+          @vertices.keys.each do |key|
+            if has_edge?(key, vertex)
+              @vertices[key].delete(vertex)
             end
           @vertices.delete(vertex)
           end
         end
-        return
       end
 
       def delete_edge!(from, to)
         if has_edge?(from, to)
           @vertices[from].delete(to)
         end
-        return
       end
 
     end
@@ -135,7 +141,6 @@ module Silicium
       @vertices[from].delete(to)
       @vertices[to].delete(from)
     end
-    return
   end
 
 end
