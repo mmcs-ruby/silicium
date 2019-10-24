@@ -132,6 +132,36 @@ class NumericalIntegrationTest < Minitest::Test
                     ::Silicium::NumericalIntegration.simpson_integration(-10, 18) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
   end
 
+  def test_error_simpson_integration
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.simpson_integration(0, 7) { |x| 1 / x }
+    end
+  end
+
+  def test_nan_error_simpson_integration
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.simpson_integration(0, 1) { |x| 1 / Math::log(x) }
+    end
+  end
+
+  def test_domain_error_simpson_integration
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.simpson_integration(-8, 7) { |x| Math::sqrt(x) }
+    end
+
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.simpson_integration(-8, 7) { |x| Math::log(x) }
+    end
+
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.simpson_integration(-6, 16) { |x| Math::asin(x + 6) }
+    end
+
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.simpson_integration(-1, 7) { |x| 1 / Math::sqrt(x) + 23 }
+    end
+  end
+
 #
   def test_log_left_rect_integration
     assert_in_delta Math.log(3.5),
