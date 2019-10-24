@@ -10,3 +10,4 @@
 *.gem
 Gemfile.lock
 .rakeTasks
+/coverage/
