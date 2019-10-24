@@ -17,32 +17,32 @@ class NumericalIntegrationTest < Minitest::Test
 
   def test_nan_error_three_eights_integration
     assert_raises ::Silicium::IntegralDoesntExistError do
-      ::Silicium::NumericalIntegration.three_eights_integration(0, 1) { |x| 1 / Math::log(x) }
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 1) { |x| 1 / Math.log(x) }
     end
   end
 
   def test_domain_error_three_eights_integration
     assert_raises ::Silicium::IntegralDoesntExistError do
-      ::Silicium::NumericalIntegration.three_eights_integration(-8, 7) { |x| Math::sqrt(x) }
+      ::Silicium::NumericalIntegration.three_eights_integration(-8, 7) { |x| Math.sqrt(x) }
     end
 
     assert_raises ::Silicium::IntegralDoesntExistError do
-      ::Silicium::NumericalIntegration.three_eights_integration(-8, 7) { |x| Math::log(x) }
+      ::Silicium::NumericalIntegration.three_eights_integration(-8, 7) { |x| Math.log(x) }
     end
 
     assert_raises ::Silicium::IntegralDoesntExistError do
-      ::Silicium::NumericalIntegration.three_eights_integration(-6, 16) { |x| Math::asin(x + 6) }
+      ::Silicium::NumericalIntegration.three_eights_integration(-6, 16) { |x| Math.asin(x + 6) }
     end
 
     assert_raises ::Silicium::IntegralDoesntExistError do
-      ::Silicium::NumericalIntegration.three_eights_integration(-1, 7) { |x| 1 / Math::sqrt(x) + 23 }
+      ::Silicium::NumericalIntegration.three_eights_integration(-1, 7) { |x| 1 / Math.sqrt(x) + 23 }
     end
     assert_raises ::Silicium::IntegralDoesntExistError do
-      ::Silicium::NumericalIntegration.three_eights_integration(0, 2) { |x| Math::log(x) - Math::log(x) }
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 2) { |x| Math.log(x) - Math.log(x) }
     end
 
     assert_raises ::Silicium::IntegralDoesntExistError do
-      ::Silicium::NumericalIntegration.three_eights_integration(0, 3) { |x| Math::log(x) / Math::log(x) }
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 3) { |x| Math.log(x) / Math.log(x) }
     end
   end
 
