@@ -79,7 +79,6 @@ module Silicium
         hull.push(up[j])
       end
       (1..(down.size - 2)).reverse_each do |j|
-        puts j
         hull.push(down[j])
       end
       hull
@@ -131,19 +130,22 @@ module Silicium
         after=c2.index('/')
         m[0]=c2.slice(before..after).gsub('/','').to_f*(-1)
         c2=c2.slice(c2.index('='),c2.length).sub('=','')
-      else m[0]=0.0 end
+      else m[0]=0.0
+      end
       if c2.include?('y')
         before=c2.index('y')+1
         after=c2.index('/')
         m[1]=c2.slice(before..after).gsub('/','').to_f*(-1)
         c2=c2.slice(c2.index('='),c2.length).sub('=','')
-      else m[1]=0.0 end
+      else m[1]=0.0
+      end
       if c2.include?('z')
         before=c2.index('z')+1
         after=c2.index('/')
         m[2]=c2.slice(before..after).gsub('/','').to_f*(-1)
         c2=c2.slice(c2.index('='),c2.length).sub('=','')
-      else m[2]=0.0 end
+      else m[2]=0.0
+      end
       return m
     end
 

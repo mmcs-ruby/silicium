@@ -44,8 +44,11 @@ class GeometryTest < Minitest::Test
                     distance_point_to_point3d(Point3d.new(-222,-333,-444),Point3d.new(-2,-5,-6)),0.0001)
   end
 
-  def test_directing_vector3d
+  def test_directing_vector3d1
     assert_equal([2.0, 1.0, 2.0],directing_vector3d('(x-3)/2=(y-1)/1=(z+1)/2'))
+  end
+
+  def test_directing_vector3d
     assert_equal([5.0, 3.0, 2.0],directing_vector3d('(x-5)/5=(y+15)/3=(z-20)/2'))
     assert_equal( [26.0, -15.0, 51.0],directing_vector3d('(x-0)/26=(y+300)/*(-15)=(z-200)/51'))
     assert_equal([0.0, 0.0, 1.0],directing_vector3d('(x-0)/0=(y-0)/0=(z-20)/1'))
@@ -65,9 +68,9 @@ class GeometryTest < Minitest::Test
     assert_in_delta(5,distance_point_to_line3d(Point3d.new(0,2,3),'(x-3)/2=(y-1)/1=(z+1)/2'),0.00001)
     assert_in_delta(22.2036033,distance_point_to_line3d(Point3d.new(1,-17,-5),'(x-5)/5=(y+15)/3=(z-20)/2'),0.00001)
     assert_in_delta(256.782523588213,distance_point_to_line3d(Point3d.new(-50,20,-50),'(x-0)/26=(y+300)/*(-15)=(z-200)/51'),0.00001)
-    assert_in_delta(0,distance_point_to_line3d(Point3d.new(0,0,2),'(x-0)/0=(y-0)/0=(z-20)/1'))
-    assert_in_delta(0,distance_point_to_line3d(Point3d.new(0,0,2),'(z-20)/1'))
-    assert_in_delta(0,distance_point_to_line3d(Point3d.new(0,0,2),'y-/0=(z-20)/1'))
+    assert_in_delta(0,distance_point_to_line3d(Point3d.new(0,0,2),'(x-0)/0=(y-0)/0=(z-20)/1'),0.000001)
+    assert_in_delta(0,distance_point_to_line3d(Point3d.new(0,0,2),'(z-20)/1'),0.00001)
+    assert_in_delta(0,distance_point_to_line3d(Point3d.new(0,0,2),'y-/0=(z-20)/1'),0.0000001)
   end
 
 
