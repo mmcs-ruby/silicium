@@ -77,6 +77,8 @@ module Silicium
           raise GraphError.new("Graph does not contain vertex #vertex")
         end
 
+
+
         @vertex_labels[vertex]
       end
 
@@ -103,17 +105,17 @@ module Silicium
       def delete_vertex!(vertex)
         if has_vertex?(vertex)
           @vertices.keys.each do |key|
-            if has_edge?(key, vertex)
-              @vertices[key].delete(vertex)
-            end
-          @vertices.delete(vertex)
+            delete_edge!(key, vertex)
           end
+          @vertices.delete(vertex)
+          @vertex_labels.delete(vertex)
         end
       end
 
       def delete_edge!(from, to)
         if has_edge?(from, to)
           @vertices[from].delete(to)
+          @edge_labels.delete([Pair.new(from, to)])
         end
       end
 
@@ -139,7 +141,9 @@ module Silicium
   def delete_edge!(from, to)
     if has_edge?(from, to)
       @vertices[from].delete(to)
+      @edge_labels.delete([Pair.new(from, to)])
       @vertices[to].delete(from)
+      @edge_labels.delete([Pair.new(to, from)])
     end
   end
 
