@@ -37,6 +37,13 @@ class NumericalIntegrationTest < Minitest::Test
     assert_raises ::Silicium::IntegralDoesntExistError do
       ::Silicium::NumericalIntegration.three_eights_integration(-1, 7) { |x| 1 / Math::sqrt(x) + 23 }
     end
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 2) { |x| Math::log(x) - Math::log(x) }
+    end
+
+    assert_raises ::Silicium::IntegralDoesntExistError do
+      ::Silicium::NumericalIntegration.three_eights_integration(0, 3) { |x| Math::log(x) / Math::log(x) }
+    end
   end
 
   def test_sin_three_eights_integration
