@@ -57,29 +57,21 @@ module Silicium
     def self.simpson_integration(a, b, eps = 0.0001, &block)
       n = 1
       begin
-        res1 = simpson_integration_with_a_segment(a, b, 1, &block)
-        res2 = simpson_integration_with_a_segment(a, b, 2, &block)
-        if res1.nan? || res2.nan?
-          raise ::Silicium::IntegralDoesntExistError, 'We have not-a-number result :('
-        end
-        if res1 == Float::INFINITY || res2 == Float::INFINITY
-          raise ::Silicium::IntegralDoesntExistError, 'We have infinity :('
-        end
-        while (res1 - res2).abs > eps
+        begin
+          res1 = simpson_integration_with_a_segment(a, b, n, &block)
           n *= 5
-          res1 = res2
           res2 = simpson_integration_with_a_segment(a, b, n, &block)
           if res1.nan? || res2.nan?
-            raise ::Silicium::IntegralDoesntExistError, 'We have not-a-number result :('
+            raise IntegralDoesntExistError, 'We have not-a-number result :('
           end
           if res1 == Float::INFINITY || res2 == Float::INFINITY
-            raise ::Silicium::IntegralDoesntExistError, 'We have infinity :('
+            raise IntegralDoesntExistError, 'We have infinity :('
           end
-        end
+        end until (res1 - res2).abs < eps
       rescue Math::DomainError
-        raise ::Silicium::IntegralDoesntExistError, 'Domain error in math function'
+        raise IntegralDoesntExistError, 'Domain error in math function'
       rescue ZeroDivisionError
-        raise ::Silicium::IntegralDoesntExistError, 'Divide by zero'
+        raise IntegralDoesntExistError, 'Divide by zero'
       end
       res2
     end

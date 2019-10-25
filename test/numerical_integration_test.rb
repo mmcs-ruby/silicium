@@ -73,7 +73,6 @@ class NumericalIntegrationTest < Minitest::Test
                     NumericalIntegration.three_eights_integration(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
   end
 
-
   def test_something_scary_three_eights_integration
     assert_in_delta 442.818,
                     NumericalIntegration.three_eights_integration(2, 5, 0.001) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
@@ -167,25 +166,31 @@ class NumericalIntegrationTest < Minitest::Test
 
   def test_nan_error_simpson_integration
     assert_raises IntegralDoesntExistError do
-      NumericalIntegration.simpson_integration(0, 1) { |x| 1 / Math::log(x) }
+      NumericalIntegration.simpson_integration(0, 1) { |x| 1 / Math.log(x) }
+    end
+  end
+
+  def test_domain_error1_simpson_integration
+    assert_raises IntegralDoesntExistError do
+      NumericalIntegration.simpson_integration(-8, 7) { |x| Math.sqrt(x) }
+    end
+  end
+
+  def test_domain_error2_simpson_integration
+    assert_raises IntegralDoesntExistError do
+      NumericalIntegration.simpson_integration(-8, 7) { |x| Math.log(x) }
+    end
+  end
+
+  def test_domain_error3_simpson_integration
+    assert_raises IntegralDoesntExistError do
+      NumericalIntegration.simpson_integration(-6, 16) { |x| Math.asin(x + 6) }
     end
   end
 
   def test_domain_error_simpson_integration
     assert_raises IntegralDoesntExistError do
-      NumericalIntegration.simpson_integration(-8, 7) { |x| Math::sqrt(x) }
-    end
-
-    assert_raises IntegralDoesntExistError do
-      NumericalIntegration.simpson_integration(-8, 7) { |x| Math::log(x) }
-    end
-
-    assert_raises IntegralDoesntExistError do
-      NumericalIntegration.simpson_integration(-6, 16) { |x| Math::asin(x + 6) }
-    end
-
-    assert_raises IntegralDoesntExistError do
-      NumericalIntegration.simpson_integration(-1, 7) { |x| 1 / Math::sqrt(x) + 23 }
+      NumericalIntegration.simpson_integration(-1, 7) { |x| 1 / Math.sqrt(x) + 23 }
     end
   end
 
@@ -230,7 +235,6 @@ class NumericalIntegrationTest < Minitest::Test
                     ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
   end
 
-
   def test_polynom_accuracy_left_rect_integration
     assert_in_delta (-159.75),
                     ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
@@ -255,7 +259,6 @@ class NumericalIntegrationTest < Minitest::Test
     assert_in_delta Math::PI / 6,
                     ::Silicium::NumericalIntegration.middle_rectangles(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
   end
-
 
   def test_something_scary_middle_rectangles
     assert_in_delta 442.818,
