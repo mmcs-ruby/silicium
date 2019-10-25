@@ -214,16 +214,17 @@ class GraphTest < SiliciumTest
 
   end
 
+
+
   def test_delete_vertex_single_1
     g = OrientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
     g.delete_vertex!(0)
-    assert(!g.has_vertex?(0))
-    assert_equal(g.vertex_number, 2)
+
+    pred = !g.has_vertex?(0) and g.vertex_number == 2
+    assert(pred)
 
   end
 
@@ -232,11 +233,10 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(:one))
     g.delete_vertex!(:one)
-    assert(!g.has_vertex?(:one))
-    assert_equal(g.vertex_number, 2)
+
+    pred = !g.has_vertex?(:one) and g.vertex_number == 2
+    assert(pred)
 
   end
 
@@ -245,11 +245,10 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?('two'))
     g.delete_vertex!('two')
-    assert(!g.has_vertex?('two'))
-    assert_equal(g.vertex_number, 2)
+
+    pred = !g.has_vertex?('two') and g.vertex_number == 2
+    assert(pred)
 
   end
 
@@ -258,17 +257,11 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
     g.delete_vertex!(0)
-    assert(!g.has_vertex?(0))
-
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?(:one))
     g.delete_vertex!(:one)
-    assert(!g.has_vertex?(:one))
-    assert_equal(g.vertex_number, 1)
+
+    pred = !g.has_vertex?(0) and !g.has_vertex?(:one) and g.vertex_number == 1
+    assert(pred)
 
   end
 
@@ -277,17 +270,11 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(:one))
     g.delete_vertex!(:one)
-    assert(!g.has_vertex?(:one))
-
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?('two'))
     g.delete_vertex!('two')
-    assert(!g.has_vertex?('two'))
-    assert_equal(g.vertex_number, 1)
+
+    pred = !g.has_vertex?(:one) and !g.has_vertex?('two') and g.vertex_number == 1
+    assert(pred)
 
   end
 
@@ -296,18 +283,11 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
     g.delete_vertex!(0)
-    assert(!g.has_vertex?(0))
-
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?('two'))
     g.delete_vertex!('two')
-    assert(!g.has_vertex?('two'))
 
-    assert_equal(g.vertex_number, 1)
+    pred = !g.has_vertex?(0) and !g.has_vertex?('two') and g.vertex_number == 1
+    assert(pred)
 
   end
 
@@ -316,23 +296,12 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
     g.delete_vertex!(0)
-    assert(!g.has_vertex?(0))
-
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?(:one))
     g.delete_vertex!(:one)
-    assert(!g.has_vertex?(:one))
-
-    assert_equal(g.vertex_number, 1)
-
-    assert(g.has_vertex?('two'))
     g.delete_vertex!('two')
-    assert(!g.has_vertex?('two'))
-    assert_equal(g.vertex_number, 0)
+
+    pred = !g.has_vertex?(0) and !g.has_vertex?(:one) and !g.has_vertex?('two') and g.vertex_number == 0
+    assert(pred)
   end
 
 
@@ -346,17 +315,10 @@ class GraphTest < SiliciumTest
     g = OrientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?('two', 0))
     g.delete_vertex!(0)
-    assert(!g.has_vertex?(0))
-    assert(!g.has_edge?(0, :one))
-    assert(!g.has_edge?(:one, 0))
-    assert(!g.has_edge?('two', 0))
-    assert_equal(g.vertex_number, 2)
+
+    pred = !g.has_edge?(0, :one) and !g.has_edge?(:one, 0) and !g.has_edge?('two', 0) and g.vertex_number == 2
+    assert(pred)
 
   end
 
@@ -365,17 +327,10 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(:one))
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?(:one, 'two'))
     g.delete_vertex!(:one)
-    assert(!g.has_vertex?(:one))
-    assert(!g.has_edge?(0, :one))
-    assert(!g.has_edge?(:one, 0))
-    assert(!g.has_edge?(:one, 'two'))
-    assert_equal(g.vertex_number, 2)
+
+    pred = !g.has_edge?(0, :one) and !g.has_edge?(:one, 0) and !g.has_edge?(:one, 'two') and g.vertex_number == 2
+    assert(pred)
 
   end
 
@@ -384,17 +339,10 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?('two'))
-    assert(g.has_edge?(:one, 'two'))
-    assert(g.has_edge?('two', 0))
-    assert(g.has_edge?('two', 'two'))
     g.delete_vertex!('two')
-    assert(!g.has_vertex?('two'))
-    assert(!g.has_edge?(:one, 'two'))
-    assert(!g.has_edge?('two', 0))
-    assert(!g.has_edge?('two', 'two'))
-    assert_equal(g.vertex_number, 2)
+
+    pred = !g.has_edge?(:one, 'two') and !g.has_edge?('two', 0) and !g.has_edge?('two', 'two') and g.vertex_number == 2
+    assert(pred)
 
   end
 
@@ -403,25 +351,11 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?('two', 0))
     g.delete_vertex!(0)
-    assert(!g.has_vertex?(0))
-    assert(!g.has_edge?(0, :one))
-    assert(!g.has_edge?(:one, 0))
-    assert(!g.has_edge?('two', 0))
-
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?(:one))
-    assert(g.has_edge?(:one, 'two'))
     g.delete_vertex!(:one)
-    assert(!g.has_vertex?(:one))
-    assert(!g.has_edge?(:one, 'two'))
-    assert_equal(g.vertex_number, 1)
+
+    pred = !g.has_edge?(0, :one) and !g.has_edge?(:one, 0) and !g.has_edge?('two', 0) and !g.has_edge?(:one, 'two') and g.vertex_number == 1
+    assert(pred)
 
   end
 
@@ -430,25 +364,11 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(:one))
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?(:one, 'two'))
     g.delete_vertex!(:one)
-    assert(!g.has_vertex?(:one))
-    assert(!g.has_edge?(0, :one))
-    assert(!g.has_edge?(:one, 0))
-    assert(!g.has_edge?(:one, 'two'))
-
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?('two'))
-    assert(g.has_edge?('two', 'two'))
     g.delete_vertex!('two')
-    assert(!g.has_vertex?('two'))
-    assert(!g.has_edge?('two', 'two'))
-    assert_equal(g.vertex_number, 1)
+
+    pred = !g.has_edge?(0, :one) and !g.has_edge?(:one, 0) and !g.has_edge?(:one, 'two') and !g.has_edge?('two', 'two') and g.vertex_number == 1
+    assert(pred)
 
   end
 
@@ -457,27 +377,12 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?('two', 0))
+
     g.delete_vertex!(0)
-    assert(!g.has_vertex?(0))
-    assert(!g.has_edge?(0, :one))
-    assert(!g.has_edge?(:one, 0))
-    assert(!g.has_edge?('two', 0))
-
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?('two'))
-    assert(g.has_edge?(:one, 'two'))
-    assert(g.has_edge?('two', 'two'))
     g.delete_vertex!('two')
-    assert(!g.has_vertex?('two'))
-    assert(!g.has_edge?(:one, 'two'))
-    assert(!g.has_edge?('two', 'two'))
-    assert_equal(g.vertex_number, 1)
+
+    pred = !g.has_edge?(0, :one) and !g.has_edge?(:one, 0) and !g.has_edge?('two', 0) and !g.has_edge?(:one, 'two') and !g.has_edge?('two', 'two') and g.vertex_number == 1
+    assert(pred)
 
   end
 
@@ -486,29 +391,16 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.vertex_number, 3)
-    assert(g.has_vertex?(0))
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?('two', 0))
     g.delete_vertex!(0)
     assert(!g.has_vertex?(0))
     assert(!g.has_edge?(0, :one))
     assert(!g.has_edge?(:one, 0))
     assert(!g.has_edge?('two', 0))
 
-    assert_equal(g.vertex_number, 2)
-
-    assert(g.has_vertex?(:one))
-    assert(g.has_edge?(:one, 'two'))
     g.delete_vertex!(:one)
     assert(!g.has_vertex?(:one))
     assert(!g.has_edge?(:one, 'two'))
 
-    assert_equal(g.vertex_number, 1)
-
-    assert(g.has_vertex?('two'))
-    assert(g.has_edge?('two', 'two'))
     g.delete_vertex!('two')
     assert(!g.has_vertex?('two'))
     assert(!g.has_edge?('two', 'two'))
@@ -526,8 +418,6 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(0, :one))
     g.delete_edge!(0, :one)
     assert(!g.has_edge?(0, :one))
     assert_equal(g.edge_number, 4)
@@ -539,8 +429,6 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(:one, 0))
     g.delete_edge!(:one, 0)
     assert(!g.has_edge?(:one, 0))
     assert_equal(g.edge_number, 4)
@@ -552,8 +440,6 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(:one, 'two'))
     g.delete_edge!(:one, 'two')
     assert(!g.has_edge?(:one, 'two'))
     assert_equal(g.edge_number, 4)
@@ -565,8 +451,6 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?('two', 0))
     g.delete_edge!('two', 0)
     assert(!g.has_edge?('two', 0))
     assert_equal(g.edge_number, 4)
@@ -578,8 +462,6 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?('two', 'two'))
     g.delete_edge!('two', 'two')
     assert(!g.has_edge?('two', 'two'))
     assert_equal(g.edge_number, 4)
@@ -590,12 +472,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(0, :one))
     g.delete_edge!(0, :one)
     assert(!g.has_edge?(0, :one))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?(:one, 0))
+
     g.delete_edge!(:one, 0)
     assert(!g.has_edge?(:one, 0))
     assert_equal(g.edge_number, 3)
@@ -606,12 +485,10 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(0, :one))
+
     g.delete_edge!(0, :one)
     assert(!g.has_edge?(0, :one))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?(:one, 'two'))
+
     g.delete_edge!(:one, 'two')
     assert(!g.has_edge?(:one, 'two'))
     assert_equal(g.edge_number, 3)
@@ -622,12 +499,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(0, :one))
     g.delete_edge!(0, :one)
     assert(!g.has_edge?(0, :one))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?('two', 0))
+
     g.delete_edge!('two', 0)
     assert(!g.has_edge?('two', 0))
     assert_equal(g.edge_number, 3)
@@ -639,12 +513,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(0, :one))
     g.delete_edge!(0, :one)
     assert(!g.has_edge?(0, :one))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?('two', 'two'))
+
     g.delete_edge!('two', 'two')
     assert(!g.has_edge?('two', 'two'))
     assert_equal(g.edge_number, 3)
@@ -656,12 +527,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(:one, 0))
     g.delete_edge!(:one, 0)
     assert(!g.has_edge?(:one, 0))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?(:one, 'two'))
+
     g.delete_edge!(:one, 'two')
     assert(!g.has_edge?(:one, 'two'))
     assert_equal(g.edge_number, 3)
@@ -673,12 +541,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(:one, 0))
     g.delete_edge!(:one, 0)
     assert(!g.has_edge?(:one, 0))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?('two', 0))
+
     g.delete_edge!('two', 0)
     assert(!g.has_edge?('two', 0))
     assert_equal(g.edge_number, 3)
@@ -689,12 +554,10 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(:one, 0))
+
     g.delete_edge!(:one, 0)
     assert(!g.has_edge?(:one, 0))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?('two', 'two'))
+
     g.delete_edge!('two', 'two')
     assert(!g.has_edge?('two', 'two'))
     assert_equal(g.edge_number, 3)
@@ -705,12 +568,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(:one, 'two'))
     g.delete_edge!(:one, 'two')
     assert(!g.has_edge?(:one, 'two'))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?('two', 0))
+
     g.delete_edge!('two', 0)
     assert(!g.has_edge?('two', 0))
     assert_equal(g.edge_number, 3)
@@ -721,12 +581,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(:one, 'two'))
     g.delete_edge!(:one, 'two')
     assert(!g.has_edge?(:one, 'two'))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?('two', 'two'))
+
     g.delete_edge!('two', 'two')
     assert(!g.has_edge?('two', 'two'))
     assert_equal(g.edge_number, 3)
@@ -737,12 +594,9 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?('two', 0))
     g.delete_edge!('two', 0)
     assert(!g.has_edge?('two', 0))
-    assert_equal(g.edge_number, 4)
-    assert(g.has_edge?('two', 'two'))
+
     g.delete_edge!('two', 'two')
     assert(!g.has_edge?('two', 'two'))
     assert_equal(g.edge_number, 3)
@@ -753,28 +607,18 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    assert_equal(g.edge_number, 5)
-    assert(g.has_edge?(0, :one))
     g.delete_edge!(0, :one)
     assert(!g.has_edge?(0, :one))
-    assert_equal(g.edge_number, 4)
 
-    assert(g.has_edge?(:one, 0))
     g.delete_edge!(:one, 0)
     assert(!g.has_edge?(:one, 0))
-    assert_equal(g.edge_number, 3)
 
-    assert(g.has_edge?(:one, 'two'))
     g.delete_edge!(:one, 'two')
     assert(!g.has_edge?(:one, 'two'))
-    assert_equal(g.edge_number, 2)
 
-    assert(g.has_edge?('two', 0))
     g.delete_edge!('two', 0)
     assert(!g.has_edge?('two', 0))
-    assert_equal(g.edge_number, 1)
 
-    assert(g.has_edge?('two', 'two'))
     g.delete_edge!('two', 'two')
     assert(!g.has_edge?('two', 'two'))
     assert_equal(g.edge_number, 0)
@@ -804,4 +648,101 @@ class GraphTest < SiliciumTest
     assert_equal(g.get_edge_label(0, :one), :some_label)
     assert_equal(g.get_edge_label(:one, 0), :some_label)
   end
+end
+
+def test_delete_unoriented_vertex_single_1
+  g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                         {v: :one,  i: [0,'two']},
+                         {v: 'two', i: [0, 'two']}])
+
+  g.delete_vertex!(0)
+  assert(!g.has_vertex?(0))
+  assert_equal(g.vertex_number, 2)
+
+end
+
+def test_delete_unoriented_vertex_single_2
+  g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                         {v: :one,  i: [0,'two']},
+                         {v: 'two', i: [0, 'two']}])
+
+  g.delete_vertex!(:one)
+  assert(!g.has_vertex?(:one))
+  assert_equal(g.vertex_number, 2)
+
+end
+
+def test_delete_unoriented_vertex_single_3
+  g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                         {v: :one,  i: [0,'two']},
+                         {v: 'two', i: [0, 'two']}])
+
+  g.delete_vertex!('two')
+  assert(!g.has_vertex?('two'))
+  assert_equal(g.vertex_number, 2)
+
+end
+
+def test_delete_unoriented_vertex_single_4
+  g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                         {v: :one,  i: [0,'two']},
+                         {v: 'two', i: [0, 'two']}])
+
+  g.delete_vertex!(0)
+  assert(!g.has_vertex?(0))
+
+  g.delete_vertex!(:one)
+  assert(!g.has_vertex?(:one))
+  assert_equal(g.vertex_number, 1)
+
+end
+
+def test_delete_unoriented_vertex_single_5
+  g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                         {v: :one,  i: [0,'two']},
+                         {v: 'two', i: [0, 'two']}])
+
+  g.delete_vertex!(:one)
+  assert(!g.has_vertex?(:one))
+
+  assert_equal(g.vertex_number, 2)
+
+  g.delete_vertex!('two')
+  assert(!g.has_vertex?('two'))
+  assert_equal(g.vertex_number, 1)
+
+end
+
+def test_delete_unoriented_vertex_single_6
+  g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                         {v: :one,  i: [0,'two']},
+                         {v: 'two', i: [0, 'two']}])
+
+  g.delete_vertex!(0)
+  assert(!g.has_vertex?(0))
+
+  assert_equal(g.vertex_number, 2)
+
+  assert(g.has_vertex?('two'))
+  g.delete_vertex!('two')
+  assert(!g.has_vertex?('two'))
+
+  assert_equal(g.vertex_number, 1)
+
+end
+
+def test_delete_unoriented_vertex_single_7
+  g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                         {v: :one,  i: [0,'two']},
+                         {v: 'two', i: [0, 'two']}])
+
+  g.delete_vertex!(0)
+  assert(!g.has_vertex?(0))
+
+  g.delete_vertex!(:one)
+  assert(!g.has_vertex?(:one))
+
+  g.delete_vertex!('two')
+  assert(!g.has_vertex?('two'))
+  assert_equal(g.vertex_number, 0)
 end
