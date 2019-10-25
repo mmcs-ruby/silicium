@@ -86,10 +86,133 @@ class GraphTest < SiliciumTest
     assert_equal(g.get_vertex_label(:one), :some_label)
   end
 
+  def test_delete_vertex_with_label
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
 
+    assert_equal(g.vertex_label_number,0)
+    g.label_vertex!(0, :some_label)
+    assert_equal(g.get_vertex_label(0), :some_label)
+    assert_equal(g.vertex_label_number,1)
 
+    assert_equal(g.vertex_number, 3)
+    assert(g.has_vertex?(0))
+    g.delete_vertex!(0)
+    assert(!g.has_vertex?(0))
+    assert_equal(g.vertex_number, 2)
 
+    assert_equal(g.vertex_label_number,0)
+    exception = assert_raises(GraphError) do
+      g.get_vertex_label(0)
+    end
+    assert_match(/Graph does not contain vertex/, exception.message)
 
+  end
+
+  def test_delete_vertex_with_label_and_edge_label_1
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    g.label_edge!(:one, 'two', 'label')
+    assert_equal(g.get_edge_label(:one, 'two'), 'label')
+
+    g.label_edge!('two', 0, 1)
+    assert_equal(g.get_edge_label('two', 0), 1)
+
+    g.label_edge!('two', 'two', [666,666,666])
+    assert_equal(g.get_edge_label('two', 'two'), [666,666,666])
+
+    assert_equal(g.edge_label_number,3)
+
+    assert_equal(g.vertex_label_number,0)
+    g.label_vertex!('two', :label)
+    assert_equal(g.get_vertex_label('two'), :label)
+    assert_equal(g.vertex_label_number,1)
+
+    assert_equal(g.vertex_number, 3)
+    assert(g.has_vertex?('two'))
+    g.delete_vertex!('two')
+    assert(!g.has_vertex?('two'))
+    assert_equal(g.vertex_number, 2)
+
+    assert_equal(g.vertex_label_number,0)
+    exception = assert_raises(GraphError) do
+      g.get_vertex_label('two')
+    end
+    assert_match(/Graph does not contain vertex/, exception.message)
+
+    assert_equal(g.edge_label_number,0)
+
+    exception = assert_raises(GraphError) do
+      g.get_edge_label(:one, 'two')
+    end
+    assert_match(/Graph does not contain edge/, exception.message)
+
+    exception = assert_raises(GraphError) do
+      g.get_edge_label('two', 0)
+    end
+    assert_match(/Graph does not contain edge/, exception.message)
+
+    exception = assert_raises(GraphError) do
+      g.get_edge_label('two', 'two')
+    end
+    assert_match(/Graph does not contain edge/, exception.message)
+
+  end
+
+  def test_delete_vertex_with_label_and_edge_label_2
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    g.label_edge!(0, :one, {'Flex' => :Ricardo_Milos})
+    assert_equal(g.get_edge_label(0, :one), {'Flex' => :Ricardo_Milos})
+
+    g.label_edge!(:one, 0, 2.82)
+    assert_equal(g.get_edge_label(:one, 0), 2.82)
+
+    g.label_edge!(:one, 'two', :ьыь)
+    assert_equal(g.get_edge_label(:one, 'two'), :ьыь)
+
+    assert_equal(g.edge_label_number,3)
+
+    assert_equal(g.vertex_label_number,0)
+    g.label_vertex!(:one, 'Эчпочмак')
+    assert_equal(g.get_vertex_label(:one), 'Эчпочмак')
+    assert_equal(g.vertex_label_number,1)
+
+    assert_equal(g.vertex_number, 3)
+    assert(g.has_vertex?(:one))
+    g.delete_vertex!(:one)
+    assert(!g.has_vertex?(:one))
+    assert_equal(g.vertex_number, 2)
+
+    assert_equal(g.vertex_label_number,0)
+    exception = assert_raises(GraphError) do
+      g.get_vertex_label(:one)
+    end
+    assert_match(/Graph does not contain vertex/, exception.message)
+
+    assert_equal(g.edge_label_number,0)
+
+    exception = assert_raises(GraphError) do
+      g.get_edge_label(0, :one)
+    end
+    assert_match(/Graph does not contain edge/, exception.message)
+
+    exception = assert_raises(GraphError) do
+      g.get_edge_label(:one, 0)
+    end
+    assert_match(/Graph does not contain edge/, exception.message)
+
+    exception = assert_raises(GraphError) do
+      g.get_edge_label(:one, 'two')
+    end
+    assert_match(/Graph does not contain edge/, exception.message)
+
+  end
 
   def test_delete_vertex_single_1
     g = OrientedGraph.new([{v: 0,     i: [:one]},
@@ -210,8 +333,14 @@ class GraphTest < SiliciumTest
     g.delete_vertex!('two')
     assert(!g.has_vertex?('two'))
     assert_equal(g.vertex_number, 0)
-
   end
+
+
+
+
+
+
+
 
   def test_delete_vertex_and_check_edges_1
     g = OrientedGraph.new([{v: 0,     i: [:one]},
@@ -651,63 +780,6 @@ class GraphTest < SiliciumTest
     assert_equal(g.edge_number, 0)
 
   end
-
-  def test_delete_edge_17
-    g = OrientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: [0,'two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    assert_equal(g.edge_number, 5)
-
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?(:one, 'two'))
-    assert(g.has_edge?('two', 0))
-    assert(g.has_edge?('two', 'two'))
-  end
-
-  def test_delete_edge_18
-    g = OrientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: [0,'two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    assert_equal(g.edge_number, 5)
-
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?(:one, 'two'))
-    assert(g.has_edge?('two', 0))
-    assert(g.has_edge?('two', 'two'))
-  end
-
-  def test_delete_edge_19
-    g = OrientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: [0,'two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    assert_equal(g.edge_number, 5)
-
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?(:one, 'two'))
-    assert(g.has_edge?('two', 0))
-    assert(g.has_edge?('two', 'two'))
-  end
-
-  def test_delete_edge_20
-    g = OrientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: [0,'two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    assert_equal(g.edge_number, 5)
-
-    assert(g.has_edge?(0, :one))
-    assert(g.has_edge?(:one, 0))
-    assert(g.has_edge?(:one, 'two'))
-    assert(g.has_edge?('two', 0))
-    assert(g.has_edge?('two', 'two'))
-  end
-
 
 
 
