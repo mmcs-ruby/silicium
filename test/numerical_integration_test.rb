@@ -22,26 +22,37 @@ class NumericalIntegrationTest < Minitest::Test
     end
   end
 
-  def test_domain_error_three_eights_integration
+  def test_domain_sqrt_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-8, 7) { |x| Math.sqrt(x) }
     end
+  end
 
+  def test_domain_log_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-8, 7) { |x| Math.log(x) }
     end
+  end
 
+  def test_domain_asin_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-6, 16) { |x| Math.asin(x + 6) }
     end
+  end
 
+  def test_domain_sqrt2_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-1, 7) { |x| 1 / Math.sqrt(x) + 23 }
     end
+  end
+
+  def test_domain_log_difference_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(0, 2) { |x| Math.log(x) - Math.log(x) }
     end
+  end
 
+  def test_domain_log_quotient_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(0, 3) { |x| Math.log(x) / Math.log(x) }
     end
@@ -97,7 +108,15 @@ class NumericalIntegrationTest < Minitest::Test
                     NumericalIntegration.three_eights_integration(-10, 18, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 
-# TODO: Write tests with non-determined function (such as integral of 1/x from -1 to 1)
+  def test_polynom_accuracy_0_0001_three_eights_integration
+    assert_in_delta 16519216 / 3.0,
+                    NumericalIntegration.three_eights_integration(-10, 18, 0.0001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.0001
+  end
+
+  def test_polynom_accuracy_0_001_three_eights_integration
+    assert_in_delta 16519216 / 3.0,
+                    NumericalIntegration.three_eights_integration(-10, 18, 0.001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.001
+  end
 
   def test_log_simpson_integration
     assert_in_delta Math.log(3.5),
@@ -267,12 +286,69 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def test_polynom_middle_rectangles
-    assert_in_delta (-63.984),
-                    ::Silicium::NumericalIntegration.middle_rectangles(-0.2, 0.2) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.middle_rectangles(-0.001, 0.001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
   end
 
   def test_polynom_accuracy_middle_rectangles
-    assert_in_delta (-63.984),
-                    ::Silicium::NumericalIntegration.middle_rectangles(-0.2, 0.2, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.middle_rectangles(-0.001, 0.001, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
+
+  def test_log_trapezoid
+    assert_in_delta Math.log(3.5),
+                    ::Silicium::NumericalIntegration.trapezoid(2, 7) { |x| 1 / x }, @@delta
+  end
+
+  def test_sin_trapezoid
+    assert_in_delta Math.sin(8) + Math.sin(10),
+                    ::Silicium::NumericalIntegration.trapezoid(-10, 8) { |x| Math.cos(x) }, @@delta
+  end
+
+  def test_arctan_trapezoid
+    assert_in_delta Math.atan(Math::PI),
+                    ::Silicium::NumericalIntegration.trapezoid(0, Math::PI) { |x| 1 / (1 + x ** 2) }, @@delta
+  end
+
+  def test_arcsin_trapezoid
+    assert_in_delta Math::PI / 6,
+                    ::Silicium::NumericalIntegration.trapezoid(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
+  end
+
+
+  def test_something_scary_trapezoid
+    assert_in_delta 442.818,
+                    ::Silicium::NumericalIntegration.trapezoid(2, 5, 0.001) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
+  end
+
+  def test_something_scary_accuracy_001_trapezoid
+    assert_in_delta 442.82,
+                    ::Silicium::NumericalIntegration.trapezoid(2, 5, 0.01) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.01
+  end
+
+  def test_something_scary_accuracy_01_trapezoid
+    assert_in_delta 442.8,
+                    ::Silicium::NumericalIntegration.trapezoid(2, 5, 0.1) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.1
+  end
+
+  def test_reverse_trapezoid
+    assert_in_delta (-1 * (Math.sin(3) + Math.sin(4))),
+                    ::Silicium::NumericalIntegration.trapezoid(4, -3) { |x| Math.cos(x) }, @@delta
+  end
+
+  def test_one_point_trapezoid
+    assert_in_delta 0,
+                    ::Silicium::NumericalIntegration.trapezoid(42, 42) { |x| Math.sin(x) / x }, @@delta
+  end
+
+  def test_polynom_trapezoid
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.trapezoid(-0.001, 0.001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+  end
+
+  def test_polynom_accuracy_trapezoid
+    assert_in_delta (-0.32),
+                    ::Silicium::NumericalIntegration.trapezoid(-0.001, 0.001, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+  end
+
 end
