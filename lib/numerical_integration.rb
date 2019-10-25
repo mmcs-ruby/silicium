@@ -12,16 +12,16 @@ module Silicium
           n *= 5
           integral1 = three_eights_integration_n(a, b, n, &block)
           if integral0.nan? || integral1.nan?
-            raise ::Silicium::IntegralDoesntExistError, "We have not-a-number result :("
+            raise IntegralDoesntExistError, "We have not-a-number result :("
           end
           if integral0 == Float::INFINITY || integral1 == Float::INFINITY
-            raise ::Silicium::IntegralDoesntExistError, "We have infinity :("
+            raise IntegralDoesntExistError, "We have infinity :("
           end
         end until (integral0 - integral1).abs < eps
       rescue Math::DomainError
-        raise ::Silicium::IntegralDoesntExistError, "Domain error in math function"
+        raise IntegralDoesntExistError, "Domain error in math function"
       rescue ZeroDivisionError
-        raise ::Silicium::IntegralDoesntExistError, "Divide by zero"
+        raise IntegralDoesntExistError, "Divide by zero"
       end
       (integral0 + integral1) / 2.0
     end
