@@ -34,7 +34,7 @@ module Silicium
       end
       ##
       # Checks the point lies on the line or not
-      def self.point_is_on_line?(p1)
+      def point_is_on_line?(p1)
         p1.y==@slope*p1.x + @free_term
       end
     end
