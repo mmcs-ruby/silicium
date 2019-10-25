@@ -30,7 +30,7 @@ module Silicium
           raise ArgumentError, "The straight line equation cannot be written in canonical form"
         end
         @slope= (p2.y - p1.y)/(p2.x - p1.x).to_f
-        @free_term= (p2.x*p1.y - p2.y*p1.x)/(p2.x - p1.x)
+        @free_term= (p2.x*p1.y - p2.y*p1.x)/(p2.x - p1.x).to_f
       end
       ##
       # Checks the point lies on the line or not
@@ -39,7 +39,6 @@ module Silicium
       end
     end
 
-    #puts (Line2d.new(Point.new(1,0),Point.new(1,2)).slope)
 
     ##
     # Calculates the distance from given points in two-dimensional space
