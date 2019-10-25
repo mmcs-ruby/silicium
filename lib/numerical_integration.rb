@@ -5,7 +5,7 @@ module Silicium
   class NumericalIntegration
 
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
-      wrapper_method([a, b], eps, "three_eights_integration_n", &block)
+      wrapper_method([a, b], eps, 'three_eights_integration_n', &block)
     end
 
     def self.three_eights_integration_n(a, b, n, &block)
@@ -20,15 +20,15 @@ module Silicium
           x += dx
         end
       rescue Math::DomainError
-        raise IntegralDoesntExistError, "Domain error in math function"
+        raise IntegralDoesntExistError, 'Domain error in math function'
       rescue ZeroDivisionError
-        raise IntegralDoesntExistError, "Divide by zero"
+        raise IntegralDoesntExistError, 'Divide by zero'
       end
       if result.nan?
-        raise IntegralDoesntExistError, "We have not-a-number result :("
+        raise IntegralDoesntExistError, 'We have not-a-number result :('
       end
       if result == Float::INFINITY
-        raise IntegralDoesntExistError, "We have infinity :("
+        raise IntegralDoesntExistError, 'We have infinity :('
       end
       result
     end
@@ -49,25 +49,7 @@ module Silicium
 
     # Simpson integration with specified accuracy
     def self.simpson_integration(a, b, eps = 0.0001, &block)
-      n = 1
-      begin
-        begin
-          res1 = simpson_integration_with_a_segment(a, b, n, &block)
-          n *= 5
-          res2 = simpson_integration_with_a_segment(a, b, n, &block)
-          if res1.nan? || res2.nan?
-            raise IntegralDoesntExistError, 'We have not-a-number result :('
-          end
-          if res1 == Float::INFINITY || res2 == Float::INFINITY
-            raise IntegralDoesntExistError, 'We have infinity :('
-          end
-        end until (res1 - res2).abs < eps
-      rescue Math::DomainError
-        raise IntegralDoesntExistError, 'Domain error in math function'
-      rescue ZeroDivisionError
-        raise IntegralDoesntExistError, 'Divide by zero'
-      end
-      res2
+      wrapper_method([a, b], eps, 'simpson_integration_with_a_segment', &block)
     end
 
     # Left Rectangle Method and Right Rectangle Method
@@ -110,7 +92,7 @@ module Silicium
 
     # Middle Rectangles Method  with specified accuracy
     def self.middle_rectangles(a, b, eps = 0.0001, &block)
-      wrapper_method([a, b], eps, "middle_rectangles_with_a_segment", &block)
+      wrapper_method([a, b], eps, 'middle_rectangles_with_a_segment', &block)
     end
 
 
@@ -129,7 +111,7 @@ module Silicium
 
     # Trapezoid Method with specified accuracy
     def self.trapezoid(a, b, eps = 0.0001, &block)
-      wrapper_method([a, b], eps, "trapezoid_with_a_segment", &block)
+      wrapper_method([a, b], eps, 'trapezoid_with_a_segment', &block)
     end
 
     private
@@ -138,10 +120,22 @@ module Silicium
     def self.wrapper_method(a_b, eps, func, &block)
       n = 1
       begin
-        result = eval "#{func}(a_b[0], a_b[1], n, &block)"
-        n *= 5
-        result1 = eval "#{func}(a_b[0], a_b[1], n, &block)"
-      end until (result - result1).abs < eps
+        begin
+          result = eval "#{func}(a_b[0], a_b[1], n, &block)"
+          n *= 5
+          result1 = eval "#{func}(a_b[0], a_b[1], n, &block)"
+          if result.nan? || result1.nan?
+            raise IntegralDoesntExistError, 'We have not-a-number result :('
+          end
+          if result == Float::INFINITY || result1 == Float::INFINITY
+            raise IntegralDoesntExistError, 'We have infinity :('
+          end
+        end until (result - result1).abs < eps
+      rescue Math::DomainError
+        raise IntegralDoesntExistError, 'Domain error in math function'
+      rescue ZeroDivisionError
+        raise IntegralDoesntExistError, 'Divide by zero'
+      end
       (result + result1) / 2.0
     end
   end
