@@ -15,7 +15,30 @@ module Silicium
     Point3d = Struct.new(:x,:y,:z)
 
     ##
-    #Calculates the distance from given points in two-dimensional space
+    # Class represents a line as equation y = k*x +b
+    # k - slope
+    # b - free_term
+    # in two-dimensional space
+    class Line2d
+      attr_reader :slope
+      attr_reader :free_term
+      def initialize(p1, p2)
+        if (p1.x == p2.x) && (p1.y == p2.y)
+          raise ArgumentError, "You need 2 diffrent points"
+        end
+        @slope= (p2.y - p1.y)/(p2.x - p1.x)
+        @free_term= (p2.x*p1.y - p2.y*p1.x)/(p2.x - p1.x)
+      end
+      ##
+      # Checks the point lies on the line or not
+      def self.point_is_on_line?(p1)
+        p1.y==@slope*p1.x + @free_term
+      end
+    end
+
+
+    ##
+    # Calculates the distance from given points in two-dimensional space
     def distance_point_to_point2d(a,b)
       Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2)
     end

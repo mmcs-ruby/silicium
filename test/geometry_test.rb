@@ -87,6 +87,28 @@ class GeometryTest < Minitest::Test
     assert_in_delta(241.00095342953614, distance_line_to_point2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
   end
 
+  def test_init_line2d_with_same_points
+    assert_raises ArgumentError  do
+      Line2d.new(Point.new(0,0),Point.new(0,0))
+    end
+  end
+
+  def test_init_slope_line2d_with_points
+    assert_equal(0,Line2d.new(Point.new(0,0),Point.new(1,0)).slope)
+  end
+
+  def test_init_free_term_line2d_with_points
+    assert_equal(0,Line2d.new(Point.new(0,0),Point.new(1,0)).free_term)
+  end
+
+  def test_method_pointis_on_line_returns_true
+    assert_equal(true, Line2d.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(500,0)))
+  end
+
+  def test_method_pointis_on_line_returns_false
+    assert_equal(false, Line2d.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(1,1)))
+  end
+
 
 end
 
