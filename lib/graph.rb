@@ -141,19 +141,19 @@ module Silicium
         super(from, to, label)
         super(to, from, label)
       end
+
+      def delete_edge!(from, to)
+        if has_edge?(from, to)
+          @vertices[from].delete(to)
+          @edge_labels.delete([Pair.new(from, to)])
+          @vertices[to].delete(from)
+          @edge_labels.delete([Pair.new(to, from)])
+        end
+      end
     end
 
     def dijkstra_algorythm(graph, starting_vertex)
       #
-    end
-  end
-
-  def delete_edge!(from, to)
-    if has_edge?(from, to)
-      @vertices[from].delete(to)
-      @edge_labels.delete([Pair.new(from, to)])
-      @vertices[to].delete(from)
-      @edge_labels.delete([Pair.new(to, from)])
     end
   end
 
