@@ -12,18 +12,18 @@ module Silicium
     ##
     # Represents a point as three coordinates
     # in three-dimensional space
-    Point3d = Struct.new(:x,:y,:z)
+    Point3d = Struct.new(:x, :y, :z)
 
     ##
     #Calculates the distance from given points in two-dimensional space
-    def distance_point_to_point2d(a,b)
-      Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2)
+    def distance_point_to_point2d(a, b)
+      Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2)
     end
 
     ##
     # Calculates the distance from given points in three-dimensional space
-    def distance_point_to_point3d(a,b)
-      Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2+(b.z-a.z)**2)
+    def distance_point_to_point3d(a, b)
+      Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2 + (b.z - a.z) ** 2)
     end
 
 
@@ -84,35 +84,58 @@ module Silicium
       hull
     end
 
+    def process_cf(line_equation, variable)
+      if line_equation.include?(variable)
+        before = line_equation.index('/') + 1
+        after = line_equation.index('=')
+        line_equation.slice(before..after).gsub('=', '').sub('*', '').gsub('(', '').gsub(')', '').to_f
+      else
+        0.0
+      end
+    end
+
+
+    def cut_by_eq(line_equation)
+      line_equation.slice(line_equation.index('='), line_equation.length).sub('=', '')
+    end
+
     ##
     # Creates an array- directing vector in three-dimensional space .
     # The equation is specified in the canonical form.
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
     #
     #Important: mandatory order of variables: x, y, z
-    def directing_vector3d(c)
-      c=c.gsub(' ','')
-      c1=c.insert(c.length,'=')
-      res=Array.new()
-      if c1.include?('x')
-        before=c1.index('/')+1
-        after=c1.index('=')
-        res[0]=c1.slice(before..after).gsub('=','').sub('*','').gsub('(','').gsub(')','').to_f
-        c1=c1.slice(after,c1.length).sub('=','')
-      else res[0]=0.0 end
-      if c1.include?('y')
-        before=c1.index('/')+1
-        after=c1.index('=')
-        res[1]=c1.slice(before..after).gsub('=','').sub('*','').gsub('(','').gsub(')','').to_f
-        c1=c1.slice(after,c1.length).sub('=','')
-      else res[1]=0.0 end
-      if c1.include?('z')
-        before=c1.index('/')+1
-        after=c1.index('=')
-        res[2]=c1.slice(before..after).gsub('=','').sub('*','').gsub('(','').gsub(')','').to_f
-        c1=c1.slice(after,c1.length).sub('=','')
-      else res[1]=0.0 end
-      return res
+    def directing_vector3d(line_equation)
+      copy_line = line_equation.gsub(' ', '').insert(line_equation.length, '=')
+      res = Array.new
+      res[0] = process_cf(copy_line, 'x')
+      copy_line = cut_by_eq(copy_line)
+      res[1] = process_cf(copy_line, 'y')
+      copy_line = cut_by_eq(copy_line)
+      res[2] = process_cf(copy_line, 'z')
+      res
+    end
+
+    class VariablesOrderException < Exception
+    end
+
+    def has_needed_variables_order(before, after)
+      before < after
+    end
+
+    def process_free_member(line_equation, variable)
+      if line_equation.include?(variable)
+        before = line_equation.index(variable) + 1
+        after = line_equation.index('/')
+
+        unless has_needed_variables_order(before, after)
+          throw VariablesOrderException
+        end
+
+        line_equation.slice(before..after).gsub('/', '').to_f * (-1)
+      else
+        0.0
+      end
     end
 
     ##
@@ -121,32 +144,27 @@ module Silicium
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
     #
     #Important: mandatory order of variables: x, y, z
-    def point_on_the_line3d(c)
-      c2=c.gsub(' ','').insert(c.length,'=')
-      m=Array.new() #line has point
+    def height_point_3d(line_equation)
+      copy_line = line_equation.gsub(' ', '').insert(line_equation.length, '=')
+      res = Array.new
 
-      if c2.include?('x')
-        before=c2.index('x')+1
-        after=c2.index('/')
-        m[0]=c2.slice(before..after).gsub('/','').to_f*(-1)
-        c2=c2.slice(c2.index('='),c2.length).sub('=','')
-      else m[0]=0.0
+      res[0] = process_free_member(copy_line, 'x')
+      copy_line = cut_by_eq(copy_line)
+      res[1] = process_free_member(copy_line, 'y')
+      copy_line = cut_by_eq(copy_line)
+      res[2] = process_free_member(copy_line, 'z')
+      res
+    end
+
+    def vectors_product(v1, v2)
+      res = Array.new
+      for i in 0..2
+        res[i] = v1[(i + 1) % 3] * v2[(i + 2) % 3] - v1[(i + 2) % 3] * v2[(i + 1) % 3]
       end
-      if c2.include?('y')
-        before=c2.index('y')+1
-        after=c2.index('/')
-        m[1]=c2.slice(before..after).gsub('/','').to_f*(-1)
-        c2=c2.slice(c2.index('='),c2.length).sub('=','')
-      else m[1]=0.0
-      end
-      if c2.include?('z')
-        before=c2.index('z')+1
-        after=c2.index('/')
-        m[2]=c2.slice(before..after).gsub('/','').to_f*(-1)
-        c2=c2.slice(c2.index('='),c2.length).sub('=','')
-      else m[2]=0.0
-      end
-      return m
+    end
+
+    def vector_length(vector)
+      Math.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)
     end
 
     ##
@@ -155,19 +173,13 @@ module Silicium
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
     #
     #Important: mandatory order of variables: x, y, z
-    def distance_point_to_line3d(a,c)
-      s=directing_vector3d(c)
-      m=point_on_the_line3d(c)
-      ma=Point3d.new(m[0]-a.x,m[1]-a.y,m[2]-a.z)
+    def point_to_line_distance_3d(point, line_eq)
+      dir_vector = directing_vector3d(line_eq)
+      line_point = height_point_3d(line_eq)
+      height_vector = [line_point[0] - point.x, line_point[1] - point.y, line_point[2] - point.z]
 
-      #Vector product of vectors.
-      sm=Array.new()
-      for i in 0..2
-        sm[i]=ma[(i+1)%3]*s[(i+2)%3]-ma[(i+2)%3]*s[(i+1)%3]
-      end
-      return (Math.sqrt(sm[0]**2+sm[1]**2+sm[2]**2)/Math.sqrt(s[0]**2+s[1]**2+s[2]**2))
+      height_on_dir = vectors_product(height_vector, dir_vector)
+      vector_length(height_on_dir) / vector_length(dir_vector)
     end
-
-
   end
 end
