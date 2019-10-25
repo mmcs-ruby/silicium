@@ -26,6 +26,12 @@ module Silicium
       Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2 + (b.z - a.z) ** 2)
     end
 
+    def distance_line_to_point2d(p1, p2, a)
+
+      dis = distance_point_to_point2d(p1, p2)
+      ((p2.y - p1.y) * a.x - (p2.x - p1.x) * a.y + p2.x * p1.y - p2.y * p1.x).abs / (dis * 1.0)
+    end
+
 
     def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
