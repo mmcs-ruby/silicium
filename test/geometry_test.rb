@@ -89,24 +89,38 @@ class GeometryTest < Minitest::Test
 
   def test_init_line2d_with_same_points
     assert_raises ArgumentError  do
-      Line2d.new(Point.new(0,0),Point.new(0,0))
+      Line2dCanon.new(Point.new(0,0),Point.new(0,0))
     end
   end
 
-  def test_init_slope_line2d_with_points
-    assert_equal(0,Line2d.new(Point.new(0,0),Point.new(1,0)).slope)
+  def test_init_line2d_with_same_x_arguments
+    assert_raises ArgumentError  do
+      Line2dCanon.new(Point.new(0,5),Point.new(0,10))
+    end
   end
 
-  def test_init_free_term_line2d_with_points
-    assert_equal(0,Line2d.new(Point.new(0,0),Point.new(1,0)).free_term)
+  def test_init_slope_line2d_with_points_simple
+    assert_equal(0,Line2dCanon.new(Point.new(0,0),Point.new(1,0)).slope)
   end
 
-  def test_method_pointis_on_line_returns_true
-    assert_equal(true, Line2d.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(500,0)))
+  def test_init_free_term_line2d_with_points_simple
+    assert_equal(0,Line2dCanon.new(Point.new(0,0),Point.new(1,0)).free_term)
   end
 
-  def test_method_pointis_on_line_returns_false
-    assert_equal(false, Line2d.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(1,1)))
+  def test_init_slope_line2d_with_points_hard
+    assert_in_delta(0.333333333,Line2dCanon.new(Point.new(0,3),Point.new(3,4)).slope,0.0001)
+  end
+
+  def test_init_free_term_line2d_with_points_hard
+    assert_in_delta(1.333333333,Line2dCanon.new(Point.new(2,2),Point.new(5,3)).free_term,0.0001)
+  end
+
+  def test_method_pointis_on_line_returns_true_simple
+    assert_equal(true, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(500,0)))
+  end
+
+  def test_method_pointis_on_line_returns_false_simple
+    assert_equal(false, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(1,1)))
   end
 
 
