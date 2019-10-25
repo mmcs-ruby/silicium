@@ -7,22 +7,10 @@ module Silicium
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
       n = 1
       begin
-        begin
-          integral0 = three_eights_integration_n(a, b, n, &block)
-          n *= 5
-          integral1 = three_eights_integration_n(a, b, n, &block)
-          if integral0.nan? || integral1.nan?
-            raise IntegralDoesntExistError, "We have not-a-number result :("
-          end
-          if integral0 == Float::INFINITY || integral1 == Float::INFINITY
-            raise IntegralDoesntExistError, "We have infinity :("
-          end
-        end until (integral0 - integral1).abs < eps
-      rescue Math::DomainError
-        raise IntegralDoesntExistError, "Domain error in math function"
-      rescue ZeroDivisionError
-        raise IntegralDoesntExistError, "Divide by zero"
-      end
+        integral0 = three_eights_integration_n(a, b, n, &block)
+        n *= 5
+        integral1 = three_eights_integration_n(a, b, n, &block)
+      end until (integral0 - integral1).abs < eps
       (integral0 + integral1) / 2.0
     end
 
@@ -30,11 +18,23 @@ module Silicium
       dx = (b - a) / n.to_f
       result = 0
       x = a
-      n.times do
-        result +=
-            (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
-                3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
-        x += dx
+      begin
+        n.times do
+          result +=
+              (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
+                  3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
+          x += dx
+        end
+      rescue Math::DomainError
+        raise IntegralDoesntExistError, "Domain error in math function"
+      rescue ZeroDivisionError
+        raise IntegralDoesntExistError, "Divide by zero"
+      end
+      if result.nan?
+        raise IntegralDoesntExistError, "We have not-a-number result :("
+      end
+      if result == Float::INFINITY
+        raise IntegralDoesntExistError, "We have infinity :("
       end
       result
     end
@@ -110,9 +110,8 @@ module Silicium
     end
 
 
-
     # Middle Rectangles Method with a segment
-    def	self.middle_rectangles_with_a_segment(a, b, n, &block)
+    def self.middle_rectangles_with_a_segment(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
       i = 0
@@ -124,19 +123,19 @@ module Silicium
     end
 
     # Middle Rectangles Method  with specified accuracy
-    def	self.middle_rectangles(a, b, eps = 0.0001, &block)
+    def self.middle_rectangles(a, b, eps = 0.0001, &block)
       n = 1
       begin
         result = middle_rectangles_with_a_segment(a, b, n, &block)
         n *= 5
         result1 = middle_rectangles_with_a_segment(a, b, n, &block)
-      end	until (result - result1).abs < eps
+      end until (result - result1).abs < eps
       (result + result1) / 2.0
     end
 
 
     # Trapezoid Method with a segment
-    def	self.trapezoid_with_a_segment(a, b, n, &block)
+    def self.trapezoid_with_a_segment(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
       i = 1
@@ -149,13 +148,13 @@ module Silicium
     end
 
     # Trapezoid Method with specified accuracy
-    def	self.trapezoid(a, b, eps = 0.0001, &block)
+    def self.trapezoid(a, b, eps = 0.0001, &block)
       n = 1
       begin
         result = trapezoid_with_a_segment(a, b, n, &block)
         n *= 5
         result1 = trapezoid_with_a_segment(a, b, n, &block)
-      end	until (result - result1).abs < eps
+      end until (result - result1).abs < eps
       (result + result1) / 2.0
     end
   end

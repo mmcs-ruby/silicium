@@ -22,26 +22,37 @@ class NumericalIntegrationTest < Minitest::Test
     end
   end
 
-  def test_domain_error_three_eights_integration
+  def test_domain_sqrt_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-8, 7) { |x| Math.sqrt(x) }
     end
+  end
 
+  def test_domain_log_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-8, 7) { |x| Math.log(x) }
     end
+  end
 
+  def test_domain_asin_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-6, 16) { |x| Math.asin(x + 6) }
     end
+  end
 
+  def test_domain_sqrt2_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(-1, 7) { |x| 1 / Math.sqrt(x) + 23 }
     end
+  end
+
+  def test_domain_log_difference_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(0, 2) { |x| Math.log(x) - Math.log(x) }
     end
+  end
 
+  def test_domain_log_quotient_error_three_eights_integration
     assert_raises IntegralDoesntExistError do
       NumericalIntegration.three_eights_integration(0, 3) { |x| Math.log(x) / Math.log(x) }
     end
@@ -98,7 +109,15 @@ class NumericalIntegrationTest < Minitest::Test
                     NumericalIntegration.three_eights_integration(-10, 18, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 
-# TODO: Write tests with non-determined function (such as integral of 1/x from -1 to 1)
+  def test_polynom_accuracy_0_0001_three_eights_integration
+    assert_in_delta 16519216 / 3.0,
+                    NumericalIntegration.three_eights_integration(-10, 18, 0.0001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.0001
+  end
+
+  def test_polynom_accuracy_0_001_three_eights_integration
+    assert_in_delta 16519216 / 3.0,
+                    NumericalIntegration.three_eights_integration(-10, 18, 0.001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.001
+  end
 
   def test_log_simpson_integration
     assert_in_delta Math.log(3.5),
@@ -328,4 +347,5 @@ class NumericalIntegrationTest < Minitest::Test
     assert_in_delta (-0.32),
                     ::Silicium::NumericalIntegration.trapezoid(-0.001, 0.001, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
+
 end
