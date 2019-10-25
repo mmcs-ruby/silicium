@@ -143,12 +143,16 @@ module Silicium
       end
 
       def delete_edge!(from, to)
-        if has_edge?(from, to)
-          @vertices[from].delete(to)
-          @edge_labels.delete([Pair.new(from, to)])
-          @vertices[to].delete(from)
-          @edge_labels.delete([Pair.new(to, from)])
+        super(from, to)
+        super(to, from)
+      end
+
+      def edge_number
+        res = 0
+        @vertices.each do |from, tos|
+          tos.each {|to| res += (to == from ? 2 : 1)}
         end
+        res / 2
       end
     end
 

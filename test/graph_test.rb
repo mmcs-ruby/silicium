@@ -694,32 +694,6 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: [0,'two']},
                            {v: 'two', i: [0, 'two']}])
 
-    g.delete_vertex!(:one)
-    g.delete_vertex!('two')
-
-    pred = !g.has_vertex?(:one) && !g.has_vertex?('two') && (g.vertex_number == 1)
-    assert(pred)
-
-  end
-
-  def test_delete_unoriented_vertex_single_6
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: [0,'two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_vertex!(0)
-    g.delete_vertex!('two')
-
-    pred = !g.has_vertex?(0) && !g.has_vertex?('two') && (g.vertex_number == 1)
-    assert(pred)
-
-  end
-
-  def test_delete_unoriented_vertex_single_7
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: [0,'two']},
-                           {v: 'two', i: [0, 'two']}])
-
     g.delete_vertex!(0)
     g.delete_vertex!(:one)
     g.delete_vertex!('two')
@@ -746,32 +720,6 @@ class GraphTest < SiliciumTest
                            {v: :one,  i: ['two']},
                            {v: 'two', i: [0, 'two']}])
 
-    g.delete_vertex!(:one)
-
-    pred = !g.has_edge?(0, :one) && !g.has_edge?(0, :one) && !g.has_edge?(:one, 'two') && !g.has_edge?('two', :one)
-    pred = pred && (g.vertex_number == 2)
-    assert(pred)
-
-  end
-
-  def test_delete_unoriented_vertex_and_check_edges_3
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_vertex!('two')
-
-    pred = !g.has_edge?(:one, 'two') && !g.has_edge?('two', :one) && !g.has_edge?(0, 'two') && !g.has_edge?('two', 0)
-    pred = pred && !g.has_edge?('two', 'two')  && (g.vertex_number == 2)
-    assert(pred)
-
-  end
-
-  def test_delete_unoriented_vertex_and_check_edges_4
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
     g.delete_vertex!(0)
     g.delete_vertex!(:one)
 
@@ -781,21 +729,7 @@ class GraphTest < SiliciumTest
 
   end
 
-  def test_delete_unoriented_vertex_and_check_edges_5
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_vertex!(:one)
-    g.delete_vertex!('two')
-
-    pred = !g.has_edge?(0, :one) && !g.has_edge?(:one, 0) && !g.has_edge?(:one, 'two') && !g.has_edge?('two', 'two')
-    pred = pred && (g.vertex_number == 1) && !g.has_edge?('two', :one) && !g.has_edge?(0, 'two') && !g.has_edge?('two', 0)
-    assert(pred)
-
-  end
-
-  def test_delete_unoriented_vertex_and_check_edges_6
+  def test_delete_unoriented_vertex_and_check_edges_3
     g = UnorientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: ['two']},
                            {v: 'two', i: [0, 'two']}])
@@ -806,21 +740,6 @@ class GraphTest < SiliciumTest
 
     pred = !g.has_edge?(0, :one) && !g.has_edge?(:one, 0) && !g.has_edge?('two', 0) && !g.has_edge?(:one, 'two')
     pred = pred && !g.has_edge?('two', 'two') && (g.vertex_number == 1) && !g.has_edge?('two', 0)  && !g.has_edge?('two', :one)
-    assert(pred)
-
-  end
-
-  def test_delete_unoriented_vertex_and_check_edges_7
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_vertex!(0)
-    g.delete_vertex!(:one)
-    g.delete_vertex!('two')
-
-    pred = !g.has_edge?(0, :one) && !g.has_edge?(:one, 0) && !g.has_edge?(:one, 'two')  && !g.has_edge?('two', :one)
-    pred = pred && !g.has_edge?('two', 'two') && (g.vertex_number == 0)  && !g.has_edge?('two', 0) && !g.has_edge?(0, 'two')
     assert(pred)
 
   end
@@ -837,84 +756,8 @@ class GraphTest < SiliciumTest
 
   end
 
+
   def test_unoriented_delete_edge_2
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_edge!(:one, 'two')
-
-    pred = !g.has_edge?(:one, 'two') && !g.has_edge?('two', :one) && (g.edge_number == 3)
-    assert(pred)
-
-  end
-
-  def test_unoriented_delete_edge_3
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_edge!('two', 0)
-
-    pred = !g.has_edge?('two', 0) && !g.has_edge?(0, 'two') && (g.edge_number == 3)
-    assert(pred)
-
-  end
-
-  def test_unoriented_delete_edge_4
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_edge!('two', 'two')
-
-    pred = !g.has_edge?('two', 'two') && (g.edge_number == 3)
-    assert(pred)
-  end
-
-  def test_unoriented_delete_edge_5
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-
-    g.delete_edge!(0, :one)
-    g.delete_edge!(:one, 'two')
-
-    pred = !g.has_edge?(0, :one) && !g.has_edge?(:one, 0) && !g.has_edge?(:one, 'two') && !g.has_edge?('two', :one)
-    pred = pred && (g.edge_number == 2)
-    assert(pred)
-  end
-
-  def test_unoriented_delete_edge_6
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_edge!(0, :one)
-    g.delete_edge!('two', 0)
-
-    pred = !g.has_edge?(0, :one) && !g.has_edge?(:one, 0) && !g.has_edge?('two', 0) && !g.has_edge?(0, 'two')
-    pred = pred && (g.edge_number == 2)
-    assert(pred)
-
-  end
-
-  def test_unoriented_delete_edge_7
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-
-    g.delete_edge!(:one, 'two')
-    g.delete_edge!('two', 0)
-
-    pred = !g.has_edge?(:one, 'two') && !g.has_edge?('two', :one) && !g.has_edge?('two', 0) && !g.has_edge?(0, 'two')
-    pred = pred && (g.edge_number == 2)
-    assert(pred)
-
-  end
-
-  def test_unoriented_delete_edge_8
     g = UnorientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: ['two']},
                            {v: 'two', i: [0, 'two']}])
@@ -927,7 +770,7 @@ class GraphTest < SiliciumTest
 
   end
 
-  def test_unoriented_delete_edge_9
+  def test_unoriented_delete_edge_3
     g = UnorientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: ['two']},
                            {v: 'two', i: [0, 'two']}])
@@ -940,7 +783,7 @@ class GraphTest < SiliciumTest
 
   end
 
-  def test_unoriented_delete_edge_10
+  def test_unoriented_delete_edge_4
     g = UnorientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: ['two']},
                            {v: 'two', i: [0, 'two']}])
