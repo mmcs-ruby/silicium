@@ -44,11 +44,6 @@ class GeometryTest < Minitest::Test
                     distance_point_to_point3d(Point3d.new(-222,-333,-444),Point3d.new(-2,-5,-6)),0.0001)
   end
 
-<<<<<<< HEAD
-  def test_distance_point_line2d_expect0
-    assert_equal(0, distance_point_line2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
-=======
-
   def test_directing_vector3d1
     assert_equal([2.0, 1.0, 2.0],directing_vector3d('(x-3)/2=(y-1)/1=(z+1)/2'))
   end
@@ -79,9 +74,8 @@ class GeometryTest < Minitest::Test
   end
 
 
-  def test_distance_line_to_point2d_simple
-    assert_equal(0, distance_line_to_point2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
->>>>>>> upstream/master
+  def test_distance_point_line2d_expect0
+    assert_equal(0, distance_point_line2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
   end
 
   def test_distance_point_line2d_expect1dot834
@@ -91,7 +85,5 @@ class GeometryTest < Minitest::Test
   def test_distance_point_line2d_expect241
     assert_in_delta(241.00095342953614, distance_point_line2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
   end
-
-
 end
 
