@@ -5,13 +5,7 @@ module Silicium
   class NumericalIntegration
 
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
-      n = 1
-      begin
-        integral0 = three_eights_integration_n(a, b, n, &block)
-        n *= 5
-        integral1 = three_eights_integration_n(a, b, n, &block)
-      end until (integral0 - integral1).abs < eps
-      (integral0 + integral1) / 2.0
+      wrapper_method(a, b, eps, "three_eights_integration_n", &block)
     end
 
     def self.three_eights_integration_n(a, b, n, &block)
