@@ -116,13 +116,7 @@ module Silicium
 
     # Middle Rectangles Method  with specified accuracy
     def self.middle_rectangles(a, b, eps = 0.0001, &block)
-      n = 1
-      begin
-        result = middle_rectangles_with_a_segment(a, b, n, &block)
-        n *= 5
-        result1 = middle_rectangles_with_a_segment(a, b, n, &block)
-      end until (result - result1).abs < eps
-      (result + result1) / 2.0
+      wrapper_method(a, b, eps, "middle_rectangles_with_a_segment", &block)
     end
 
 
@@ -141,11 +135,18 @@ module Silicium
 
     # Trapezoid Method with specified accuracy
     def self.trapezoid(a, b, eps = 0.0001, &block)
+      wrapper_method(a, b, eps, "trapezoid_with_a_segment", &block)
+    end
+
+    private
+
+    # Wrapper method for num_integratons methods
+    def self.wrapper_method(a, b, eps, func, &block)
       n = 1
       begin
-        result = trapezoid_with_a_segment(a, b, n, &block)
+        result = eval "#{func}(a, b, n, &block)"
         n *= 5
-        result1 = trapezoid_with_a_segment(a, b, n, &block)
+        result1 = eval "#{func}(a, b, n, &block)"
       end until (result - result1).abs < eps
       (result + result1) / 2.0
     end
