@@ -19,14 +19,17 @@ module Silicium
     # k - slope
     # b - free_term
     # in two-dimensional space
-    class Line2d
+    class Line2dCanon
       attr_reader :slope
       attr_reader :free_term
       def initialize(p1, p2)
         if (p1.x == p2.x) && (p1.y == p2.y)
           raise ArgumentError, "You need 2 diffrent points"
         end
-        @slope= (p2.y - p1.y)/(p2.x - p1.x)
+        if (p1.x == p2.x)
+          raise ArgumentError, "The straight line equation cannot be written in canonical form"
+        end
+        @slope= (p2.y - p1.y)/(p2.x - p1.x).to_f
         @free_term= (p2.x*p1.y - p2.y*p1.x)/(p2.x - p1.x)
       end
       ##
@@ -36,6 +39,7 @@ module Silicium
       end
     end
 
+    #puts (Line2d.new(Point.new(1,0),Point.new(1,2)).slope)
 
     ##
     # Calculates the distance from given points in two-dimensional space
