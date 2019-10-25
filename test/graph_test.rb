@@ -542,6 +542,15 @@ class GraphTest < SiliciumTest
 
   end
 
+  def test_unoriented_constructor
+    g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                             {v: :one,  i: []},
+                             {v: 'two', i: []}])
+
+    assert(g.has_edge?(0, :one))
+    assert(g.has_edge?(:one, 0))
+  end
+
   def test_unoriented_add_edge
     g = UnorientedGraph.new([{v: 0,     i: []},
                            {v: :one,  i: []},

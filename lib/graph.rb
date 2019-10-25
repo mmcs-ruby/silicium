@@ -37,12 +37,12 @@ module Silicium
       def add_edge_force!(from, to)
         add_vertex!(from)
         add_vertex!(to)
-        @vertices[from] << to
+        add_edge!(from, to)
       end
 
       def adjacted_with(vertex)
         unless @vertices.has_key?(vertex)
-          raise GraphError.new("Graph does not contain vertex #vertex")
+          raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
 
         @vertices[vertex].clone
@@ -50,7 +50,7 @@ module Silicium
 
       def label_edge!(from, to, label)
         unless @vertices.has_key?(from) && @vertices[from].include?(to)
-          raise GraphError.new("Graph does not contain edge (#from, #to)")
+          raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
 
         @edge_labels[Pair.new(from, to)] = label
@@ -58,7 +58,7 @@ module Silicium
 
       def label_vertex!(vertex, label)
         unless @vertices.has_key?(vertex)
-          raise GraphError.new("Graph does not contain vertex #vertex")
+          raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
 
         @vertex_labels[vertex] = label
@@ -66,7 +66,7 @@ module Silicium
 
       def get_edge_label(from, to)
         if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
-          raise GraphError.new("Graph does not contain edge (#from, #to)")
+          raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
 
         @edge_labels[Pair.new(from, to)]
@@ -74,7 +74,7 @@ module Silicium
 
       def get_vertex_label(vertex)
         unless @vertices.has_key?(vertex)
-          raise GraphError.new("Graph does not contain vertex #vertex")
+          raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
 
         @vertex_labels[vertex]
