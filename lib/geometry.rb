@@ -17,15 +17,14 @@ module Silicium
     ##
     #Calculates the distance from given points in two-dimensional space
     def distance_point_to_point2d(a, b)
-      Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2)
+      Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2)
     end
 
     ##
     # Calculates the distance from given points in three-dimensional space
     def distance_point_to_point3d(a, b)
-      Math.sqrt((b.x - a.x) ** 2 + (b.y - a.y) ** 2 + (b.z - a.z) ** 2)
+      Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2 + (b.z - a.z)**2)
     end
-
 
     def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
@@ -94,7 +93,6 @@ module Silicium
       end
     end
 
-
     def cut_by_eq(line_equation)
       line_equation.slice(line_equation.index('='), line_equation.length).sub('=', '')
     end
@@ -104,10 +102,10 @@ module Silicium
     # The equation is specified in the canonical form.
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
     #
-    #Important: mandatory order of variables: x, y, z
+    # Important: mandatory order of variables: x, y, z
     def directing_vector3d(line_equation)
       copy_line = line_equation.gsub(' ', '').insert(line_equation.length, '=')
-      res = Array.new
+      res = []
       res[0] = process_cf(copy_line, 'x')
       copy_line = cut_by_eq(copy_line)
       res[1] = process_cf(copy_line, 'y')
@@ -119,7 +117,7 @@ module Silicium
     class VariablesOrderException < Exception
     end
 
-    def has_needed_variables_order(before, after)
+    def needed_variables_order?(before, after)
       before < after
     end
 
@@ -128,7 +126,7 @@ module Silicium
         before = line_equation.index(variable) + 1
         after = line_equation.index('/')
 
-        unless has_needed_variables_order(before, after)
+        unless needed_variables_order?(before, after)
           throw VariablesOrderException
         end
 
@@ -143,10 +141,10 @@ module Silicium
     # given by the equation in the canonical form.
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
     #
-    #Important: mandatory order of variables: x, y, z
+    # Important: mandatory order of variables: x, y, z
     def height_point_3d(line_equation)
       copy_line = line_equation.gsub(' ', '').insert(line_equation.length, '=')
-      res = Array.new
+      res = []
 
       res[0] = process_free_member(copy_line, 'x')
       copy_line = cut_by_eq(copy_line)
@@ -157,14 +155,15 @@ module Silicium
     end
 
     def vectors_product(v1, v2)
-      res = Array.new
-      for i in 0..2
+      res = Array.new(3)
+      (0..2).each do |i|
         res[i] = v1[(i + 1) % 3] * v2[(i + 2) % 3] - v1[(i + 2) % 3] * v2[(i + 1) % 3]
       end
+      res
     end
 
     def vector_length(vector)
-      Math.sqrt(vector[0] ** 2 + vector[1] ** 2 + vector[2] ** 2)
+      Math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
     end
 
     ##
@@ -172,14 +171,15 @@ module Silicium
     # to a straight line given by a canonical equation.
     # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
     #
-    #Important: mandatory order of variables: x, y, z
+    # Important: mandatory order of variables: x, y, z
     def point_to_line_distance_3d(point, line_eq)
       dir_vector = directing_vector3d(line_eq)
       line_point = height_point_3d(line_eq)
       height_vector = [line_point[0] - point.x, line_point[1] - point.y, line_point[2] - point.z]
 
       height_on_dir = vectors_product(height_vector, dir_vector)
-      vector_length(height_on_dir) / vector_length(dir_vector)
+      vector_length(height_on_dir) /
+          vector_length(dir_vector)
     end
   end
 end
