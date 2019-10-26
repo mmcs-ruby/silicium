@@ -1,4 +1,4 @@
-require "silicium"
+require 'silicium'
 require 'chunky_png'
 
 module Silicium
@@ -27,6 +27,10 @@ module Silicium
       # Draws a bar chart in the plot using provided +bars+,
       # each of them has width of +bar_width+ and colored +bars_color+
       def bar_chart(bars, bar_width, bars_color = ChunkyPNG::Color('red @ 1.0'), axis_color = ChunkyPNG::Color::BLACK)
+        if bars.count * bar_width > @image.width
+          raise ArgumentError, 'Not enough big size of image to plot these number of bars'
+        end
+
         padding = 5
         # Values of x and y on borders of plot
         minx = [bars.collect { |k, _| k }.min, 0].min
@@ -35,8 +39,8 @@ module Silicium
         maxy = [bars.collect { |_, v| v }.max, 0].max
         dpux = Float((@image.width - 2 * padding)) / (maxx - minx + bar_width) # Dots per unit for X
         dpuy = Float((@image.height - 2 * padding)) / (maxy - miny) # Dots per unit for Y
-        rectangle(padding, @image.height - padding - (miny.abs * dpuy).ceil, @image.width - 2 * padding, 1, axis_color) #Axis OX
-        rectangle(padding + (minx.abs * dpux).ceil, padding, 1, @image.height - 2 * padding, axis_color) #Axis OY
+        rectangle(padding, @image.height - padding - (miny.abs * dpuy).ceil, @image.width - 2 * padding, 1, axis_color) # Axis OX
+        rectangle(padding + (minx.abs * dpux).ceil, padding, 1, @image.height - 2 * padding, axis_color) # Axis OY
 
         bars.each do |x, y| # Cycle drawing bars
           rectangle(padding + ((x + minx.abs) * dpux).floor,
@@ -51,7 +55,5 @@ module Silicium
         @image.save(filename, :interlace => true)
       end
     end
-
   end
-
 end
