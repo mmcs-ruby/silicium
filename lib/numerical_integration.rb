@@ -12,23 +12,11 @@ module Silicium
       dx = (b - a) / n.to_f
       result = 0
       x = a
-      begin
-        n.times do
-          result +=
-              (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
-                  3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
-          x += dx
-        end
-      rescue Math::DomainError
-        raise IntegralDoesntExistError, 'Domain error in math function'
-      rescue ZeroDivisionError
-        raise IntegralDoesntExistError, 'Divide by zero'
-      end
-      if result.nan?
-        raise IntegralDoesntExistError, 'We have not-a-number result :('
-      end
-      if result == Float::INFINITY
-        raise IntegralDoesntExistError, 'We have infinity :('
+      n.times do
+        result +=
+            (block.call(x) + 3 * block.call((2 * x + x + dx) / 3.0) +
+                3 * block.call((x + 2 * (x + dx)) / 3.0) + block.call(x + dx)) / 8.0 * dx
+        x += dx
       end
       result
     end
