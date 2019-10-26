@@ -5,13 +5,16 @@ class Test < Minitest::Test
 
 	include Combinatorics
 
+	def test_fact
+		assert_equal fact(7, 3), [5040, 24, 6]
+	end
+
 	def test_combination
-		assert_equal Combination(5, 3), 10
+		assert_equal combination(5, 3), 10
 	end
 	
 	def test_arrangement
-		assert_equal Arrangement(5, 3), 60
+		assert_equal arrangement(5, 3), 60
 	end
-
 
 end
