@@ -18,4 +18,14 @@ class SiliciumTest < Minitest::Test
     plotter.export(filename)
   end
 
+  def test_plotter_bar_chart
+    filename = 'tmp/bar_chart.png'
+    File.delete(filename) if File.exist?(filename)
+
+    plotter = Image.new(200, 100)
+    plotter.bar_chart({ -200 => 10, 40 => 20, 80 => 40, 160 => 80 }, 4, ChunkyPNG::Color::BLACK)
+    plotter.export(filename)
+
+  end
+
 end
