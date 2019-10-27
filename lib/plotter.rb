@@ -1,9 +1,11 @@
 require 'silicium'
 require 'chunky_png'
+require 'ruby2d'
+
 
 module Silicium
   module Plotter
-    ##
+    #
     # Factory method to return a color value, based on the arguments given.
     #
     # @overload Color(r, g, b, a)
@@ -91,6 +93,52 @@ module Silicium
       def export(filename)
         @image.save(filename, :interlace => true)
       end
+    end
+
+
+    @CENTER_X = (get :width) / 2
+    @CENTER_Y = (get :height) / 2
+    @MUL = (get :height)  / 4
+
+    def fn(x)
+      Math::asin(Math::sqrt(x))
+      #Math::cos(0.5*x)
+      #x**2
+      #14/x
+    end
+
+    def reset_step(x, st, &f)
+      y1 = f.call(x)
+      y2 = f.call(x + st)
+
+      if (y1 - y2).abs > 1.0
+        [st / (y1 - y2).abs, 0.001].max
+      else
+        st
+      end
+    end
+
+    def draw_fn(a, b, &func)
+      step = 0.12
+      c_step = step
+      arg = a
+
+      while arg < b do
+        c_step = step
+        c_step = reset_step(arg, step) {|xx| fn(xx)}
+
+        Line.new(
+            x1: @CENTER_X + arg * @MUL, y1: @CENTER_Y - func.call(arg) * @MUL,
+            x2: @CENTER_X + 1 + arg * @MUL, y2: @CENTER_Y + 1 - func.call(arg) * @MUL,
+            width: 1,
+            color: 'lime',
+            z: 20
+        )
+        arg += c_step
+      end
+    end
+    def show_window
+      show
     end
   end
 end
