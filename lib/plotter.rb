@@ -3,6 +3,15 @@ require 'chunky_png'
 
 module Silicium
   module Plotter
+    def Color(*args)
+      case args.length
+      when 1; ChunkyPNG::Color.parse(args.first)
+      when 2; (ChunkyPNG::Color.parse(args.first) & 0xffffff00) | args[1].to_i
+      when 3; ChunkyPNG::Color.rgb(*args)
+      when 4; ChunkyPNG::Color.rgba(*args)
+      else raise ArgumentError, "Don't know how to create a color from #{args.inspect}!"
+      end
+    end
     ##
     # A class representing canvas for plotting bar charts and function graphs
     class Image
