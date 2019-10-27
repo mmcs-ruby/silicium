@@ -64,19 +64,28 @@ module Cubes
       @sides
     end
 
+    def to_s
+      sides
+    end
+
     def initialize(sides)
       @csides = 1
       @sides = [1]
-      if sides > 1
-        @csides = sides
-        for i in 2..sides
-          @sides << i
+      if sides.class == Integer
+        if sides > 1
+          @csides = sides
+          for i in 2..sides
+            @sides << i
+          end
         end
+      elsif sides.class == Array and sides.size > 0
+        @csides = sides.size
+        @sides = sides.sort
       end
     end
 
     def throw
-      rand(1..@csides)
+      sides[rand(0..@csides-1)]
     end
   end
 
@@ -88,6 +97,29 @@ module Cubes
       @pons = parse_pons(arr).sort_by{|item| -item.csides}
       @percentage = count_chance_sum
     end
+
+    def percentage
+      @percentage
+    end
+
+    def to_s
+      res = @pons.map {|item| item.to_s}
+
+    end
+
+    def throw
+      sum = 0
+      r = rand
+      @percentage.each do |item|
+        sum += item[1]
+        if sum > r
+          return item[0]
+          break
+        end
+      end
+    end
+
+    private
 
     def parse_pons(arr)
       res = []
@@ -129,7 +161,6 @@ module Cubes
           end
         end
         h = h1
-        #puts(h1)
         h1 = Hash.new
         n = 0
         m = 0
@@ -140,6 +171,7 @@ module Cubes
       arr3.each {|item| res[item.to_s] = Float(h[item.to_s]) / fchance}
       res
     end
+
   end
 
 end
