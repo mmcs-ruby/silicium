@@ -20,7 +20,7 @@ module Silicium
       for i in 0..n
         x = rand(a * 1.0, b * 1.0)
         sum += fun.call(x)
-        res += (b - a) * 1.0 / i * s
+        res += (b - a) * 1.0 / i * sum
       end
       res
     end
