@@ -14,13 +14,12 @@ module Silicium
     end
 
     #integrating using method Monte Carlo (f - function, a, b - integrating limits, n - amount of random numbers)
-    def integrating_Monte_Carlo_base(fun, a, b, n = 100000)
-      sum = 0
+    def integrating_Monte_Carlo_base(a, b, n = 100000, &block)
       res = 0
-      for i in 0..n
-        x = rand(a * 1.0, b * 1.0)
-        sum += fun.call(x)
-        res += (b - a) * 1.0 / i * sum
+      range = a..b.to_f
+      for i in 1..(n + 1)
+         x = rand(range)
+         res += (b - a) * 1.0 / n * block.call(x)
       end
       res
     end

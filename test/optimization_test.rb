@@ -32,7 +32,31 @@ class SiliciumTest < Minitest::Test
        x * x + 2 * x + 1
     end
 
-    assert_in_delta 26.0 / 3, integrating_Monte_Carlo_base(method(:test_1), 0, 2), 0.1
+    assert_in_delta 19.0 / 3, integrating_Monte_Carlo_base(1, 2){ |x| test_1(x) }, 0.3
+  end
+
+  def test_integrating_Monte_Carlo_base_exp_integral
+    def test_1(x)
+       Math.exp(x)
+    end
+
+    assert_in_delta -1 + Math.exp(5), integrating_Monte_Carlo_base(0, 5){ |x| test_1(x) }, 5
+  end
+
+  def test_integrating_Monte_Carlo_base_sym_board
+    def test_1(x)
+       x * x * x
+    end
+
+    assert_in_delta 0, integrating_Monte_Carlo_base(-1, 1){ |x| test_1(x) }, 0.1
+  end
+
+  def test_integrating_Monte_Carlo_base_neg_board
+    def test_1(x)
+       Math.sin(x)
+    end
+
+    assert_in_delta Math.cos(3) - Math.cos(2), integrating_Monte_Carlo_base(-3, 2){ |x| test_1(x) }, 0.1
   end
 
 end
