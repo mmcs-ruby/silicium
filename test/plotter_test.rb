@@ -2,7 +2,7 @@ require 'test_helper'
 require 'plotter'
 require 'chunky_png'
 
-class SiliciumTest < Minitest::Test
+class PlotterTest < Minitest::Test
   include Silicium::Plotter
 
   @@dir_ready = File.directory?('tmp') || Dir.mkdir('tmp')
