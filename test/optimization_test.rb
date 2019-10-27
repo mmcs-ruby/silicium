@@ -29,8 +29,9 @@ class SiliciumTest < Minitest::Test
 
   def test_integrating_Monte_Carlo_base_common_integral
     def test_1(x)
-      x * x + 2 * x + 1
+       x * x + 2 * x + 1
     end
+
     assert_in_delta 26.0 / 3, integrating_Monte_Carlo_base(method(:test_1), 0, 2), 0.1
   end
 

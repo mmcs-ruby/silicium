@@ -14,7 +14,7 @@ module Silicium
     end
 
     #integrating using method Monte Carlo (f - function, a, b - integrating limits, n - amount of random numbers)
-    def integrating_Monte_Carlo_base(&fun, a, b, n = 100000)
+    def integrating_Monte_Carlo_base(fun, a, b, n = 100000)
       sum = 0
       res = 0
       for i in 0..n
@@ -24,5 +24,6 @@ module Silicium
       end
       res
     end
+
   end
 end
