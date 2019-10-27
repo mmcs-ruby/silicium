@@ -7,6 +7,11 @@ class PlotterTest < Minitest::Test
 
   @@dir_ready = File.directory?('tmp') || Dir.mkdir('tmp')
 
+  def images_eql?(filename1, filename2)
+    ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename1))
+                    .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename2)))
+  end
+
   def test_plotter_rectangle
     # TODO: write method to remove all *.png from tmp before and after running tests
     filename = 'tmp/rectangle.png'
@@ -16,8 +21,7 @@ class PlotterTest < Minitest::Test
     plotter.rectangle(20, 30, 50, 60, Color('black @ 0.5'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 
   def test_bar_chart_1st_quadrant
@@ -28,8 +32,7 @@ class PlotterTest < Minitest::Test
     plotter.bar_chart({ 20 => 10, 40 => 20, 80 => 40, 160 => 80 }, 1, Color('red @ 1.0'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 
   def test_bar_chart_2nd_quadrant
@@ -40,8 +43,7 @@ class PlotterTest < Minitest::Test
     plotter.bar_chart({ -20 => 10, -40 => 20, -80 => 40, -160 => 80 }, 1, Color('red @ 1.0'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 
   def test_bar_chart_3rd_quadrant
@@ -52,8 +54,7 @@ class PlotterTest < Minitest::Test
     plotter.bar_chart({ -20 => -10, -40 => -20, -80 => -40, -160 => -80 }, 1, Color('red @ 1.0'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 
   def test_bar_chart_4th_quadrant
@@ -64,8 +65,7 @@ class PlotterTest < Minitest::Test
     plotter.bar_chart({ 20 => -10, 40 => -20, 80 => -40, 160 => -80 }, 1, Color('red @ 1.0'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 
   def test_bar_chart_1st2nd_quadrant
@@ -77,8 +77,7 @@ class PlotterTest < Minitest::Test
                         20 => 10, 40 => 20, 80 => 40, 160 => 80 }, 1, Color('red @ 1.0'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 
   def test_bar_chart_3rd4th_quadrant
@@ -90,8 +89,7 @@ class PlotterTest < Minitest::Test
                         20 => -10, 40 => -20, 80 => -40, 160 => -80 }, 1, Color('red @ 1.0'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 
   def test_bar_chart_all_quadrant
@@ -102,7 +100,6 @@ class PlotterTest < Minitest::Test
     plotter.bar_chart({ 20 => -10, -40 => -20, -80 => 40, 160 => 80 }, 1, Color('red @ 1.0'))
     plotter.export(filename)
 
-    assert(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename.sub('tmp', 'test/resources')))
-               .eql?(ChunkyPNG::Image.from_datastream(ChunkyPNG::Datastream.from_file(filename))))
+    assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
   end
 end
