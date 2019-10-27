@@ -3,6 +3,34 @@ require 'chunky_png'
 
 module Silicium
   module Plotter
+    ##
+    # Factory method to return a color value, based on the arguments given.
+    #
+    # @overload Color(r, g, b, a)
+    #   @param (see ChunkyPNG::Color.rgba)
+    #   @return [Integer] The rgba color value.
+    #
+    # @overload Color(r, g, b)
+    #   @param (see ChunkyPNG::Color.rgb)
+    #   @return [Integer] The rgb color value.
+    #
+    # @overload Color(hex_value, opacity = nil)
+    #   @param (see ChunkyPNG::Color.from_hex)
+    #   @return [Integer] The hex color value, with the opacity applied if one
+    #     was given.
+    #
+    # @overload Color(color_name, opacity = nil)
+    #   @param (see ChunkyPNG::Color.html_color)
+    #   @return [Integer] The hex color value, with the opacity applied if one
+    #     was given.
+    #
+    # @overload Color(color_value, opacity = nil)
+    #   @param [Integer, :to_i] The color value.
+    #   @return [Integer] The color value, with the opacity applied if one was
+    #     given.
+    #
+    # @return [Integer] The determined color value as RGBA integer.
+    # @raise [ArgumentError] if the arguments weren't understood as a color.
     def Color(*args)
       case args.length
       when 1; ChunkyPNG::Color.parse(args.first)
