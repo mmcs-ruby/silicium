@@ -1,4 +1,3 @@
-
 require 'test_helper'
 require 'geometry'
 
@@ -75,16 +74,16 @@ class GeometryTest < Minitest::Test
   end
 
 
-  def test_distance_line_to_point2d_simple
-    assert_equal(0, distance_line_to_point2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
+  def test_distance_line_on_point
+    assert_equal(0, distance_point_line2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
   end
 
-  def test_distance_line_to_point2d_normal
-    assert_in_delta(1.8343409898251712, distance_line_to_point2d(Point.new(-7, 3), Point.new(6, 11), Point.new(3, 7)), 0.0001)
+  def test_distance_point_close_from_line
+    assert_in_delta(1.8343409898251712, distance_point_line2d(Point.new(-7, 3), Point.new(6, 11), Point.new(3, 7)), 0.0001)
   end
 
-  def test_distance_line_to_point2d_big
-    assert_in_delta(241.00095342953614, distance_line_to_point2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
+  def test_distance_point_far_from_line
+    assert_in_delta(241.00095342953614, distance_point_line2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
   end
 
   def test_init_line2d_with_same_points
@@ -125,4 +124,3 @@ class GeometryTest < Minitest::Test
 
 
 end
-
