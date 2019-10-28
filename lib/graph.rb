@@ -123,6 +123,48 @@ module Silicium
         @edge_number -= 1
       end
 
+      def breadth_first_search?(start, goal)
+        visited = Hash.new(false)
+        queue = Queue.new
+        queue.push(start)
+        visited[start] = true
+        until queue.empty? do
+          node = queue.pop
+          if node == goal
+            return true
+          end
+          @vertices[node].each do |child|
+            if visited[child] == false
+              queue.push(child)
+              visited[child] = true
+            end
+          end
+        end
+        false
+      end
+
+      def breadth_first_search(start, goal)
+        visited = Hash.new(false)
+        res = [start]
+        queue = Queue.new
+        queue.push(start)
+        visited[start] = true
+        until queue.empty? do
+          node = queue.pop
+          if node == goal
+            return res
+          end
+          @vertices[node].each do |child|
+            if visited[child] == false
+              queue.push(child)
+              res << child
+              visited[child] = true
+            end
+          end
+        end
+        []
+      end
+
       protected
 
       def protected_add_edge!(from, to)
