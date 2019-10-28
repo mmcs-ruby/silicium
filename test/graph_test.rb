@@ -5,6 +5,18 @@ require 'graph'
 class GraphTest < SiliciumTest
   include Silicium::Graphs
 
+  def oriented_graph
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+  end
+
+  def unoriented_graph
+    g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: ['two']},
+                           {v: 'two', i: [0, 'two']}])
+  end
+
   def test_default_constructor
     g = OrientedGraph.new
     assert_equal(g.vertex_number, 0)

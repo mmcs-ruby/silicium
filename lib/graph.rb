@@ -137,17 +137,16 @@ module Silicium
           @edge_labels.delete(Pair.new(from, to))
         end
       end
+
     end
 
     class UnorientedGraph < OrientedGraph
 
-
       def add_edge!(from, to)
-          protected_add_edge!(from, to)
-          protected_add_edge!(to, from)
-          @edge_number += 1
+        protected_add_edge!(from, to)
+        protected_add_edge!(to, from)
+        @edge_number += 1
       end
-
 
       def label_edge!(from, to, label)
         super(from, to, label)
@@ -155,16 +154,11 @@ module Silicium
       end
 
       def delete_edge!(from, to)
-          protected_delete_edge!(from, to)
-          protected_delete_edge!(to, from)
-          @edge_number -= 1
+        protected_delete_edge!(from, to)
+        protected_delete_edge!(to, from)
+        @edge_number -= 1
       end
 
-      #def edge_number
-        #super
-        #res = super
-        #res % 2 == 0 ? res / 2 : (res / 2) + 1
-      #end
     end
 
     def dijkstra_algorythm(graph, starting_vertex)
