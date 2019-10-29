@@ -37,12 +37,12 @@ module Silicium
       def add_edge_force!(from, to)
         add_vertex!(from)
         add_vertex!(to)
-        @vertices[from] << to
+        add_edge!(from, to)
       end
 
       def adjacted_with(vertex)
         unless @vertices.has_key?(vertex)
-          raise GraphError.new("Graph does not contain vertex #vertex")
+          raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
 
         @vertices[vertex].clone
@@ -50,7 +50,7 @@ module Silicium
 
       def label_edge!(from, to, label)
         unless @vertices.has_key?(from) && @vertices[from].include?(to)
-          raise GraphError.new("Graph does not contain edge (#from, #to)")
+          raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
 
         @edge_labels[Pair.new(from, to)] = label
@@ -58,7 +58,7 @@ module Silicium
 
       def label_vertex!(vertex, label)
         unless @vertices.has_key?(vertex)
-          raise GraphError.new("Graph does not contain vertex #vertex")
+          raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
 
         @vertex_labels[vertex] = label
@@ -66,7 +66,7 @@ module Silicium
 
       def get_edge_label(from, to)
         if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
-          raise GraphError.new("Graph does not contain edge (#from, #to)")
+          raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
 
         @edge_labels[Pair.new(from, to)]
@@ -74,7 +74,7 @@ module Silicium
 
       def get_vertex_label(vertex)
         unless @vertices.has_key?(vertex)
-          raise GraphError.new("Graph does not contain vertex #vertex")
+          raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
 
         @vertex_labels[vertex]
@@ -84,6 +84,22 @@ module Silicium
         @vertices.count
       end
 
+      def edge_number
+        res = 0
+        @vertices.values.each do |item|
+          res += item.count
+        end
+        res
+      end
+
+      def vertex_label_number
+        @vertex_labels.count
+      end
+
+      def edge_label_number
+        @edge_labels.count
+      end
+
       def has_vertex?(vertex)
         @vertices.has_key?(vertex)
       end
@@ -91,6 +107,28 @@ module Silicium
       def has_edge?(from, to)
         @vertices.has_key?(from) && @vertices[from].include?(to)
       end
+
+      def delete_vertex!(vertex)
+        if has_vertex?(vertex)
+          @vertices.keys.each do |key|
+            delete_edge!(key, vertex)
+          end
+          @vertices.delete(vertex)
+          @vertex_labels.delete(vertex)
+
+          @vertices.keys.each do |key|
+            @edge_labels.delete(Pair.new(vertex, key))
+          end
+        end
+      end
+
+      def delete_edge!(from, to)
+        if has_edge?(from, to)
+          @vertices[from].delete(to)
+          @edge_labels.delete(Pair.new(from, to))
+        end
+      end
+
     end
 
     class UnorientedGraph < OrientedGraph
@@ -103,10 +141,24 @@ module Silicium
         super(from, to, label)
         super(to, from, label)
       end
+
+      def delete_edge!(from, to)
+        super(from, to)
+        super(to, from)
+      end
+
+      def edge_number
+        res = 0
+        @vertices.each do |from, tos|
+          tos.each {|to| res += (to == from ? 2 : 1)}
+        end
+        res / 2
+      end
     end
 
     def dijkstra_algorythm(graph, starting_vertex)
       #
     end
   end
+
 end
