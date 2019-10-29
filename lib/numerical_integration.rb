@@ -2,12 +2,16 @@ module Silicium
   class IntegralDoesntExistError < RuntimeError
 
   end
+  ##
+  # A class providing numerical integration methods
   class NumericalIntegration
 
+    # Computes integral from +a+ to +b+ of +block+ with accuracy +eps+
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
       wrapper_method([a, b], eps, 'three_eights_integration_n', &block)
     end
 
+    # Computes integral from +a+ to +b+ of +block+ with +n+ segmentations
     def self.three_eights_integration_n(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
