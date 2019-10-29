@@ -138,7 +138,7 @@ module Silicium
     #
     # Important: mandatory order of variables: x, y, z
     def directing_vector3d(line_equation)
-      copy_line = line_equation.gsub(' ', '').insert(line_equation.length, '=')
+      copy_line = insert_eq(line_equation)
       res = []
       res[0] = process_cf(copy_line, 'x')
       copy_line = cut_by_eq(copy_line)
@@ -177,7 +177,7 @@ module Silicium
     #
     # Important: mandatory order of variables: x, y, z
     def height_point_3d(line_equation)
-      copy_line = line_equation.gsub(' ', '').insert(line_equation.length, '=')
+      copy_line = insert_eq(line_equation)
       res = []
 
       res[0] = process_free_member(copy_line, 'x')
@@ -214,6 +214,10 @@ module Silicium
       height_on_dir = vectors_product(height_vector, dir_vector)
       vector_length(height_on_dir) /
           vector_length(dir_vector)
+    end
+
+    def insert_eq(line_equation)
+      line_equation.gsub(' ', '').insert(line_equation.length, '=')
     end
   end
 end
