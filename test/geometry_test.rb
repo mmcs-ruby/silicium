@@ -79,6 +79,69 @@ class GeometryTest < Minitest::Test
     assert_in_delta(241.00095342953614, distance_line_to_point2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
   end
 
+  def test_process_cf
+    assert_equal(3, process_cf('x/3', 'x'))
+    assert_equal(3, process_cf('y-3/3', 'y'))
+    assert_equal(3, process_cf('(z-500)/3', 'z'))
+  end
+
+  def test_process_cf_zero
+    assert_equal(0, process_cf('y/3', 'x'))
+  end
+
+  def test_cut_by_eq
+    assert_equal('123hello', cut_by_eq('qqqqq=123hello'))
+  end
+
+
+  def test_directing_vector3d_exception
+    directing_vector3d('z/34=(y-5)/2')
+  rescue Exception => ex
+    assert_equal(VariablesOrderException, ex.class)
+  end
+
+
+  def test_needed_variables_order?
+    assert_equal(true, needed_variables_order?(3, 6))
+    assert_equal(false, needed_variables_order?(6, 6))
+    assert_equal(false, needed_variables_order?(10, 6))
+  end
+
+  def test_process_free_member
+    assert_equal(3, process_free_member('(x-3)/32', 'x'))
+    assert_equal(4, process_free_member('(y-4)/12', 'y'))
+    assert_equal(-4, process_free_member('(z+4)/3', 'z'))
+    assert_equal(0.0, process_free_member('y/3', 'z'))
+  end
+
+
+  def test_height_point_3d
+    assert_equal([3, 1, -1], height_point_3d('(x-3)/2=(y-1)/1=(z+1)/2'))
+    assert_equal([3, 1, 0], height_point_3d('(x-3)/2=(y-1)/1'))
+  end
+
+
+  def test_height_point_3d_exception
+    height_point_3d('z/34=(y-5)/2')
+  rescue Exception => ex
+    assert_equal(VariablesOrderException, ex.class)
+  end
+
+
+  def test_vectors_product
+    assert_equal([2, -14, 5], vectors_product([3, -1, -4], [2, 1, 2]))
+  end
+
+  def test_vector_length
+    assert_in_delta(5.385164807, vector_length([2, 3, -4]), 0.00001)
+  end
+
+
+  def test_distance_point_to_line3d_exception
+    point_to_line_distance_3d(Point3d.new(0, 2, 3), 'z/34=(y-5)/2')
+  rescue Exception => ex
+    assert_equal(VariablesOrderException, ex.class)
+  end
 
 end
 
