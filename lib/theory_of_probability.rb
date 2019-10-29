@@ -3,7 +3,7 @@ module Combinatorics
     res = (1..n).inject(:*) || 1
     res
   end
-
+  
   def fact(n, k)
     res = [1,1,1]
     c = 1
@@ -47,14 +47,13 @@ module Combinatorics
       f[0] / f[2]
     end
   end
+  
+  
 end
 
 module Cubes
 
   class Polyhedron
-
-    attr_accessor :csides
-    attr_accessor :sides
 
     def csides
       @csides
@@ -90,8 +89,6 @@ module Cubes
   end
 
   class Set_Of_Polyhedrons
-    attr_reader :pons
-    attr_reader :percentage
 
     def initialize(arr)
       @pons = parse_pons(arr).sort_by{|item| -item.csides}
@@ -104,7 +101,7 @@ module Cubes
 
     def to_s
       res = @pons.map {|item| item.to_s}
-
+	  res
     end
 
     def throw
@@ -113,7 +110,7 @@ module Cubes
       @percentage.each do |item|
         sum += item[1]
         if sum > r
-          return item[0]
+          item[0]
           break
         end
       end
@@ -128,50 +125,51 @@ module Cubes
       end
       return res
     end
+	
+	def count_chance_sum_chances_step(arr1, arr2, arr3, h)
+	  n = 0
+      m = 0
+      sum = 0
+      q = Queue.new
+      h1 = Hash.new
+      while m < arr2.size
+        if m == 0
+          q << h[(arr1[n]).to_s]
+          sum += h[(arr1[n]).to_s]
+        end
+        if q.size > arr2.size or m > 0
+          sum -= q.pop
+        end
+        h1[(arr1[n] + arr2[m]).to_s] = sum
+        arr3 << (arr1[n] + arr2[m])
+        if n < arr1.size - 1
+          n += 1
+        else
+          m += 1
+        end
+      end
+      h1
+	end
 
     def count_chance_sum
       h = Hash.new
-      pons[0].sides.each do |item|
+      @pons[0].sides.each do |item|
         h[item.to_s] = 1
       end
-      n = 0
-      m = 0
-      sum = 0
       arr3 = @pons[0].sides
       for i in 1..@pons.size - 1
-        q = Queue.new
-        h1 = Hash.new
         arr1 = arr3
         arr3 = Array.new
         arr2 = @pons[i].sides
-        while m < arr2.size
-          if m == 0
-            q << h[(arr1[n]).to_s]
-            sum += h[(arr1[n]).to_s]
-          end
-          if q.size > arr2.size or m > 0
-            sum -= q.pop
-          end
-          h1[(arr1[n] + arr2[m]).to_s] = sum
-          arr3 << (arr1[n] + arr2[m])
-          if n < arr1.size - 1
-            n += 1
-          else
-            m += 1
-          end
-        end
+        h1 = count_chance_sum_chances_step(arr1, arr2, arr3, h)
         h = h1
         h1 = Hash.new
-        n = 0
-        m = 0
-        sum = 0
       end
       res = Hash.new
       fchance = @pons.inject(1) { |mult, item| mult * item.csides }
       arr3.each {|item| res[item.to_s] = Float(h[item.to_s]) / fchance}
       res
     end
-
   end
 
 end
