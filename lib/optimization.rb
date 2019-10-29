@@ -92,5 +92,25 @@ module Silicium
       x
     end
 
+    #find root in [a, b], if he exist, if number of iterations > iters -> error
+    def half_division(a, b, eps = 0.001, iters = 100000, &block)
+      c = (a + b) / 2.0
+      while ((block.call(c).abs) > eps)
+        if (block.call(a) * block.call(c) < 0)
+          b = c
+          c = (a + c) / 2.0
+        else
+          a = c
+          c = (b + c) / 2.0
+        end
+        iters -= 1
+        if iters == 0
+          raise RuntimeError, "Root not found! Check does he exist, or change eps or iters"
+        end
+      end
+      c
+    end
+
+
   end
 end

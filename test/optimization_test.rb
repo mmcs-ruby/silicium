@@ -183,5 +183,34 @@ class SiliciumTest < Minitest::Test
     assert_in_delta vals[2], 2, 0.01
   end
 
+  def test_half_division_root_neg
+    def test_1(x)
+      Math.exp(x) - x * x
+    end
+    assert_in_delta -0.703, half_division(-2, 2, 0.0001){|x| test_1(x)}, 0.001
+  end
+
+  def test_half_division_root_exist_pos
+    def test_1(x)
+      100 * Math.log(x) -  x * x * x
+    end
+    assert_in_delta 5.556, half_division(2, 10, 0.0001){|x| test_1(x)}, 0.001
+  end
+
+  def test_half_division_root_exist_zero
+    def test_1(x)
+      x * x + x
+    end
+    assert_in_delta 0, half_division(-0.5, 0.5, 0.0001){|x| test_1(x)}, 0.001
+  end
+
+  def test_half_division_root_not_exist
+    def test_1(x)
+      x * x + x + 1
+    end
+    exception = assert_raises(RuntimeError) do
+      half_division(-0.5, 0.5, 0.0001){|x| test_1(x)}
+    end
+  end
 
 end
