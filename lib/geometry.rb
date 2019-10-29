@@ -202,25 +202,21 @@ module Silicium
 
     # Closest pair of points_________________________
 
-    #sort according to x value
-    def cmp_x(a,b)
-      a.x < b.x
-    end
-
-    #sort according to y value
-    def cmp_y(a,b)
-      a.y < b.y
-    end
-
     # find minimum distance between two points in set
-    def find_min_dist(points, n)
-      min = 999
+    def find_min_dist(points)
+      min = distance_point_to_point2d(points[0], points[1])
       points.each { |i|
-        if (distance_point_to_point2d(points[i], points[i + 1])) < min
-          min = distance_point_to_point2d(points[i], points[i + 1])
-        end
+        points.each { |j|
+          j = i+1
+          if (j < points.size)
+            if (distance_point_to_point2d(points[i], points[j])) < min
+              min = distance_point_to_point2d(points[i], points[j])
+            end
+          end
+        }
       }
       return min
     end
+
   end
 end
