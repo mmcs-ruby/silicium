@@ -115,6 +115,73 @@ class SiliciumTest < Minitest::Test
     end
   end
 
+  def test_hook_jeeves_params_1
+    def test_1(x)
+      8 * x[0] * x[0] + 4 * x[0]  + 5
+    end
+
+    vals = hook_jeeves([-4], [1], 0.001) {|x| test_1(x)}
+    assert_in_delta vals[0], -0.25, 0.01
+  end
+
+  def test_hook_jeeves_params_1_new_atm
+    def test_1(x)
+      8 * x[0] * x[0] + 4 * x[0]  + 5
+    end
+
+    vals = hook_jeeves([5], [1], 0.001) {|x| test_1(x)}
+    assert_in_delta vals[0], -0.25, 0.01
+  end
+
+  def test_hook_jeeves_params_1_new_atm2
+    def test_1(x)
+      8 * x[0] * x[0] + 4 * x[0]  + 5
+    end
+
+    vals = hook_jeeves([5], [-1], 0.001) {|x| test_1(x)}
+    assert_in_delta vals[0], -0.25, 0.01
+  end
+
+  def test_hook_jeeves_params_2
+    def test_1(x)
+      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]
+    end
+
+    vals = hook_jeeves([-6, 0], [-1, 2], 0.001) {|x| test_1(x)}
+    assert_in_delta vals[0], -8.0/3, 0.01
+    assert_in_delta vals[1], -4.0/3, 0.01
+  end
+
+  def test_hook_jeeves_params_2_new_atm
+    def test_1(x)
+      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]
+    end
+
+    vals = hook_jeeves([12, -5], [5, 3], 0.001) {|x| test_1(x)}
+    assert_in_delta vals[0], -8.0/3, 0.01
+    assert_in_delta vals[1], -4.0/3, 0.01
+  end
+
+  def test_hook_jeeves_params_2_new_atm_2
+    def test_1(x)
+      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]
+    end
+
+    vals = hook_jeeves([-10, 10], [6, 6], 0.001) {|x| test_1(x)}
+    assert_in_delta vals[0], -8.0/3, 0.01
+    assert_in_delta vals[1], -4.0/3, 0.01
+  end
+
+  def test_hook_jeeves_params_3
+    def test_1(x)
+      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1] + x[2] * x[2] * x[2] - x[1] * x[2] - 3 * x[2] * x[2]
+    end
+
+    vals = hook_jeeves([0, 1, 2], [1, 1, 1], 0.001) {|x| test_1(x)}
+    assert_in_delta vals[0], -2, 0.01
+    assert_in_delta vals[1], 0, 0.01
+    assert_in_delta vals[2], 2, 0.01
+  end
 
 
 end

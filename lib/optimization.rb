@@ -60,6 +60,37 @@ module Silicium
       crutch
     end
 
+    #Hook - Jeeves method for find minimum point (x - array of start variables, step - step of one iteration, eps - allowable error, alfa - slowdown of step,
+    #block - function which takes array x, WAENING function doesn't control  correctness of input
+    def hook_jeeves(x, step, eps = 0.1, alfa = 2.0, &block)
+      prev_f = block.call(x)
+      accuracy = 0
+      step.each { |a| accuracy += a * a }
+      accuracy = Math.sqrt(accuracy)
+      while (accuracy > eps)
+        x_old = x
+        for i in 0..x.length - 1
+          x[i] += step[i]
+          tmp1 = block.call(x)
+          x[i] = x[i] - 2 * step[i]
+          tmp2 = block.call(x)
+          if (tmp1 > tmp2)
+            cur_f = tmp2
+          else
+            x[i] = x[i] + step[i] * 2
+            cur_f = tmp2
+          end
+          if (cur_f > prev_f)
+            step[i] = step[i] * 1.0 / alfa
+          end
+          prev_f = cur_f
+        end
+        accuracy = 0
+        step.each { |a| accuracy += a * a }
+        accuracy = Math.sqrt(accuracy)
+      end
+      x
+    end
 
   end
 end
