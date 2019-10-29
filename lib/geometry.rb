@@ -200,6 +200,16 @@ module Silicium
       return (Math.sqrt(sm[0]**2+sm[1]**2+sm[2]**2)/Math.sqrt(s[0]**2+s[1]**2+s[2]**2))
     end
 
+    # Closest pair of points_________________________
 
+    #sort according to x value
+    def cmp_x(a,b)
+      a.x < b.x
+    end
+
+    #sort according to y value
+    def cmp_y(a,b)
+      a.y < b.y
+    end
   end
 end
