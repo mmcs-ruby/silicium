@@ -78,9 +78,9 @@ module Silicium
             cur_f = tmp2
           else
             x[i] = x[i] + step[i] * 2
-            cur_f = tmp2
+            cur_f = tmp1
           end
-          if (cur_f > prev_f)
+          if (cur_f >= prev_f)
             step[i] = step[i] * 1.0 / alfa
           end
           prev_f = cur_f
