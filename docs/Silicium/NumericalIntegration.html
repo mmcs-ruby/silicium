@@ -108,6 +108,8 @@
 
   <section class="description">
     
+<p>A class providing numerical integration methods</p>
+
   </section>
 
   
@@ -146,7 +148,7 @@
 
           
           <div class="method-source-code" id="left_rect_integration-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 74</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 48</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">left_rect_integration</span>(<span class="ruby-identifier">left_p</span>, <span class="ruby-identifier">right_p</span>, <span class="ruby-identifier">eps</span> = <span class="ruby-value">0.0001</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">splits</span> = <span class="ruby-value">1</span>
   <span class="ruby-identifier">res1</span> = <span class="ruby-identifier">left_rect_integration_n</span>(<span class="ruby-identifier">left_p</span>, <span class="ruby-identifier">right_p</span>, <span class="ruby-value">1</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
@@ -187,7 +189,7 @@
 
           
           <div class="method-source-code" id="left_rect_integration_n-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 87</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 61</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">left_rect_integration_n</span>(<span class="ruby-identifier">left_p</span>, <span class="ruby-identifier">right_p</span>, <span class="ruby-identifier">splits</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">dx</span> = (<span class="ruby-identifier">right_p</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">left_p</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">splits</span>.<span class="ruby-identifier">to_f</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-value">0</span>
@@ -227,9 +229,9 @@
 
           
           <div class="method-source-code" id="middle_rectangles-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 112</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 86</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">middle_rectangles</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">eps</span> = <span class="ruby-value">0.0001</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-identifier">wrapper_method</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-identifier">eps</span>, <span class="ruby-string">&quot;middle_rectangles_with_a_segment&quot;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">wrapper_method</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-identifier">eps</span>, <span class="ruby-string">&#39;middle_rectangles_with_a_segment&#39;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -260,7 +262,7 @@
 
           
           <div class="method-source-code" id="middle_rectangles_with_a_segment-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 100</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 74</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">middle_rectangles_with_a_segment</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">n</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">dx</span> = (<span class="ruby-identifier">b</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_f</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-value">0</span>
@@ -300,27 +302,9 @@
 
           
           <div class="method-source-code" id="simpson_integration-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 51</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 43</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">simpson_integration</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">eps</span> = <span class="ruby-value">0.0001</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-identifier">n</span> = <span class="ruby-value">1</span>
-  <span class="ruby-keyword">begin</span>
-    <span class="ruby-keyword">begin</span>
-      <span class="ruby-identifier">res1</span> = <span class="ruby-identifier">simpson_integration_with_a_segment</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">n</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-      <span class="ruby-identifier">n</span> <span class="ruby-operator">*=</span> <span class="ruby-value">5</span>
-      <span class="ruby-identifier">res2</span> = <span class="ruby-identifier">simpson_integration_with_a_segment</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">n</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">res1</span>.<span class="ruby-identifier">nan?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">res2</span>.<span class="ruby-identifier">nan?</span>
-        <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&#39;We have not-a-number result :(&#39;</span>
-      <span class="ruby-keyword">end</span>
-      <span class="ruby-keyword">if</span> <span class="ruby-identifier">res1</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Float</span><span class="ruby-operator">::</span><span class="ruby-constant">INFINITY</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">res2</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Float</span><span class="ruby-operator">::</span><span class="ruby-constant">INFINITY</span>
-        <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&#39;We have infinity :(&#39;</span>
-      <span class="ruby-keyword">end</span>
-    <span class="ruby-keyword">end</span> <span class="ruby-keyword">until</span> (<span class="ruby-identifier">res1</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">res2</span>).<span class="ruby-identifier">abs</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">eps</span>
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-constant">DomainError</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&#39;Domain error in math function&#39;</span>
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ZeroDivisionError</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&#39;Divide by zero&#39;</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">res2</span>
+  <span class="ruby-identifier">wrapper_method</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-identifier">eps</span>, <span class="ruby-string">&#39;simpson_integration_with_a_segment&#39;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -351,7 +335,7 @@
 
           
           <div class="method-source-code" id="simpson_integration_with_a_segment-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 38</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 30</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">simpson_integration_with_a_segment</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">n</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">dx</span> = (<span class="ruby-identifier">b</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_f</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-value">0</span>
@@ -386,15 +370,15 @@
 
         <div class="method-description">
           
-          
+          <p>Computes integral from <code>a</code> to <code>b</code> of <code>block</code> with accuracy <code>eps</code></p>
           
           
 
           
           <div class="method-source-code" id="three_eights_integration-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 7</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 10</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">three_eights_integration</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">eps</span> = <span class="ruby-value">0.0001</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-identifier">wrapper_method</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-identifier">eps</span>, <span class="ruby-string">&quot;three_eights_integration_n&quot;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">wrapper_method</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-identifier">eps</span>, <span class="ruby-string">&#39;three_eights_integration_n&#39;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -419,34 +403,22 @@
 
         <div class="method-description">
           
-          
+          <p>Computes integral from <code>a</code> to <code>b</code> of <code>block</code> with <code>n</code> segmentations</p>
           
           
 
           
           <div class="method-source-code" id="three_eights_integration_n-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 11</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 15</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">three_eights_integration_n</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">n</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">dx</span> = (<span class="ruby-identifier">b</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_f</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-value">0</span>
   <span class="ruby-identifier">x</span> = <span class="ruby-identifier">a</span>
-  <span class="ruby-keyword">begin</span>
-    <span class="ruby-identifier">n</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span>
-      <span class="ruby-identifier">result</span> <span class="ruby-operator">+=</span>
-          (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span>) <span class="ruby-operator">+</span> <span class="ruby-value">3</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>((<span class="ruby-value">2</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">dx</span>) <span class="ruby-operator">/</span> <span class="ruby-value">3.0</span>) <span class="ruby-operator">+</span>
-              <span class="ruby-value">3</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>((<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">dx</span>)) <span class="ruby-operator">/</span> <span class="ruby-value">3.0</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">dx</span>)) <span class="ruby-operator">/</span> <span class="ruby-value">8.0</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">dx</span>
-      <span class="ruby-identifier">x</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">dx</span>
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">Math</span><span class="ruby-operator">::</span><span class="ruby-constant">DomainError</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&quot;Domain error in math function&quot;</span>
-  <span class="ruby-keyword">rescue</span> <span class="ruby-constant">ZeroDivisionError</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&quot;Divide by zero&quot;</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span>.<span class="ruby-identifier">nan?</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&quot;We have not-a-number result :(&quot;</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">result</span> <span class="ruby-operator">==</span> <span class="ruby-constant">Float</span><span class="ruby-operator">::</span><span class="ruby-constant">INFINITY</span>
-    <span class="ruby-identifier">raise</span> <span class="ruby-constant">IntegralDoesntExistError</span>, <span class="ruby-string">&quot;We have infinity :(&quot;</span>
+  <span class="ruby-identifier">n</span>.<span class="ruby-identifier">times</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">result</span> <span class="ruby-operator">+=</span>
+      (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span>) <span class="ruby-operator">+</span> <span class="ruby-value">3</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>((<span class="ruby-value">2</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">dx</span>) <span class="ruby-operator">/</span> <span class="ruby-value">3.0</span>) <span class="ruby-operator">+</span>
+          <span class="ruby-value">3</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>((<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">dx</span>)) <span class="ruby-operator">/</span> <span class="ruby-value">3.0</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">dx</span>)) <span class="ruby-operator">/</span> <span class="ruby-value">8.0</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">dx</span>
+    <span class="ruby-identifier">x</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">dx</span>
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">result</span>
 <span class="ruby-keyword">end</span></pre>
@@ -479,9 +451,9 @@
 
           
           <div class="method-source-code" id="trapezoid-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 131</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 105</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">trapezoid</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">eps</span> = <span class="ruby-value">0.0001</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
-  <span class="ruby-identifier">wrapper_method</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-identifier">eps</span>, <span class="ruby-string">&quot;trapezoid_with_a_segment&quot;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">wrapper_method</span>([<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>], <span class="ruby-identifier">eps</span>, <span class="ruby-string">&#39;trapezoid_with_a_segment&#39;</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -512,7 +484,7 @@
 
           
           <div class="method-source-code" id="trapezoid_with_a_segment-source">
-            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 118</span>
+            <pre><span class="ruby-comment"># File lib/numerical_integration.rb, line 92</span>
 <span class="ruby-keyword">def</span> <span class="ruby-keyword">self</span>.<span class="ruby-identifier ruby-title">trapezoid_with_a_segment</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">n</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
   <span class="ruby-identifier">dx</span> = (<span class="ruby-identifier">b</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">n</span>.<span class="ruby-identifier">to_f</span>
   <span class="ruby-identifier">result</span> = <span class="ruby-value">0</span>
