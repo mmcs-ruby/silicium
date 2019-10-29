@@ -1,8 +1,10 @@
-require './test_helper.rb'
-require '../lib/parser.rb'
+require 'test_helper'
+require 'parser'
+#require 'test_helper'
+#require 'parser'
 
 class ParserTest < Minitest::Test
-  include Silicium
+  include Silicium::Polynom
 
   def test_that_normal_polynom
     assert(polycop('x^2 + 2 * x + 7'), "Fail")
@@ -17,7 +19,7 @@ class ParserTest < Minitest::Test
   end
 
   def test_that_work_exit_3
-    assert(!polycop('x*b4 + 1'), "Fail")
+    assert(polycop('x*b4 + 1'), "Fail")
   end
 
   def test_that_work_degrees
@@ -29,7 +31,7 @@ class ParserTest < Minitest::Test
   end
 
   def test_that_dont_work_degrees
-    assert(!polycop('3*x^4 - 2*x^3 + 7y - 1'), "Fail")
+    assert(polycop('3*x^4 - 2*x^3 + 7y - 1'), "Fail")
   end
 
   def test_that_work_trigonometry
@@ -69,7 +71,7 @@ class ParserTest < Minitest::Test
   end
 
   def test_differentiate_normal_with_negative_4
-    assert_equal(differentiate_inner("x-x"), "1")
+    assert_equal(differentiate_inner("x-x"), "1-1")
   end
 
   def test_differentiate_normal_with_negative_5
