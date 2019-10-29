@@ -1,7 +1,9 @@
 require "silicium"
+require 'fast_matrix'
 
 module Silicium
   module Optimization
+
 
     # reflector function
     def re_lu(x)
