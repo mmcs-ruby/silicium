@@ -52,7 +52,7 @@ class GeometryTest < Minitest::Test
     assert_equal([5.0, 3.0, 2.0], directing_vector3d('(x-5)/5=(y+15)/3=(z-20)/2'))
     assert_equal([26.0, -15.0, 51.0], directing_vector3d('(x-0)/26=(y+300)/*(-15)=(z-200)/51'))
     assert_equal([0.0, 0.0, 1.0], directing_vector3d('(x-0)/0=(y-0)/0=(z-20)/1'))
-    assert_equal([30.0, 56.0, 0.0], directing_vector3d('(x-30)/234=(y-56)/4'))
+    assert_equal([234.0, 4.0, 0.0], directing_vector3d('(x-30)/234=(y-56)/4'))
   end
 
   def test_point_on_the_line3d
@@ -74,18 +74,53 @@ class GeometryTest < Minitest::Test
   end
 
 
-  def test_distance_line_to_point2d_simple
-    assert_equal(0, distance_line_to_point2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
+  def test_distance_line_on_point
+    assert_equal(0, distance_point_line2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
   end
 
-  def test_distance_line_to_point2d_normal
-    assert_in_delta(1.8343409898251712, distance_line_to_point2d(Point.new(-7, 3), Point.new(6, 11), Point.new(3, 7)), 0.0001)
+  def test_distance_point_close_from_line
+    assert_in_delta(1.8343409898251712, distance_point_line2d(Point.new(-7, 3), Point.new(6, 11), Point.new(3, 7)), 0.0001)
   end
 
-  def test_distance_line_to_point2d_big
-    assert_in_delta(241.00095342953614, distance_line_to_point2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
+  def test_distance_point_far_from_line
+    assert_in_delta(241.00095342953614, distance_point_line2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
+  end
+
+  def test_init_line2d_with_same_points
+    assert_raises ArgumentError  do
+      Line2dCanon.new(Point.new(0,0),Point.new(0,0))
+    end
+  end
+
+  def test_init_line2d_with_same_x_arguments
+    assert_raises ArgumentError  do
+      Line2dCanon.new(Point.new(0,5),Point.new(0,10))
+    end
+  end
+
+  def test_init_slope_line2d_with_points_simple
+    assert_equal(0,Line2dCanon.new(Point.new(0,0),Point.new(1,0)).slope)
+  end
+
+  def test_init_free_term_line2d_with_points_simple
+    assert_equal(0,Line2dCanon.new(Point.new(0,0),Point.new(1,0)).free_term)
+  end
+
+  def test_init_slope_line2d_with_points_hard
+    assert_in_delta(0.333333333,Line2dCanon.new(Point.new(0,3),Point.new(3,4)).slope,0.0001)
+  end
+
+  def test_init_free_term_line2d_with_points_hard
+    assert_in_delta(1.333333333,Line2dCanon.new(Point.new(2,2),Point.new(5,3)).free_term,0.0001)
+  end
+
+  def test_method_pointis_on_line_returns_true_simple
+    assert_equal(true, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(500,0)))
+  end
+
+  def test_method_pointis_on_line_returns_false_simple
+    assert_equal(false, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(1,1)))
   end
 
 
 end
-
