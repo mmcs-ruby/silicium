@@ -1,6 +1,6 @@
 module Silicium
 
-  class Polynom
+  module Polynom
     attr_reader :str
 
     def initializer(str)
