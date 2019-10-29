@@ -144,6 +144,56 @@ module Silicium
     end
 
 
+=begin
+    def first_char_from(str, ch, ind)
+      i = ind
+      while((str[i] != ch) && (i != str.length))
+        i+=1
+      end
+      return i
+    end
+    def find_closing_bracket(str, ind)
+      i = ind
+      kind_of_a_stack = 0
+      while(i != str.length)
+        if(str[i] == '(')
+          kind_of_a_stack += 1
+        end
+        if(str[i] == ')')
+          if(kind_of_a_stack == 0)
+            return i
+          else
+            kind_of_a_stack -= 1
+          end
+        end
+        i+=1
+      end
+      return i
+    end
+    def dif_2(str)
+      var_hash = new.Hash()
+      ind_hash = 0
+      if (str.include?('('))
+        ind = first_char_from(str, '(', 0)
+        while (ind != str.length)
+          ind2 = find_closing_bracket(str,ind + 1)
+          if (str[ind2].null?)
+            puts 'bad string'
+          else
+            var_hash[ind_hash] = str[ind+1,ind2-1]
+            if (!(str[ind2+1] == '*' && str[ind2+2] == '*'))
+              str = str[0,ind2] + '**1' + str[ind2+1,str.length-1]
+            end
+            str = str[0,ind-1] + '#' + ind_hash.to_s + str[ind2+1,str.length-1]
+            ind_hash += 1
+          end
+          ind = first_char_from(str, '(', 0)
+        end
+      end
+    end
+=end
+
+
   end
 end
 class PolynomError < StandardError
