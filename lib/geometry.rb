@@ -15,7 +15,33 @@ module Silicium
     Point3d = Struct.new(:x,:y,:z)
 
     ##
-    #Calculates the distance from given points in two-dimensional space
+    # Class represents a line as equation y = k*x +b
+    # k - slope
+    # b - free_term
+    # in two-dimensional space
+    class Line2dCanon
+      attr_reader :slope
+      attr_reader :free_term
+      def initialize(p1, p2)
+        if (p1.x == p2.x) && (p1.y == p2.y)
+          raise ArgumentError, "You need 2 diffrent points"
+        end
+        if (p1.x == p2.x)
+          raise ArgumentError, "The straight line equation cannot be written in canonical form"
+        end
+        @slope= (p2.y - p1.y)/(p2.x - p1.x).to_f
+        @free_term= (p2.x*p1.y - p2.y*p1.x)/(p2.x - p1.x).to_f
+      end
+      ##
+      # Checks the point lies on the line or not
+      def point_is_on_line?(p1)
+        p1.y==@slope*p1.x + @free_term
+      end
+    end
+
+
+    ##
+    # Calculates the distance from given points in two-dimensional space
     def distance_point_to_point2d(a,b)
       Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2)
     end
@@ -26,10 +52,13 @@ module Silicium
       Math.sqrt((b.x-a.x)**2+(b.y-a.y)**2+(b.z-a.z)**2)
     end
 
-    def distance_line_to_point2d(p1, p2, a)
-
-      dis = distance_point_to_point2d(p1, p2)
-      ((p2.y - p1.y) * a.x - (p2.x - p1.x) * a.y + p2.x * p1.y - p2.y * p1.x).abs / (dis * 1.0)
+    ##
+    # The distance from a point to a line on a plane
+    # The line is defined by two points
+    # https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+    def distance_point_line2d(p1, p2, a)
+      line_segment_length = distance_point_to_point2d(p1, p2)
+      ((p2.y - p1.y) * a.x - (p2.x - p1.x) * a.y + p2.x * p1.y - p2.y * p1.x).abs / (line_segment_length * 1.0)
     end
 
 
