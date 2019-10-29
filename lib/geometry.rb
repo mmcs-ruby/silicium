@@ -211,5 +211,16 @@ module Silicium
     def cmp_y(a,b)
       a.y < b.y
     end
+
+    # find minimum distance between two points in set
+    def find_min_dist(points, n)
+      min = 999
+      points.each { |i|
+        if (distance_point_to_point2d(points[i], points[i + 1])) < min
+          min = distance_point_to_point2d(points[i], points[i + 1])
+        end
+      }
+      return min
+    end
   end
 end

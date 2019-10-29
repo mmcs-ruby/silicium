@@ -123,6 +123,26 @@ class GeometryTest < Minitest::Test
     assert_equal(false, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(1,1)))
   end
 
+  # Closest pair of points_______________________________
 
+  def test_method_cmp_x_returns_true_simple
+    assert_equal(true, cmp_x(Point.new(1, 1), Point.new(3,1)))
+  end
+
+  def test_method_cmp_x_returns_false_simple
+    assert_equal(false, cmp_x(Point.new(5, 1), Point.new(3,1)))
+  end
+
+  def test_method_cmp_y_returns_true_simple
+    assert_equal(true, cmp_y(Point.new(1, 1), Point.new(3,1)))
+  end
+
+  def test_method_cmp_y_returns_false_simple
+    assert_equal(false, cmp_y(Point.new(5, 1), Point.new(3,1)))
+  end
+
+  def test_method_find_min_dist_simple
+    assert_equal(1, find_min_dist([Point.new(1,1), Point.new(2,1), Point.new(3,2)], 3))
+  end
 end
 
