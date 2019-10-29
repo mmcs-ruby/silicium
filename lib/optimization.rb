@@ -24,5 +24,40 @@ module Silicium
       res
     end
 
+    #return true if array is sorted
+    def sorted?(a)
+      return false if a.nil?
+      for i in 0..a.length - 2
+        if (a[i + 1] < a[i])
+          return false
+        end
+      end
+      true
+    end
+
+    #fastest(but it is not exactly) sort, modify sequance
+    def bogosort!(a)
+      if (a.nil?)
+        raise ArgumentError, "Nil array in bogosort"
+      end
+      while (!sorted?(a))
+        a.shuffle!
+      end
+      a
+    end
+
+    #fastest(but it is not exactly) sort
+    def bogosort(a)
+      if (a.nil?)
+        raise ArgumentError, "Nil array in bogosort"
+      end
+      crutch = a
+      while (!sorted?(crutch))
+        crutch = a.shuffle
+      end
+      crutch
+    end
+
+
   end
 end

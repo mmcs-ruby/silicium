@@ -59,4 +59,62 @@ class SiliciumTest < Minitest::Test
     assert_in_delta Math.cos(3) - Math.cos(2), integrating_Monte_Carlo_base(-3, 2){ |x| test_1(x) }, 0.1
   end
 
+  def test_sorted_sorted_arr
+    assert sorted?([1, 2, 3, 4, 5])
+  end
+
+  def test_sorted_unsorted_arr
+    assert !sorted?([1, 2, 666, 4, 5])
+  end
+
+  def test_sorted_empty_arr
+    assert sorted?([])
+  end
+
+  def test_sorted_nil
+    assert !sorted?(nil)
+  end
+
+  def test_bogosort_m_sorted_arr
+    assert sorted?(bogosort!([1, 2, 3]))
+  end
+
+  def test_bogosort_m_unsorted_arr
+    assert sorted?(bogosort!([3, 1, 2, 5, 4]))
+  end
+
+  def test_bogosort_m_modify_arr
+    a = [3, 0, 5]
+    bogosort!(a)
+    assert sorted?(a)
+  end
+
+  def test_bogosort_m_nil_arr
+    exception = assert_raises(ArgumentError) do
+      bogosort!(nil)
+    end
+  end
+
+  def test_bogosort_sorted_arr
+    assert sorted?(bogosort([1, 2, 3]))
+  end
+
+  def test_bogosort_unsorted_arr
+    assert sorted?(bogosort([3, 1, 2, 5, 4]))
+  end
+
+  def test_bogosort_not_modify_arr
+    a = [3, 0, 5]
+    bogosort(a)
+    assert !sorted?(a)
+  end
+
+  def test_bogosort_nil_arr
+    exception = assert_raises(ArgumentError) do
+      bogosort!(nil)
+    end
+  end
+
+
+
 end
