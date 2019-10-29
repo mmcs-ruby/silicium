@@ -18,7 +18,7 @@ class PlotterTest < Minitest::Test
     File.delete(filename) if File.exist?(filename)
 
     plotter = Image.new(100, 100)
-    plotter.rectangle(20, 30, 50, 60, Color('black @ 0.5'))
+    plotter.rectangle(20, 30, 50, 60, color('black @ 0.5'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
@@ -29,7 +29,7 @@ class PlotterTest < Minitest::Test
     File.delete(filename) if File.exist?(filename)
 
     plotter = Image.new(200, 100)
-    plotter.bar_chart({ 20 => 10, 40 => 20, 80 => 40, 160 => 80 }, 1, Color('red @ 1.0'))
+    plotter.bar_chart({ 20 => 10, 40 => 20, 80 => 40, 160 => 80 }, 1, color('red @ 1.0'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
@@ -40,7 +40,7 @@ class PlotterTest < Minitest::Test
     File.delete(filename) if File.exist?(filename)
 
     plotter = Image.new(200, 100)
-    plotter.bar_chart({ -20 => 10, -40 => 20, -80 => 40, -160 => 80 }, 1, Color('red @ 1.0'))
+    plotter.bar_chart({ -20 => 10, -40 => 20, -80 => 40, -160 => 80 }, 1, color('red @ 1.0'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
@@ -51,7 +51,7 @@ class PlotterTest < Minitest::Test
     File.delete(filename) if File.exist?(filename)
 
     plotter = Image.new(200, 100)
-    plotter.bar_chart({ -20 => -10, -40 => -20, -80 => -40, -160 => -80 }, 1, Color('red @ 1.0'))
+    plotter.bar_chart({ -20 => -10, -40 => -20, -80 => -40, -160 => -80 }, 1, color('red @ 1.0'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
@@ -62,7 +62,7 @@ class PlotterTest < Minitest::Test
     File.delete(filename) if File.exist?(filename)
 
     plotter = Image.new(200, 100)
-    plotter.bar_chart({ 20 => -10, 40 => -20, 80 => -40, 160 => -80 }, 1, Color('red @ 1.0'))
+    plotter.bar_chart({ 20 => -10, 40 => -20, 80 => -40, 160 => -80 }, 1, color('red @ 1.0'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
@@ -74,7 +74,7 @@ class PlotterTest < Minitest::Test
 
     plotter = Image.new(200, 100)
     plotter.bar_chart({ -20 => 10, -40 => 20, -80 => 40, -160 => 80,
-                        20 => 10, 40 => 20, 80 => 40, 160 => 80 }, 1, Color('red @ 1.0'))
+                        20 => 10, 40 => 20, 80 => 40, 160 => 80 }, 1, color('red @ 1.0'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
@@ -86,7 +86,7 @@ class PlotterTest < Minitest::Test
 
     plotter = Image.new(200, 100)
     plotter.bar_chart({ -20 => -10, -40 => -20, -80 => -40, -160 => -80,
-                        20 => -10, 40 => -20, 80 => -40, 160 => -80 }, 1, Color('red @ 1.0'))
+                        20 => -10, 40 => -20, 80 => -40, 160 => -80 }, 1, color('red @ 1.0'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
@@ -97,7 +97,7 @@ class PlotterTest < Minitest::Test
     File.delete(filename) if File.exist?(filename)
 
     plotter = Image.new(200, 100)
-    plotter.bar_chart({ 20 => -10, -40 => -20, -80 => 40, 160 => 80 }, 1, Color('red @ 1.0'))
+    plotter.bar_chart({ 20 => -10, -40 => -20, -80 => 40, 160 => 80 }, 1, color('red @ 1.0'))
     plotter.export(filename)
 
     assert(images_eql?(filename.sub('tmp', 'test/resources'), filename))
