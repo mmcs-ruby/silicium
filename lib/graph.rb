@@ -134,7 +134,7 @@ module Silicium
             return true
           end
           @vertices[node].each do |child|
-            if visited[child] == false
+            unless visited[child]
               queue.push(child)
               visited[child] = true
             end
@@ -172,6 +172,18 @@ module Silicium
         pred
       end
 
+      def number_of_connected
+        visited = Hash.new(false)
+        res = 0
+        @vertices.keys.each do |v|
+          unless visited[v]
+            dfu(v, visited)
+            res += 1
+          end
+        end
+        res
+      end
+
       protected
 
       def protected_add_edge!(from, to)
@@ -184,6 +196,15 @@ module Silicium
         if has_edge?(from, to)
           @vertices[from].delete(to)
           @edge_labels.delete(Pair.new(from, to))
+        end
+      end
+
+      def dfu(vertice, visited)
+        visited[vertice] = true
+        @vertices[vertice].each do |item|
+          unless visited[item]
+            dfu(item, visited)
+          end
         end
       end
 
