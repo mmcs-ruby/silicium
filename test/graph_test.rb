@@ -97,6 +97,46 @@ class GraphTest < SiliciumTest
     assert(!g.connected?)
   end
 
+  def test_number_of_connected_one
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert_equal(g.number_of_connected, 1)
+  end
+
+  def test_number_of_connected_two_1
+    g = OrientedGraph.new([{v: 0,     i: []},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert_equal(g.number_of_connected, 2)
+  end
+
+  def test_number_of_connected_two_2
+    g = OrientedGraph.new([{v: 0,     i: []},
+                           {v: :one,  i: ['two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert_equal(g.number_of_connected, 2)
+  end
+
+  def test_number_of_connected_two_3
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0]},
+                           {v: 'two', i: ['two']}])
+
+    assert_equal(g.number_of_connected, 2)
+  end
+
+  def test_number_of_connected_three
+    g = OrientedGraph.new([{v: 0,     i: []},
+                           {v: :one,  i: []},
+                           {v: 'two', i: []}])
+
+    assert_equal(g.number_of_connected, 3)
+  end
+
   def test_bfs_passed_1
     g = OrientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: [0,'two']},
@@ -121,7 +161,7 @@ class GraphTest < SiliciumTest
     assert(!g.breadth_first_search?(0, 'two'))
   end
 
-  def test_bfs_fail_2
+  def test_bfs_failed_2
     g = OrientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: [0]},
                            {v: 'two', i: [0, 'two']}])
