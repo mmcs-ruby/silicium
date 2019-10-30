@@ -27,6 +27,7 @@ module Silicium
     class Line2dCanon
       attr_reader :slope
       attr_reader :free_term
+
       def initialize(p1, p2)
         if (p1.x == p2.x) && (p1.y == p2.y)
           raise ArgumentError, "You need 2 diffrent points"
@@ -34,13 +35,14 @@ module Silicium
         if (p1.x == p2.x)
           raise ArgumentError, "The straight line equation cannot be written in canonical form"
         end
-        @slope= (p2.y - p1.y)/(p2.x - p1.x).to_f
-        @free_term= (p2.x*p1.y - p2.y*p1.x)/(p2.x - p1.x).to_f
+        @slope = (p2.y - p1.y) / (p2.x - p1.x).to_f
+        @free_term = (p2.x * p1.y - p2.y * p1.x) / (p2.x - p1.x).to_f
       end
+
       ##
       # Checks the point lies on the line or not
       def point_is_on_line?(p1)
-        p1.y==@slope*p1.x + @free_term
+        p1.y == @slope * p1.x + @free_term
       end
     end
 
@@ -131,6 +133,18 @@ module Silicium
       line_equation.slice(line_equation.index('='), line_equation.length).sub('=', '')
     end
 
+    def process_line_by_coordinates(line_equation, func)
+      copy_line = insert_eq(line_equation)
+      func = method(func)
+      res = []
+      res[0] = func.call(copy_line, 'x')
+      copy_line = cut_by_eq(copy_line)
+      res[1] = func.call(copy_line, 'y')
+      copy_line = cut_by_eq(copy_line)
+      res[2] = func.call(copy_line, 'z')
+      res
+    end
+
     ##
     # Creates an array- directing vector in three-dimensional space .
     # The equation is specified in the canonical form.
@@ -138,14 +152,7 @@ module Silicium
     #
     # Important: mandatory order of variables: x, y, z
     def directing_vector3d(line_equation)
-      copy_line = insert_eq(line_equation)
-      res = []
-      res[0] = process_cf(copy_line, 'x')
-      copy_line = cut_by_eq(copy_line)
-      res[1] = process_cf(copy_line, 'y')
-      copy_line = cut_by_eq(copy_line)
-      res[2] = process_cf(copy_line, 'z')
-      res
+      process_line_by_coordinates(line_equation, :process_cf)
     end
 
     class VariablesOrderException < Exception
@@ -177,15 +184,7 @@ module Silicium
     #
     # Important: mandatory order of variables: x, y, z
     def height_point_3d(line_equation)
-      copy_line = insert_eq(line_equation)
-      res = []
-
-      res[0] = process_free_member(copy_line, 'x')
-      copy_line = cut_by_eq(copy_line)
-      res[1] = process_free_member(copy_line, 'y')
-      copy_line = cut_by_eq(copy_line)
-      res[2] = process_free_member(copy_line, 'z')
-      res
+      process_line_by_coordinates(line_equation, :process_free_member)
     end
 
     def vectors_product(v1, v2)
@@ -212,8 +211,7 @@ module Silicium
       height_vector = [line_point[0] - point.x, line_point[1] - point.y, line_point[2] - point.z]
 
       height_on_dir = vectors_product(height_vector, dir_vector)
-      vector_length(height_on_dir) /
-          vector_length(dir_vector)
+      vector_length(height_on_dir) / vector_length(dir_vector)
     end
 
     def insert_eq(line_equation)
