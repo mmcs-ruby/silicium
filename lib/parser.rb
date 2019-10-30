@@ -52,10 +52,10 @@ module Silicium
       i = ind
       kind_of_a_stack = 0
       while(i != str.length)
-        if(str[i] == '(')
+        case str[i]
+        when '('
           kind_of_a_stack += 1
-        end
-        if(str[i] == ')')
+        when ')'
           if(kind_of_a_stack == 0)
             return i
           else
@@ -66,26 +66,33 @@ module Silicium
       end
       return i
     end
-
+    def fill_var_loop_inner(str,var_hash,ind_hash,ind)
+      var_hash[ind_hash] = str[ind+1,ind2-ind-1]
+      if (!(str[ind2+1] == '*' && str[ind2+2] == '*'))
+        str = str[0,ind2+1] + '**1' + str[ind2+1,str.length-1]
+      end
+      str = str[0,ind] + '#' + ind_hash.to_s + str[ind2+1,str.length-ind2-1]
+      ind_hash += 1
+      return [str, var_hash, ind_hash, ind]
+    end
+    def fill_variables_loop(str,var_hash,ind_hash,ind)
+      while (ind != str.length)
+        ind2 = find_closing_bracket(str,ind + 1)
+        if (str[ind2].nil?)
+          puts 'bad string'
+        else
+          str, var_hash, ind_hash, ind = fill_var_loop_inner(str,var_hash, ind_hash, ind)
+        end
+        ind = first_char_from(str, '(', 0)
+      end
+      return [str, var_hash]
+    end
     def fill_variables(str)
       var_hash = Hash.new
       ind_hash = 0
       if (str.include?('('))
         ind = first_char_from(str, '(', 0)
-        while (ind != str.length)
-          ind2 = find_closing_bracket(str,ind + 1)
-          if (str[ind2].nil?)
-            puts 'bad string'
-          else
-            var_hash[ind_hash] = str[ind+1,ind2-ind-1]
-            if (!(str[ind2+1] == '*' && str[ind2+2] == '*'))
-              str = str[0,ind2+1] + '**1' + str[ind2+1,str.length-1]
-            end
-            str = str[0,ind] + '#' + ind_hash.to_s + str[ind2+1,str.length-ind2-1]
-            ind_hash += 1
-          end
-          ind = first_char_from(str, '(', 0)
-        end
+        str,var_hash = fill_variables_loop(str,var_hash,ind_hash,ind)
       end
       return [str, var_hash]
     end
@@ -120,7 +127,8 @@ module Silicium
                '0'
              end
     end
-    def dif_x(a,b,c) # a*x^b*c
+
+    def dif_x_a(a)
       if (a.nil? || a == "1*" || a == '')
         a = ""
         a_char = ""
@@ -128,6 +136,9 @@ module Silicium
         a_char = a[a.length - 1]
         a = eval(a[0,a.length-1]).to_s
       end
+      return [a, a_char]
+    end
+    def dif_x_c(c)
       if (c.nil? || c == "*1" || c == "/1" || c == '')
         c = ""
         c_char = ""
@@ -135,6 +146,11 @@ module Silicium
         c_char = c[0]
         c = eval(c[1,c.length-1]).to_s
       end
+      return [c, c_char]
+    end
+    def dif_x(a,b,c) # a*x^b*c
+      a, a_char = dif_x_a(a)
+      c, c_char = dif_x_c(c)
       if (b.nil? || b == "**1")
         return eval(a+a_char+"1"+c_char+c).to_s
       else
@@ -232,11 +248,7 @@ module Silicium
       str = run_difs(str)
       return str
     end
-
-
-
   end
-
 end
 class PolynomError < StandardError
 end
