@@ -97,6 +97,38 @@ class GraphTest < SiliciumTest
     assert(!g.connected?)
   end
 
+  def test_bfs_passed_1
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert(g.breadth_first_search?(0, 'two'))
+  end
+
+  def test_bfs_passed_2
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert(g.breadth_first_search?('two', 0))
+  end
+
+  def test_bfs_failed_1
+    g = OrientedGraph.new([{v: 0,     i: []},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert(!g.breadth_first_search?(0, 'two'))
+  end
+
+  def test_bfs_fail_2
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0]},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert(!g.breadth_first_search?(0, 'two'))
+  end
+
   def test_add_vertex
     g = OrientedGraph.new
     g.add_vertex!(:one)
