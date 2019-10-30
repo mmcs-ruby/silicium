@@ -1,6 +1,6 @@
-# here goes the Sparse class
 module Silicium
   module Sparse
+    # here goes the Sparse class
     class SparseMatrix
       attr_reader :triplets
 
