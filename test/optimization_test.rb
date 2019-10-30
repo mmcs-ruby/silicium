@@ -213,4 +213,34 @@ class SiliciumTest < Minitest::Test
     end
   end
 
+  def test_middle
+    assert_equal 2.0, middle(1, 3)
+  end
+
+  def test_half_division_step
+    def test_1(x)
+      x
+    end
+    a = 1
+    b = 3
+    c = 2
+    tmp = half_division_step(a, b, c){|x| test_1(x)}
+    a = tmp[0]
+    b = tmp[1]
+    c = tmp[2]
+    assert_equal a, 2
+    assert_equal c, 2.5
+    assert_equal b, 3
+  end
+
+  def test_accuracy
+    assert_in_delta 0.3, accuracy([0.2, -0.1, 0.2]), 0.01
+  end
+
+  def test_hook_jeeves_step
+    exception = assert_raises(ArgumentError) do
+      test_hook_jeeves_step(-0.5, 0.5, 0.0001)
+    end
+  end
+
 end

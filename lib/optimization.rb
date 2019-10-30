@@ -60,49 +60,75 @@ module Silicium
       crutch
     end
 
+    #calculate current accuracy in Hook - Jeeves method
+    def accuracy(step)
+      acc = 0
+      step.each { |a| acc += a * a }
+      Math.sqrt(acc)
+    end
+
+    #do one Hook - Jeeves step
+    def hook_jeeves_step(x, i, step, &block)
+      x[i] += step[i]
+      tmp1 = block.call(x)
+      x[i] = x[i] - 2 * step[i]
+      tmp2 = block.call(x)
+      if (tmp1 > tmp2)
+        cur_f = tmp2
+      else
+        x[i] = x[i] + step[i] * 2
+        cur_f = tmp1
+      end
+      [cur_f, x[i]]
+    end
+
     #Hook - Jeeves method for find minimum point (x - array of start variables, step - step of one iteration, eps - allowable error, alfa - slowdown of step,
     #block - function which takes array x, WAENING function doesn't control  correctness of input
     def hook_jeeves(x, step, eps = 0.1, alfa = 2.0, &block)
       prev_f = block.call(x)
-      accuracy = 0
-      step.each { |a| accuracy += a * a }
-      accuracy = Math.sqrt(accuracy)
-      while (accuracy > eps)
+      acc = accuracy(step)
+      while (acc > eps)
         x_old = x
         for i in 0..x.length - 1
-          x[i] += step[i]
-          tmp1 = block.call(x)
-          x[i] = x[i] - 2 * step[i]
-          tmp2 = block.call(x)
-          if (tmp1 > tmp2)
-            cur_f = tmp2
-          else
-            x[i] = x[i] + step[i] * 2
-            cur_f = tmp1
-          end
+          tmp = hook_jeeves_step(x, i, step, &block)
+          cur_f = tmp[0]
+          x[i] = tmp[1]
           if (cur_f >= prev_f)
             step[i] = step[i] * 1.0 / alfa
           end
           prev_f = cur_f
         end
-        accuracy = 0
-        step.each { |a| accuracy += a * a }
-        accuracy = Math.sqrt(accuracy)
+        acc = accuracy(step)
       end
       x
     end
 
+    #find centr of interval
+    def middle(a, b)
+      (a + b) / 2.0
+    end
+
+    #do one half division step
+    def half_division_step(a, b, c, &block)
+      if (block.call(a) * block.call(c) < 0)
+        b = c
+        c = middle(a, c)
+      else
+        a = c
+        c = middle(b, c)
+      end
+      [a, b, c]
+    end
+
     #find root in [a, b], if he exist, if number of iterations > iters -> error
-    def half_division(a, b, eps = 0.001, iters = 100000, &block)
-      c = (a + b) / 2.0
+    def half_division(a, b, eps = 0.001, &block)
+      iters = 1000000
+      c = middle(a, b)
       while ((block.call(c).abs) > eps)
-        if (block.call(a) * block.call(c) < 0)
-          b = c
-          c = (a + c) / 2.0
-        else
-          a = c
-          c = (b + c) / 2.0
-        end
+        tmp = half_division_step(a, b, c, &block)
+        a = tmp[0]
+        b = tmp[1]
+        c = tmp[2]
         iters -= 1
         if iters == 0
           raise RuntimeError, "Root not found! Check does he exist, or change eps or iters"
