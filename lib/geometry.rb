@@ -84,7 +84,7 @@ module Silicium
       points.empty? || points.size == 1 || points.size == 2
     end
 
-    def put_point_in_part!(part, point, direction)
+    def put_point_in_part(part, point, direction)
       direction = method(direction)
       while part.size >= 2 && !direction.call(part[part.size - 2], part[part.size - 1], point)
         part.pop
@@ -109,10 +109,10 @@ module Silicium
         point = points[i]
         is_last = i == points.size - 1
         if is_last || clockwise(first, point, last)
-          put_point_in_part!(up, point, :clockwise)
+          put_point_in_part(up, point, :clockwise)
         end
         if is_last || counter_clockwise(first, point, last)
-          put_point_in_part!(down, point, :counter_clockwise)
+          put_point_in_part(down, point, :counter_clockwise)
         end
       end
 
