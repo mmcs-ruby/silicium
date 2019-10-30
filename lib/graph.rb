@@ -162,6 +162,16 @@ module Silicium
         @edge_labels = l
       end
 
+      def connected?
+        start = @vertices.keys[0]
+        goal = @vertices.keys[vertex_number - 1]
+        pred = breadth_first_search?(start, goal)
+        reverse!
+        pred = pred and breadth_first_search?(goal, start)
+        reverse!
+        pred
+      end
+
       protected
 
       def protected_add_edge!(from, to)
