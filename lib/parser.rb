@@ -7,32 +7,42 @@ module Silicium
       unless polycop(str)
         raise PolynomError, 'Invalid string for polynom '
       end
-
-      str.gsub!('^','**')
-      str.gsub!('tg','tan')
-      str.gsub!(/(sin|cos|tan)/,'Math::\1')
       @str = str
     end
 
     def polycop(str)
-      allowed_w = ['sin','cos','tan','tg','ctg','arccos','arcsin']
+      allowed_w = ['ln','lg','log']
+      str_var = ''
       parsed = str.split(/[-+]/)
       parsed.each do |term|
-        if term[/(\s?\d*\s?\*\s?)?[a-z](\^\d*)?|\s?\d+$/].nil?
+        if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
           return false
         end
-        #check for extra letters in term
+        cur_var = $2
+        str_var = cur_var if str_var == ''
+        if !cur_var.nil? && str_var != cur_var
+          return false
+        end
+        # check for extra letters in term
         letters = term.scan(/[a-z]{2,}/)
         letters = letters.join
         if letters.length != 0 && !allowed_w.include?(letters)
           return false
         end
       end
+      @x = str_var # sorry for that
       return true
+    end
+    def to_ruby_s ()
+      temp_str = @str
+      temp_str.gsub!('^','**')
+      temp_str.gsub!(/lg|log|ln/,'Math::\1')
+      temp_str.gsub!(@x,x)
+      return temp_str
     end
 
     def evaluate(x)
-      res = str.gsub('x',x)
+      res = to_ruby_s
       eval(res)
     end
 
