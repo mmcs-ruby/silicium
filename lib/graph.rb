@@ -14,6 +14,7 @@ module Silicium
         @vertices = {}
         @edge_labels = {}
         @vertex_labels = {}
+        @edge_number = 0
         initializer.each do |v|
           add_vertex!(v[:v])
           v[:i].each { |iv| add_edge_force!(v[:v], iv)}
@@ -28,9 +29,8 @@ module Silicium
       end
 
       def add_edge!(from, to)
-        if @vertices.has_key?(from) && @vertices.has_key?(to)
-          @vertices[from] << to
-        end
+        protected_add_edge!(from, to)
+        @edge_number += 1
       end
 
       # should only be used in constructor
@@ -85,11 +85,7 @@ module Silicium
       end
 
       def edge_number
-        res = 0
-        @vertices.values.each do |item|
-          res += item.count
-        end
-        res
+        @edge_number
       end
 
       def vertex_label_number
@@ -123,18 +119,103 @@ module Silicium
       end
 
       def delete_edge!(from, to)
+        protected_delete_edge!(from, to)
+        @edge_number -= 1
+      end
+
+      def breadth_first_search?(start, goal)
+        visited = Hash.new(false)
+        queue = Queue.new
+        queue.push(start)
+        visited[start] = true
+        until queue.empty? do
+          node = queue.pop
+          if node == goal
+            return true
+          end
+          @vertices[node].each do |child|
+            unless visited[child]
+              queue.push(child)
+              visited[child] = true
+            end
+          end
+        end
+        false
+      end
+
+      def reverse!
+        v = Hash.new()
+        l = {}
+        @vertices.keys.each do |from|
+          v[from] = [].to_set
+        end
+
+        @vertices.keys.each do |from|
+          @vertices[from].each do |to|
+            v[to] << from
+            if @edge_labels.include?(Pair.new(from, to))
+              l[Pair.new(to, from)] = @edge_labels[Pair.new(from, to)]
+            end
+          end
+        end
+        @vertices = v
+        @edge_labels = l
+      end
+
+      def connected?
+        start = @vertices.keys[0]
+        goal = @vertices.keys[vertex_number - 1]
+        pred = breadth_first_search?(start, goal)
+        reverse!
+        pred = pred and breadth_first_search?(goal, start)
+        reverse!
+        pred
+      end
+
+      def number_of_connected
+        visited = Hash.new(false)
+        res = 0
+        @vertices.keys.each do |v|
+          unless visited[v]
+            dfu(v, visited)
+            res += 1
+          end
+        end
+        res
+      end
+
+      protected
+
+      def protected_add_edge!(from, to)
+        if @vertices.has_key?(from) && @vertices.has_key?(to)
+          @vertices[from] << to
+        end
+      end
+
+      def protected_delete_edge!(from, to)
         if has_edge?(from, to)
           @vertices[from].delete(to)
           @edge_labels.delete(Pair.new(from, to))
         end
       end
 
+      def dfu(vertice, visited)
+        visited[vertice] = true
+        @vertices[vertice].each do |item|
+          unless visited[item]
+            dfu(item, visited)
+          end
+        end
+      end
+
     end
 
     class UnorientedGraph < OrientedGraph
+
       def add_edge!(from, to)
-        super(from, to)
-        super(to, from)
+        protected_add_edge!(from, to)
+        protected_add_edge!(to, from)
+        @edge_number += 1
       end
 
       def label_edge!(from, to, label)
@@ -143,22 +224,15 @@ module Silicium
       end
 
       def delete_edge!(from, to)
-        super(from, to)
-        super(to, from)
+        protected_delete_edge!(from, to)
+        protected_delete_edge!(to, from)
+        @edge_number -= 1
       end
 
-      def edge_number
-        res = 0
-        @vertices.each do |from, tos|
-          tos.each {|to| res += (to == from ? 2 : 1)}
-        end
-        res / 2
-      end
     end
 
     def dijkstra_algorythm(graph, starting_vertex)
       #
     end
   end
-
 end
