@@ -26,17 +26,17 @@ class Test < Minitest::Test
 	end
 
 	def test_chance1
-		s = PolyhedronsSet.new([6, 6])
+		s = PolyhedronSet.new([6, 6])
 		assert s.percentage[5] - 0.1111111 < 0.0000001
 	end
 
 	def test_chance2
-		s = PolyhedronsSet.new([6, 6, 6])
+		s = PolyhedronSet.new([6, 6, 6])
 		assert_equal s.percentage[10] - 0.125, 0
 	end
 
 	def test_chance3
-		s = PolyhedronsSet.new([[1,3,5], [2, 4, 6]])
+		s = PolyhedronSet.new([[1,3,5], [2, 4, 6]])
 		assert s.percentage[7] - 0.3333333 < 0.0000001
 	end
 

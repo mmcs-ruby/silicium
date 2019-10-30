@@ -15,18 +15,9 @@ module Combinatorics
   #Factorial for counting 3 parameters in one run
   def fact(n, k)
     res = [1,1,1]
-    c = 1
     if n > 1
-      for i in 2..n
-        c *= i
-        if i == n-k
-          res[1] = c
-        elsif i == k
-          res[2] = c
-        end
-      end
+      fact_n_greater_1(n, k, res)
     end
-    res[0] = c
     res
   end
 
@@ -51,7 +42,26 @@ module Combinatorics
       f[0] / f[1]
     end
   end
-  
+
+  private
+
+  def fact_n_greater_1(n,k, res)
+    c = 1
+    for i in 2..n
+      c *= i
+      determining_i(i, n, k, c, res)
+    end
+    res[0] = c
+  end
+
+  def determining_i(i, n, k, c, res)
+    if i == n-k
+      res[1] = c
+    end
+    if i == k
+      res[2] = c
+    end
+  end
   
 end
 
@@ -83,13 +93,9 @@ module Cubes
     def initialize(sides)
       @csides = 1
       @sides = [1]
-      if sides.class == Integer
-        if sides > 1
-          @csides = sides
-          for i in 2..sides
-            @sides << i
-          end
-        end
+      if sides.class == Integer and sides > 1
+        @csides = sides
+        (2..sides).each {|i| @sides << i}
       elsif sides.class == Array and sides.size > 0
         @csides = sides.size
         @sides = sides.sort
@@ -99,14 +105,14 @@ module Cubes
     ##
     # ability to throw a polyhedron
     def throw
-      sides[rand(0..@sides[@csides-1])]
+      @sides[rand(0..@csides-1)]
     end
   end
 
   ##
   # Class represents a PolyhedronsSet
   # percentage - hash with chances of getting definite score
-  class PolyhedronsSet
+  class PolyhedronSet
 
     def initialize(arr)
       @pons = parse_pons(arr).sort_by{|item| -item.csides}
@@ -121,7 +127,7 @@ module Cubes
     # returns array of polyhedrons
     def to_s
       res = @pons.map {|item| item.to_s}
-	    res
+      res
     end
 
     ##
@@ -155,32 +161,43 @@ module Cubes
       arr.each do |item|
         res << Polyhedron.new(item)
       end
-      return res
+      res
     end
 
-	  def count_chance_sum_chances_step(arr1, arr2, arr3, h)
+    def count_chance_sum_chances_step(arr1, arr2, arr3, h)
       n = 0
       m = 0
       sum = 0
       q = Queue.new
       h1 = Hash.new
       while m < arr2.size
-        if m == 0
-          q << h[arr1[n]]
-          sum += h[arr1[n]]
-        end
+        sum = m_0(q, sum, h, arr1, n, m)
         if q.size > arr2.size or m > 0
           sum -= q.pop
         end
         h1[arr1[n] + arr2[m]] = sum
         arr3 << (arr1[n] + arr2[m])
-        if n < arr1.size - 1
-          n += 1
-        else
-          m += 1
-        end
+        nmarr = n_less_arr1_size(n, arr1, m)
+        n, m = nmarr[0], nmarr[1]
       end
       h1
+    end
+
+    def m_0(q, sum, h, arr1, n, m)
+      if m == 0
+        q << h[arr1[n]]
+        sum += h[arr1[n]]
+      end
+      sum
+    end
+
+    def n_less_arr1_size(n, arr1, m)
+      if n < arr1.size - 1
+        n += 1
+      else
+        m += 1
+      end
+      [n,m]
     end
 
     def count_chance_sum
@@ -202,5 +219,6 @@ module Cubes
       arr3.each {|item| res[item] = Float(h[item]) / fchance}
       res
     end
+
   end
 end
