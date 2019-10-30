@@ -81,6 +81,22 @@ class GraphTest < SiliciumTest
     g.label_vertex!(:one, :some_label)
   end
 
+  def test_connected
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert(g.connected?)
+  end
+
+  def test_connected_failed
+    g = OrientedGraph.new([{v: 0,     i: []},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    assert(!g.connected?)
+  end
+
   def test_add_vertex
     g = OrientedGraph.new
     g.add_vertex!(:one)
