@@ -93,7 +93,6 @@ module Silicium
       prev_f = block.call(x)
       acc = accuracy(step)
       while (acc > eps)
-        x_old = x
         for i in 0..x.length - 1
           tmp = hook_jeeves_step(x, i, step, &block)
           cur_f = tmp[0]

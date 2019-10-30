@@ -28,35 +28,19 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_integrating_Monte_Carlo_base_common_integral
-    def test_1(x)
-       x * x + 2 * x + 1
-    end
-
-    assert_in_delta 19.0 / 3, integrating_Monte_Carlo_base(1, 2){ |x| test_1(x) }, 0.3
+    assert_in_delta 19.0 / 3, (integrating_Monte_Carlo_base(1, 2){ |x| x * x + 2 * x + 1 }), 0.3
   end
 
   def test_integrating_Monte_Carlo_base_exp_integral
-    def test_1(x)
-       Math.exp(x)
-    end
-
-    assert_in_delta -1 + Math.exp(5), integrating_Monte_Carlo_base(0, 5){ |x| test_1(x) }, 5
+    assert_in_delta -1 + Math.exp(5), (integrating_Monte_Carlo_base(0, 5){ |x| Math.exp(x) }), 5
   end
 
   def test_integrating_Monte_Carlo_base_sym_board
-    def test_1(x)
-       x * x * x
-    end
-
-    assert_in_delta 0, integrating_Monte_Carlo_base(-1, 1){ |x| test_1(x) }, 0.1
+    assert_in_delta 0, (integrating_Monte_Carlo_base(-1, 1){ |x| x * x * x }), 0.1
   end
 
   def test_integrating_Monte_Carlo_base_neg_board
-    def test_1(x)
-       Math.sin(x)
-    end
-
-    assert_in_delta Math.cos(3) - Math.cos(2), integrating_Monte_Carlo_base(-3, 2){ |x| test_1(x) }, 0.1
+    assert_in_delta Math.cos(3) - Math.cos(2), (integrating_Monte_Carlo_base(-3, 2){ |x| Math.sin(x) }), 0.1
   end
 
   def test_sorted_sorted_arr
@@ -116,100 +100,60 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_hook_jeeves_params_1
-    def test_1(x)
-      8 * x[0] * x[0] + 4 * x[0]  + 5
-    end
-
-    vals = hook_jeeves([-4], [1], 0.001) {|x| test_1(x)}
+    vals = (hook_jeeves([-4], [1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0]  + 5})
     assert_in_delta vals[0], -0.25, 0.01
   end
 
   def test_hook_jeeves_params_1_new_atm
-    def test_1(x)
-      8 * x[0] * x[0] + 4 * x[0]  + 5
-    end
-
-    vals = hook_jeeves([5], [1], 0.001) {|x| test_1(x)}
+    vals = (hook_jeeves([5], [1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0]  + 5})
     assert_in_delta vals[0], -0.25, 0.01
   end
 
   def test_hook_jeeves_params_1_new_atm2
-    def test_1(x)
-      8 * x[0] * x[0] + 4 * x[0]  + 5
-    end
-
-    vals = hook_jeeves([5], [-1], 0.001) {|x| test_1(x)}
+    vals = (hook_jeeves([5], [-1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0]  + 5})
     assert_in_delta vals[0], -0.25, 0.01
   end
 
   def test_hook_jeeves_params_2
-    def test_1(x)
-      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]
-    end
-
-    vals = hook_jeeves([-6, 0], [-1, 2], 0.001) {|x| test_1(x)}
+    vals = (hook_jeeves([-6, 0], [-1, 2], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]})
     assert_in_delta vals[0], -8.0/3, 0.01
     assert_in_delta vals[1], -4.0/3, 0.01
   end
 
   def test_hook_jeeves_params_2_new_atm
-    def test_1(x)
-      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]
-    end
-
-    vals = hook_jeeves([12, -5], [5, 3], 0.001) {|x| test_1(x)}
+    vals = (hook_jeeves([12, -5], [5, 3], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]})
     assert_in_delta vals[0], -8.0/3, 0.01
     assert_in_delta vals[1], -4.0/3, 0.01
   end
 
   def test_hook_jeeves_params_2_new_atm_2
-    def test_1(x)
-      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]
-    end
-
-    vals = hook_jeeves([-10, 10], [6, 6], 0.001) {|x| test_1(x)}
+    vals = (hook_jeeves([-10, 10], [6, 6], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]})
     assert_in_delta vals[0], -8.0/3, 0.01
     assert_in_delta vals[1], -4.0/3, 0.01
   end
 
   def test_hook_jeeves_params_3
-    def test_1(x)
-      x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1] + x[2] * x[2] * x[2] - x[1] * x[2] - 3 * x[2] * x[2]
-    end
-
-    vals = hook_jeeves([0, 1, 2], [1, 1, 1], 0.001) {|x| test_1(x)}
+    vals = hook_jeeves([0, 1, 2], [1, 1, 1], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1] + x[2] * x[2] * x[2] - x[1] * x[2] - 3 * x[2] * x[2]}
     assert_in_delta vals[0], -2, 0.01
     assert_in_delta vals[1], 0, 0.01
     assert_in_delta vals[2], 2, 0.01
   end
 
   def test_half_division_root_neg
-    def test_1(x)
-      Math.exp(x) - x * x
-    end
-    assert_in_delta -0.703, half_division(-2, 2, 0.0001){|x| test_1(x)}, 0.001
+    assert_in_delta -0.703, (half_division(-2, 2, 0.0001){|x| Math.exp(x) - x * x}), 0.001
   end
 
   def test_half_division_root_exist_pos
-    def test_1(x)
-      100 * Math.log(x) -  x * x * x
-    end
-    assert_in_delta 5.556, half_division(2, 10, 0.0001){|x| test_1(x)}, 0.001
+    assert_in_delta 5.556, (half_division(2, 10, 0.0001){|x| 100 * Math.log(x) -  x * x * x}), 0.001
   end
 
   def test_half_division_root_exist_zero
-    def test_1(x)
-      x * x + x
-    end
-    assert_in_delta 0, half_division(-0.5, 0.5, 0.0001){|x| test_1(x)}, 0.001
+    assert_in_delta 0, half_division(-0.5, 0.5, 0.0001){|x| x * x + x}, 0.001
   end
 
   def test_half_division_root_not_exist
-    def test_1(x)
-      x * x + x + 1
-    end
     exception = assert_raises(RuntimeError) do
-      half_division(-0.5, 0.5, 0.0001){|x| test_1(x)}
+      half_division(-0.5, 0.5, 0.0001){|x| x * x + x + 1}
     end
   end
 
@@ -218,13 +162,10 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_half_division_step
-    def test_1(x)
-      x
-    end
     a = 1
     b = 3
     c = 2
-    tmp = half_division_step(a, b, c){|x| test_1(x)}
+    tmp = half_division_step(a, b, c){|x| x}
     a = tmp[0]
     b = tmp[1]
     c = tmp[2]
