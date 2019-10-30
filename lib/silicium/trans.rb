@@ -1,4 +1,3 @@
-
 module Silicium
   module Sparse
     #addition for SparseMatrix class
@@ -18,8 +17,8 @@ module Silicium
         self = transpose
       end
 
-
     end
   end
 end
+
 
