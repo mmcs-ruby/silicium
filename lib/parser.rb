@@ -1,12 +1,10 @@
 module Silicium
 
-  module Polynom
+  module Algebra
     attr_reader :str
 
     def initializer(str)
-      unless polycop(str)
-        raise PolynomError, 'Invalid string for polynom '
-      end
+      raise PolynomError, 'Invalid string for polynom ' unless polycop(str)
       @str = str
     end
 
@@ -15,37 +13,69 @@ module Silicium
       str_var = ''
       parsed = str.split(/[-+]/)
       parsed.each do |term|
-        if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
-          return false
-        end
+        return false if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
         cur_var = $2
         str_var = cur_var if str_var == ''
-        if !cur_var.nil? && str_var != cur_var
-          return false
-        end
+        return false if !cur_var.nil? && str_var != cur_var
         # check for extra letters in term
         letters = term.scan(/[a-z]{2,}/)
         letters = letters.join
-        if letters.length != 0 && !allowed_w.include?(letters)
+        if !letters.empty? && !allowed_w.include?(letters)
           return false
         end
       end
-      @x = str_var # sorry for that
+      # save variable letter in
+      @letter_var = str_var # sorry for that
       return true
     end
-    def to_ruby_s ()
+    # transform @str into syntactically correct ruby str
+    def to_ruby_s (val)
       temp_str = @str
       temp_str.gsub!('^','**')
       temp_str.gsub!(/lg|log|ln/,'Math::\1')
-      temp_str.gsub!(@x,x)
+      temp_str.gsub!(@letter_var, val)
       return temp_str
     end
 
-    def evaluate(x)
-      res = to_ruby_s
+    def evaluate(val)
+      res = to_ruby_s(val)
       eval(res)
     end
-
+    # transform polynom into array of coefficients
+    def to_kf(str)
+      tokens = str.split(/[-+]/)
+      kf = Array.new(0.0)
+      deg = 0
+      tokens.each do |term|
+        term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
+        par_kf = $1
+        par_deg = $2
+        # check if term is free term
+        if term.scan(/[a-z]/).empty?
+          cur_kf = term.to_f
+          cur_deg = 0
+        else
+          cur_kf = par_kf.nil? ? 1 : par_kf.to_f
+          cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
+        end
+        # initialize deg for the first time
+        deg = cur_deg if deg == 0
+        # add 0 coefficient to missing degrees
+        insert_zeros(kf,deg - cur_deg - 1) if deg - cur_deg > 1
+        kf << cur_kf
+        deg = cur_deg
+      end
+      insert_zeros(kf,deg) unless deg == 0
+      return kf
+    end
+    def insert_zeros(arr,count)
+      loop do
+        arr << 0.0
+        count = count - 1
+        break if count == 0
+      end
+    end
+=begin
     def differentiate
       return differentiate_inner(@str)
     end
@@ -152,7 +182,7 @@ module Silicium
       end
       return final_str
     end
-
+=end
 
 =begin
     def first_char_from(str, ch, ind)
@@ -202,8 +232,6 @@ module Silicium
       end
     end
 =end
-
-
   end
 end
 class PolynomError < StandardError
