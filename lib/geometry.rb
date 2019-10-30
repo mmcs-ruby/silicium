@@ -205,16 +205,16 @@ module Silicium
     # find minimum distance between two points in set
     def find_min_dist(points)
       min = distance_point_to_point2d(points[0], points[1])
-      points.each { |i|
-        points.each { |j|
+      points.each do |i|
+        points.each do |j|
           j = i+1
           if (j < points.size)
             if (distance_point_to_point2d(points[i], points[j])) < min
               min = distance_point_to_point2d(points[i], points[j])
             end
           end
-        }
-      }
+        end
+      end
       return min
     end
 
