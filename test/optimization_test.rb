@@ -243,4 +243,12 @@ class SiliciumTest < Minitest::Test
     end
   end
 
+  def test_switch_step_true
+    assert_equal switch_step(2, 1, [10], 0), 5
+  end
+
+  def test_switch_step_false
+    assert_equal switch_step(2, 3, [10], 0), 10
+  end
+
 end

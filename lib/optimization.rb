@@ -82,9 +82,14 @@ module Silicium
       [cur_f, x[i]]
     end
 
+    #switch step if current func value > previous func value
+    def switch_step(cur_f, prev_f, step, i)
+      return step[i] / 2.0 if cur_f >= prev_f #you can switch 2.0 on something else
+      step[i]
+    end
     #Hook - Jeeves method for find minimum point (x - array of start variables, step - step of one iteration, eps - allowable error, alfa - slowdown of step,
     #block - function which takes array x, WAENING function doesn't control  correctness of input
-    def hook_jeeves(x, step, eps = 0.1, alfa = 2.0, &block)
+    def hook_jeeves(x, step, eps = 0.1, &block)
       prev_f = block.call(x)
       acc = accuracy(step)
       while (acc > eps)
@@ -93,9 +98,7 @@ module Silicium
           tmp = hook_jeeves_step(x, i, step, &block)
           cur_f = tmp[0]
           x[i] = tmp[1]
-          if (cur_f >= prev_f)
-            step[i] = step[i] * 1.0 / alfa
-          end
+          step[i] = switch_step(cur_f, prev_f, step, i)
           prev_f = cur_f
         end
         acc = accuracy(step)
