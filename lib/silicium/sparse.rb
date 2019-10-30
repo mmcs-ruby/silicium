@@ -10,6 +10,14 @@ module Silicium
         @triplets = []
       end
 
+      def copy
+        new = SparseMatrix.new(@n, @m)
+        triplets.each do |triplet|
+          new.add(triplet[0], triplet[1], triplet[2])
+        end
+        new
+      end
+
       def add(i, j, x)
         if i > @n || j > @m || i < 0 || j < 0
           raise RuntimeError, "out of range"
