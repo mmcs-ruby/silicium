@@ -1,4 +1,6 @@
 module Silicium
+
+  require_relative 'trans'
   module Sparse
     # here goes the Sparse class
     class SparseMatrix
@@ -39,7 +41,7 @@ module Silicium
             return triplet[2]
           end
         end
-        return 0
+        0
       end
     end
   end
