@@ -143,26 +143,23 @@ module Silicium
         false
       end
 
-      def breadth_first_search(start, goal)
-        visited = Hash.new(false)
-        res = [start]
-        queue = Queue.new
-        queue.push(start)
-        visited[start] = true
-        until queue.empty? do
-          node = queue.pop
-          if node == goal
-            return res
-          end
-          @vertices[node].each do |child|
-            if visited[child] == false
-              queue.push(child)
-              res << child
-              visited[child] = true
+      def reverse!
+        v = Hash.new()
+        l = {}
+        @vertices.keys.each do |from|
+          v[from] = [].to_set
+        end
+
+        @vertices.keys.each do |from|
+          @vertices[from].each do |to|
+            v[to] << from
+            if @edge_labels.include?(Pair.new(from, to))
+              l[Pair.new(to, from)] = @edge_labels[Pair.new(from, to)]
             end
           end
         end
-        []
+        @vertices = v
+        @edge_labels = l
       end
 
       protected
