@@ -5,17 +5,17 @@ require 'graph'
 class GraphTest < SiliciumTest
   include Silicium::Graphs
 
-  def oriented_graph
-    g = OrientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: [0,'two']},
-                           {v: 'two', i: [0, 'two']}])
-  end
+  #def oriented_graph
+    #g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           #{v: :one,  i: [0,'two']},
+                           #{v: 'two', i: [0, 'two']}])
+  #end
 
-  def unoriented_graph
-    g = UnorientedGraph.new([{v: 0,     i: [:one]},
-                           {v: :one,  i: ['two']},
-                           {v: 'two', i: [0, 'two']}])
-  end
+  #def unoriented_graph
+    #g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                           #{v: :one,  i: ['two']},
+                           #{v: 'two', i: [0, 'two']}])
+  #end
 
   def test_default_constructor
     g = OrientedGraph.new
@@ -38,6 +38,47 @@ class GraphTest < SiliciumTest
     assert(g.has_edge?(:one, 'two'))
     assert(g.has_edge?('two', 0))
     assert(g.has_edge?('two', 'two'))
+  end
+
+  def test_reverse_graph_vertex
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    g.reverse!
+    pred = g.vertex_number == 3 && g.has_vertex?(0) && g.has_vertex?(:one) && g.has_vertex?('two')
+    assert(pred)
+  end
+
+  def test_reverse_graph_edges
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    g.reverse!
+    pred = g.has_edge?(:one, 0) && g.has_edge?(0, :one) && g.has_edge?('two', :one) && g.has_edge?(0, 'two')
+    pred = pred && g.has_edge?('two', 'two')
+    assert(pred)
+  end
+
+  def test_reverse_label_edge
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    g.label_edge!(0, :one, :some_label)
+    g.reverse!
+    assert_equal(g.get_edge_label(:one, 0), :some_label)
+  end
+
+  def test_reverse_label_vertex
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0,'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+    g.label_vertex!(:one, :some_label)
+    g.reverse!
+    g.label_vertex!(:one, :some_label)
   end
 
   def test_add_vertex
