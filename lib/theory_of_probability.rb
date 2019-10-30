@@ -187,9 +187,9 @@ module Cubes
       if arr[2] == 0
         a = h[arr1[arr[1]]]
         q << a
-        sum += a
+        arr[0] += a
       end
-      sum
+      arr[0]
     end
 
     def n_less_arr1_size(n, arr1, m)
