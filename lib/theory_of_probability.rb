@@ -49,17 +49,17 @@ module Combinatorics
     c = 1
     for i in 2..n
       c *= i
-      determining_i(i, n, k, c, res)
+      determining_i([i, n, k, c], res)
     end
     res[0] = c
   end
 
-  def determining_i(i, n, k, c, res)
-    if i == n-k
-      res[1] = c
+  def determining_i(arr, res)
+    if arr[0] == arr[1] - arr[2]
+      res[1] = arr[3]
     end
-    if i == k
-      res[2] = c
+    if arr[0] == arr[2]
+      res[2] = arr[3]
     end
   end
   
@@ -171,7 +171,7 @@ module Cubes
       q = Queue.new
       h1 = Hash.new
       while m < arr2.size
-        sum = m_0(q, sum, h, arr1, n, m)
+        sum = m_0([sum, n, m], q, h, arr1)
         if q.size > arr2.size or m > 0
           sum -= q.pop
         end
@@ -183,10 +183,11 @@ module Cubes
       h1
     end
 
-    def m_0(q, sum, h, arr1, n, m)
-      if m == 0
-        q << h[arr1[n]]
-        sum += h[arr1[n]]
+    def m_0(arr, q, h, arr1)
+      if arr[2] == 0
+        a = h[arr1[arr[1]]]
+        q << a
+        sum += a
       end
       sum
     end
