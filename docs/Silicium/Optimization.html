@@ -68,7 +68,31 @@
 
   <ul class="link-list" role="directory">
     
+    <li ><a href="#method-i-accuracy">#accuracy</a>
+    
+    <li ><a href="#method-i-bogosort">#bogosort</a>
+    
+    <li ><a href="#method-i-bogosort-21">#bogosort!</a>
+    
+    <li ><a href="#method-i-half_division">#half_division</a>
+    
+    <li ><a href="#method-i-half_division_step">#half_division_step</a>
+    
+    <li ><a href="#method-i-hook_jeeves">#hook_jeeves</a>
+    
+    <li ><a href="#method-i-hook_jeeves_step">#hook_jeeves_step</a>
+    
+    <li ><a href="#method-i-integrating_Monte_Carlo_base">#integrating_Monte_Carlo_base</a>
+    
+    <li ><a href="#method-i-middle">#middle</a>
+    
     <li ><a href="#method-i-re_lu">#re_lu</a>
+    
+    <li ><a href="#method-i-sigmoid">#sigmoid</a>
+    
+    <li ><a href="#method-i-sorted-3F">#sorted?</a>
+    
+    <li ><a href="#method-i-switch_step">#switch_step</a>
     
   </ul>
 </div>
@@ -102,6 +126,365 @@
        </header>
 
     
+      <div id="method-i-accuracy" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">accuracy</span><span
+            class="method-args">(step)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>calculate current accuracy in Hook - Jeeves method</p>
+          
+          
+
+          
+          <div class="method-source-code" id="accuracy-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 64</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">accuracy</span>(<span class="ruby-identifier">step</span>)
+  <span class="ruby-identifier">acc</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">step</span>.<span class="ruby-identifier">each</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">a</span><span class="ruby-operator">|</span> <span class="ruby-identifier">acc</span> <span class="ruby-operator">+=</span> <span class="ruby-identifier">a</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">a</span> }
+  <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">acc</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-bogosort" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">bogosort</span><span
+            class="method-args">(a)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>fastest(but it is not exactly) sort</p>
+          
+          
+
+          
+          <div class="method-source-code" id="bogosort-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bogosort</span>(<span class="ruby-identifier">a</span>)
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">a</span>.<span class="ruby-identifier">nil?</span>)
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Nil array in bogosort&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">crutch</span> = <span class="ruby-identifier">a</span>
+  <span class="ruby-keyword">while</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">sorted?</span>(<span class="ruby-identifier">crutch</span>))
+    <span class="ruby-identifier">crutch</span> = <span class="ruby-identifier">a</span>.<span class="ruby-identifier">shuffle</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">crutch</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-bogosort-21" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">bogosort!</span><span
+            class="method-args">(a)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>fastest(but it is not exactly) sort, modify sequance</p>
+          
+          
+
+          
+          <div class="method-source-code" id="bogosort-21-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 41</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bogosort!</span>(<span class="ruby-identifier">a</span>)
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">a</span>.<span class="ruby-identifier">nil?</span>)
+    <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&quot;Nil array in bogosort&quot;</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">while</span> (<span class="ruby-operator">!</span><span class="ruby-identifier">sorted?</span>(<span class="ruby-identifier">a</span>))
+    <span class="ruby-identifier">a</span>.<span class="ruby-identifier">shuffle!</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">a</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-half_division" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">half_division</span><span
+            class="method-args">(a, b, eps = 0.001, &amp;block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>find root in [a, b], if he exist, if number of iterations &gt; iters -&gt; error</p>
+          
+          
+
+          
+          <div class="method-source-code" id="half_division-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 126</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">half_division</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">eps</span> = <span class="ruby-value">0.001</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">iters</span> = <span class="ruby-value">1000000</span>
+  <span class="ruby-identifier">c</span> = <span class="ruby-identifier">middle</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>)
+  <span class="ruby-keyword">while</span> ((<span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">c</span>).<span class="ruby-identifier">abs</span>) <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">eps</span>)
+    <span class="ruby-identifier">tmp</span> = <span class="ruby-identifier">half_division_step</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+    <span class="ruby-identifier">a</span> = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">0</span>]
+    <span class="ruby-identifier">b</span> = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">1</span>]
+    <span class="ruby-identifier">c</span> = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">2</span>]
+    <span class="ruby-identifier">iters</span> <span class="ruby-operator">-=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">iters</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+      <span class="ruby-identifier">raise</span> <span class="ruby-constant">RuntimeError</span>, <span class="ruby-string">&quot;Root not found! Check does he exist, or change eps or iters&quot;</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">c</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-half_division_step" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">half_division_step</span><span
+            class="method-args">(a, b, c, &amp;block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>do one half division step</p>
+          
+          
+
+          
+          <div class="method-source-code" id="half_division_step-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 114</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">half_division_step</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">a</span>) <span class="ruby-operator">*</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">c</span>) <span class="ruby-operator">&lt;</span> <span class="ruby-value">0</span>)
+    <span class="ruby-identifier">b</span> = <span class="ruby-identifier">c</span>
+    <span class="ruby-identifier">c</span> = <span class="ruby-identifier">middle</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">c</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">a</span> = <span class="ruby-identifier">c</span>
+    <span class="ruby-identifier">c</span> = <span class="ruby-identifier">middle</span>(<span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>)
+  <span class="ruby-keyword">end</span>
+  [<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-hook_jeeves" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">hook_jeeves</span><span
+            class="method-args">(x, step, eps = 0.1, &amp;block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Hook - Jeeves method for find minimum point (x - array of start variables, step - step of one iteration, eps - allowable error, alfa - slowdown of step, block - function which takes array x, WAENING function doesn&#39;t control  correctness of input</p>
+          
+          
+
+          
+          <div class="method-source-code" id="hook_jeeves-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 92</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">hook_jeeves</span>(<span class="ruby-identifier">x</span>, <span class="ruby-identifier">step</span>, <span class="ruby-identifier">eps</span> = <span class="ruby-value">0.1</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">prev_f</span> = <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span>)
+  <span class="ruby-identifier">acc</span> = <span class="ruby-identifier">accuracy</span>(<span class="ruby-identifier">step</span>)
+  <span class="ruby-keyword">while</span> (<span class="ruby-identifier">acc</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">eps</span>)
+    <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">x</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+      <span class="ruby-identifier">tmp</span> = <span class="ruby-identifier">hook_jeeves_step</span>(<span class="ruby-identifier">x</span>, <span class="ruby-identifier">i</span>, <span class="ruby-identifier">step</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+      <span class="ruby-identifier">cur_f</span> = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">0</span>]
+      <span class="ruby-identifier">x</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">tmp</span>[<span class="ruby-value">1</span>]
+      <span class="ruby-identifier">step</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">switch_step</span>(<span class="ruby-identifier">cur_f</span>, <span class="ruby-identifier">prev_f</span>, <span class="ruby-identifier">step</span>, <span class="ruby-identifier">i</span>)
+      <span class="ruby-identifier">prev_f</span> = <span class="ruby-identifier">cur_f</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">acc</span> = <span class="ruby-identifier">accuracy</span>(<span class="ruby-identifier">step</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">x</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-hook_jeeves_step" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">hook_jeeves_step</span><span
+            class="method-args">(x, i, step, &amp;block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>do one Hook - Jeeves step</p>
+          
+          
+
+          
+          <div class="method-source-code" id="hook_jeeves_step-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 71</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">hook_jeeves_step</span>(<span class="ruby-identifier">x</span>, <span class="ruby-identifier">i</span>, <span class="ruby-identifier">step</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">x</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">+=</span> <span class="ruby-identifier">step</span>[<span class="ruby-identifier">i</span>]
+  <span class="ruby-identifier">tmp1</span> = <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span>)
+  <span class="ruby-identifier">x</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">x</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">-</span> <span class="ruby-value">2</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">step</span>[<span class="ruby-identifier">i</span>]
+  <span class="ruby-identifier">tmp2</span> = <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span>)
+  <span class="ruby-keyword">if</span> (<span class="ruby-identifier">tmp1</span> <span class="ruby-operator">&gt;</span> <span class="ruby-identifier">tmp2</span>)
+    <span class="ruby-identifier">cur_f</span> = <span class="ruby-identifier">tmp2</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-identifier">x</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">x</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">+</span> <span class="ruby-identifier">step</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">*</span> <span class="ruby-value">2</span>
+    <span class="ruby-identifier">cur_f</span> = <span class="ruby-identifier">tmp1</span>
+  <span class="ruby-keyword">end</span>
+  [<span class="ruby-identifier">cur_f</span>, <span class="ruby-identifier">x</span>[<span class="ruby-identifier">i</span>]]
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-integrating_Monte_Carlo_base" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">integrating_Monte_Carlo_base</span><span
+            class="method-args">(a, b, n = 100000, &amp;block)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>integrating using method Monte Carlo (f - function, a, b - integrating limits, n - amount of random numbers)</p>
+          
+          
+
+          
+          <div class="method-source-code" id="integrating_Monte_Carlo_base-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 19</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">integrating_Monte_Carlo_base</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">n</span> = <span class="ruby-value">100000</span>, <span class="ruby-operator">&amp;</span><span class="ruby-identifier">block</span>)
+  <span class="ruby-identifier">res</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">range</span> = <span class="ruby-identifier">a</span><span class="ruby-operator">..</span><span class="ruby-identifier">b</span>.<span class="ruby-identifier">to_f</span>
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> <span class="ruby-value">1</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">n</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>)
+     <span class="ruby-identifier">x</span> = <span class="ruby-identifier">rand</span>(<span class="ruby-identifier">range</span>)
+     <span class="ruby-identifier">res</span> <span class="ruby-operator">+=</span> (<span class="ruby-identifier">b</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>) <span class="ruby-operator">*</span> <span class="ruby-value">1.0</span> <span class="ruby-operator">/</span> <span class="ruby-identifier">n</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">block</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">x</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">res</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-middle" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">middle</span><span
+            class="method-args">(a, b)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>find centr of interval</p>
+          
+          
+
+          
+          <div class="method-source-code" id="middle-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 109</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">middle</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>)
+  (<span class="ruby-identifier">a</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">b</span>) <span class="ruby-operator">/</span> <span class="ruby-value">2.0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-re_lu" class="method-detail ">
         
         <div class="method-heading">
@@ -121,9 +504,115 @@
 
           
           <div class="method-source-code" id="re_lu-source">
-            <pre><span class="ruby-comment"># File lib/optimization.rb, line 7</span>
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 9</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">re_lu</span>(<span class="ruby-identifier">x</span>)
   <span class="ruby-identifier">x</span>.<span class="ruby-identifier">negative?</span> <span class="ruby-operator">?</span> <span class="ruby-value">0</span> <span class="ruby-operator">:</span> <span class="ruby-identifier">x</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sigmoid" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sigmoid</span><span
+            class="method-args">(x)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>sigmoid function</p>
+          
+          
+
+          
+          <div class="method-source-code" id="sigmoid-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 14</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sigmoid</span>(<span class="ruby-identifier">x</span>)
+  <span class="ruby-value">1.0</span> <span class="ruby-operator">/</span> (<span class="ruby-value">1</span> <span class="ruby-operator">+</span> <span class="ruby-constant">Math</span>.<span class="ruby-identifier">exp</span>(<span class="ruby-operator">-</span><span class="ruby-identifier">x</span>))
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-sorted-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">sorted?</span><span
+            class="method-args">(a)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>return true if array is sorted</p>
+          
+          
+
+          
+          <div class="method-source-code" id="sorted-3F-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 30</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">sorted?</span>(<span class="ruby-identifier">a</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">nil?</span>
+  <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">length</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>
+    <span class="ruby-keyword">if</span> (<span class="ruby-identifier">a</span>[<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>] <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">a</span>[<span class="ruby-identifier">i</span>])
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">false</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">true</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-switch_step" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">switch_step</span><span
+            class="method-args">(cur_f, prev_f, step, i)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>switch step if current func value &gt; previous func value</p>
+          
+          
+
+          
+          <div class="method-source-code" id="switch_step-source">
+            <pre><span class="ruby-comment"># File lib/optimization.rb, line 86</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">switch_step</span>(<span class="ruby-identifier">cur_f</span>, <span class="ruby-identifier">prev_f</span>, <span class="ruby-identifier">step</span>, <span class="ruby-identifier">i</span>)
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">step</span>[<span class="ruby-identifier">i</span>] <span class="ruby-operator">/</span> <span class="ruby-value">2.0</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">cur_f</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-identifier">prev_f</span> <span class="ruby-comment">#you can switch 2.0 on something else</span>
+  <span class="ruby-identifier">step</span>[<span class="ruby-identifier">i</span>]
 <span class="ruby-keyword">end</span></pre>
           </div>
           
