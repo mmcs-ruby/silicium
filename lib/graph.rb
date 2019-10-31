@@ -17,7 +17,11 @@ module Silicium
         @edge_number = 0
         initializer.each do |v|
           add_vertex!(v[:v])
-          v[:i].each { |iv| add_edge_force!(v[:v], iv)}
+          v[:i].each do |iv|
+            add_vertex!(v[:v])
+            add_vertex!(iv)
+            add_edge!(v[:v], iv)
+          end
         end
       end
 
@@ -33,18 +37,8 @@ module Silicium
         @edge_number += 1
       end
 
-      # should only be used in constructor
-      def add_edge_force!(from, to)
-        add_vertex!(from)
-        add_vertex!(to)
-        add_edge!(from, to)
-      end
-
       def adjacted_with(vertex)
-        unless @vertices.has_key?(vertex)
-          raise GraphError.new("Graph does not contain vertex #{vertex}")
-        end
-
+        raise GraphError.new("Graph does not contain vertex #{vertex}") unless @vertices.has_key?(vertex)
         @vertices[vertex].clone
       end
 
