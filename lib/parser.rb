@@ -29,7 +29,6 @@ module Silicium
 
       return true
     end
-    def to_ruby_s (val)
 
     # transform @str into syntactically correct ruby str
     def to_ruby_s(val)
