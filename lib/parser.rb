@@ -26,7 +26,6 @@ module Silicium
       end
       # save variable letter in
       @letter_var = str_var # sorry for that
-
       return true
     end
 
