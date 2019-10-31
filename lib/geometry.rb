@@ -20,29 +20,76 @@ module Silicium
       Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2)
     end
 
-    # Class represents a line as equation y = k*x +b
-    # k - slope
-    # b - free_term
+    ##
+    # Class represents a line as equation Ax + By + C = 0
     # in two-dimensional space
     class Line2dCanon
-      attr_reader :slope
-      attr_reader :free_term
+      attr_reader :x_coefficient
+      attr_reader :y_coefficient
+      attr_reader :free_coefficient
 
-      def initialize(p1, p2)
-        if (p1.x == p2.x) && (p1.y == p2.y)
-          raise ArgumentError, "You need 2 diffrent points"
+      def initialize(point1, point2)
+        if (point1.x == point2.x) && (point1.y == point2.y)
+          raise ArgumentError, "You need 2 different points"
         end
-        if (p1.x == p2.x)
-          raise ArgumentError, "The straight line equation cannot be written in canonical form"
+
+        if point1.x == point2.x
+          @x_coefficient = 1
+          @y_coefficient = 0
+          @free_coefficient = - point1.x
+        else
+          slope_point = (point2.y - point1.y) / (point2.x - point1.x)
+          @x_coefficient = -slope_point
+          @y_coefficient = 1
+          @free_coefficient = - point1.y + slope_point * point1.x
         end
-        @slope = (p2.y - p1.y) / (p2.x - p1.x).to_f
-        @free_term = (p2.x * p1.y - p2.y * p1.x) / (p2.x - p1.x).to_f
       end
 
       ##
       # Checks the point lies on the line or not
-      def point_is_on_line?(p1)
-        p1.y == @slope * p1.x + @free_term
+      def point_is_on_line?(point)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
+      end
+
+      ##
+      # Checks if two lines are parallel
+      def is_parallel?(another_line)
+        @x_coefficient.equal?(another_line.x_coefficient) && @y_coefficient.equal?(another_line.y_coefficient)
+      end
+
+      ##
+      # Checks if two lines are intersecting
+      def is_intersecting?(another_line)
+        @x_coefficient != another_line.x_coefficient || @y_coefficient != another_line.y_coefficient
+      end
+
+      ##
+      # Checks if two lines are perpendicular
+      def is_perpendicular?(another_line)
+        (@x_coefficient * another_line.x_coefficient).equal?(- @y_coefficient * another_line.y_coefficient)
+      end
+
+      ##
+      # Returns a point of intersection of two lines
+      # If not intersecting returns nil
+      def intersection_point(another_line)
+        unless is_intersecting?(another_line)
+          return nil
+        end
+        divisor = @x_coefficient * another_line.y_coefficient - another_line.x_coefficient * @y_coefficient
+        x = (@y_coefficient * another_line.free_coefficient - another_line.y_coefficient * @free_coefficient) / divisor
+        y = (@free_coefficient * another_line.x_coefficient - another_line.free_coefficient * @x_coefficient) / divisor
+        Point.new(x, y)
+      end
+
+      ##
+      # Returns distance between lines
+      def distance_to_line(another_line)
+        if is_intersecting?(another_line)
+          return 0
+        end
+
+        (@free_coefficient - another_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
       end
     end
 
