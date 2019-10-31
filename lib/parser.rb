@@ -28,8 +28,9 @@ module Silicium
       @letter_var = str_var # sorry for that
       return true
     end
+
     # transform @str into syntactically correct ruby str
-    def to_ruby_s (val)
+    def to_ruby_s(val)
       temp_str = @str
       temp_str.gsub!('^','**')
       temp_str.gsub!(/lg|log|ln/,'Math::\1')
@@ -41,197 +42,118 @@ module Silicium
       res = to_ruby_s(val)
       eval(res)
     end
-    # transform polynom into array of coefficients
-    def to_kf(str)
-      tokens = str.split(/[-+]/)
-      kf = Array.new(0.0)
-      deg = 0
-      tokens.each do |term|
-        term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
-        par_kf = $1
-        par_deg = $2
-        # check if term is free term
-        if term.scan(/[a-z]/).empty?
-          cur_kf = term.to_f
-          cur_deg = 0
-        else
-          cur_kf = par_kf.nil? ? 1 : par_kf.to_f
-          cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
+    module PolynomRootsReal
+      # transform polynom into array of coefficients
+      def to_kf(str)
+        tokens = str.split(/[-+]/)
+        kf = Array.new(0.0)
+        deg = 0
+        tokens.each do |term|
+          term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
+          par_kf = $1
+          par_deg = $2
+          # check if term is free term
+          if term.scan(/[a-z]/).empty?
+            cur_kf = term.to_f
+            cur_deg = 0
+          else
+            cur_kf = par_kf.nil? ? 1 : par_kf.to_f
+            cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
+          end
+          # initialize deg for the first time
+          deg = cur_deg if deg == 0
+          # add 0 coefficient to missing degrees
+          insert_zeros(kf, deg - cur_deg - 1) if deg - cur_deg > 1
+          kf << cur_kf
+          deg = cur_deg
         end
-        # initialize deg for the first time
-        deg = cur_deg if deg == 0
-        # add 0 coefficient to missing degrees
-        insert_zeros(kf,deg - cur_deg - 1) if deg - cur_deg > 1
-        kf << cur_kf
-        deg = cur_deg
+        insert_zeros(kf,deg) unless deg.zero?
+        return kf
       end
-      insert_zeros(kf,deg) unless deg == 0
-      return kf
-    end
-    def insert_zeros(arr,count)
-      loop do
-        arr << 0.0
-        count = count - 1
-        break if count == 0
-      end
-    end
-=begin
-    def differentiate
-      return differentiate_inner(@str)
-    end
-    def differentiate_inner(str) #string -> string
-      ###################################### --METHODS
-      def is_digit?(ch)
-        if (ch == nil)
-          return false
-        end
-        return (ch >= '0')&&(ch <= '9')
-      end
-      def fin(fstr)
-        if (fstr == '')
-          return '0'
-        else
-          return fstr
-        end
-      end
-      ####################################### --IMPLEMENTATION
-      final_str = ''
-      cur_elem = ''
-      ind = 0
 
-      cur_sym = str[ind]
-      if (cur_sym == '-')
-        cur_elem += '-'
-        ind+=1
-        cur_sym = str[ind]
+      def insert_zeros(arr,count)
+        loop do
+          arr << 0.0
+          count -= 1
+          break if count == 0
+        end
       end
-      if (is_digit?(cur_sym))
-        while (is_digit?(cur_sym))
-          cur_elem = cur_elem + cur_sym
-          ind+=1
-          cur_sym = str[ind]
+      # evaluate polinom, which defined by array of coefficients
+      def eval_by_kf(deg,val,kf)
+        s = 1.0
+        i = deg - 1
+        loop do
+          s = s * val + kf[i]
+          i -= 1
+          break if i.zero?
         end
-        if (cur_sym == '+')
-          ind+=1
-          final_str = differentiate_inner(str[ind, str.length - ind]) + final_str
-        end
-        if (cur_sym == '-')
-          final_str = differentiate_inner(str[ind, str.length - ind]) + final_str
-        end
-        if (cur_sym == nil)
-          return fin(final_str)
-        end
-        if (cur_sym == '*')
-          final_str = cur_elem + cur_sym + final_str
-          ind+=1
-          cur_sym = str[ind]
-        end
-        cur_elem = ''
+        return s
       end
-      if (cur_sym == 'x')
-        is_pow = false
-        cur_elem += cur_sym
-        ind+=1
-        cur_sym = str[ind]
-        if (cur_sym == nil)
-          return final_str + '1'
-        end
-        if (cur_sym == '*' && str[ind+1] == '*')
-          ind+=2
-          cur_sym  = str[ind]
-          cur_pow = ''
-          while (is_digit?(cur_sym))
-            cur_pow = cur_pow + cur_sym
-            ind += 1
-            cur_sym = str[ind]
-          end
-          if (cur_pow.to_i != 1)
-            is_pow = true
-          end
-          if (cur_pow.to_i == 2)
-            final_str = final_str + cur_pow + "*" + cur_elem
+      # find polynom root by binary search in interval, which has root
+      def binary_root_finder(deg,edge_neg,edge_pos,kf)
+        loop do
+          x = 0.5 * (edge_neg + edge_pos)
+          return x if x == edge_pos || x == edge_neg
+          if eval_by_kf(deg,x,kf) > 0
+            edge_pos = x
           else
-            final_str = final_str + cur_pow + "*" + cur_elem + "**" + (cur_pow.to_i - 1).to_s
+            edge_neg = x
           end
         end
-        if (cur_sym == '+')
-          if (is_pow)
-            ind+=1
-            next_dif = differentiate_inner(str[ind, str.length - ind])
-            if (next_dif != '0')
-              final_str = final_str + '+' + next_dif
-            end
+      end
+      def step_up(level,kf_dif,root_dif,cur_root_count)
+        major = find_major(level, kf_dif[level])
+        cur_root_count[level] = 0
+        i = 0
+        # main loop
+        loop do
+          edge_left = i.zero? ? -major : root_dif[level-1][i-1]
+          left_val = eval_by_kf(level,edge_left,kf_dif[level])
+          # if we hit in root(unlikely)
+          continue if hit_root(level, edge_left, left_val, root_dif, cur_root_count)
+          sign_left = left_val.positive? ? 1 : -1
+          edge_right = i == cur_root_count[level] ? major : root_dif[level - 1][i]
+          right_val = eval_by_kf(level,edge_right,kf_dif[level])
+          # if we hit in root(unlikely)
+          continue if hit_root(level, edge_right, right_val, root_dif, cur_root_count)
+          sigh_right = right_val.positive? ? 1 : -1
+          # if sign on edges is equal, there are no roots
+          continue if sigh_right == sign_left
+          if sign_left.negative?
+            edge_neg = edge_left
+            edge_pos = edge_right
           else
-            ind+=1
-            next_dif = differentiate_inner(str[ind, str.length - ind])
-            if (next_dif != '0')
-              final_str = final_str + '1' + '+' + next_dif
-            else
-              final_str = final_str + '1'
-            end
+            edge_neg = edge_right
+            edge_pos = edge_left
+          end
+          # start binary_root_finder
+          root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, kf_dif[level])
+          i += 1
+          break if i > cur_root_count[level-1]
+        end
+      end
+      # find value, which we will use as infinity
+      def find_major(level,kf_dif)
+        major = 0.0
+        i = 0
+        loop do
+          s = kf_dif[i]
+          major = s if s > major
+          i += 1
+          break if i == level
+        end
+        return major + 1.0
+      end
+      def hit_root(level,edge,val,root_dif,cur_roots_count)
+        if val == 0
+          root_dif[level][cur_roots_count[level]] = edge
+          cur_roots_count[level] += 1
+          return true
+        end
+        return false
+      end
+    end
 
-          end
-        end
-        if (cur_sym == '-')
-          if (is_pow)
-            final_str = final_str + '-' + differentiate_inner(str[ind, str.length - ind])
-          else
-            final_str = final_str + '1' + '-' + differentiate_inner(str[ind, str.length - ind])
-          end
-        end
-      end
-      return final_str
-    end
-=end
-
-=begin
-    def first_char_from(str, ch, ind)
-      i = ind
-      while((str[i] != ch) && (i != str.length))
-        i+=1
-      end
-      return i
-    end
-    def find_closing_bracket(str, ind)
-      i = ind
-      kind_of_a_stack = 0
-      while(i != str.length)
-        if(str[i] == '(')
-          kind_of_a_stack += 1
-        end
-        if(str[i] == ')')
-          if(kind_of_a_stack == 0)
-            return i
-          else
-            kind_of_a_stack -= 1
-          end
-        end
-        i+=1
-      end
-      return i
-    end
-    def dif_2(str)
-      var_hash = new.Hash()
-      ind_hash = 0
-      if (str.include?('('))
-        ind = first_char_from(str, '(', 0)
-        while (ind != str.length)
-          ind2 = find_closing_bracket(str,ind + 1)
-          if (str[ind2].null?)
-            puts 'bad string'
-          else
-            var_hash[ind_hash] = str[ind+1,ind2-1]
-            if (!(str[ind2+1] == '*' && str[ind2+2] == '*'))
-              str = str[0,ind2] + '**1' + str[ind2+1,str.length-1]
-            end
-            str = str[0,ind-1] + '#' + ind_hash.to_s + str[ind2+1,str.length-1]
-            ind_hash += 1
-          end
-          ind = first_char_from(str, '(', 0)
-        end
-      end
-    end
-=end
   end
 end
 class PolynomError < StandardError
