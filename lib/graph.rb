@@ -194,14 +194,18 @@ module Silicium
         if node == goal
           return true
         end
-        graph.vertices[node].each do |child|
-          unless visited[child]
-            queue.push(child)
-            visited[child] = true
-          end
-        end
+        add_to_queue(graph, queue, node, visited)
       end
       false
+    end
+
+    def add_to_queue(graph, queue, node, visited)
+    graph.vertices[node].each do |child|
+      unless visited[child]
+        queue.push(child)
+        visited[child] = true
+      end
+    end
     end
 
     def connected?(graph)
