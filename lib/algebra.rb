@@ -153,8 +153,11 @@ module Silicium
         return false
       end
     end
-    def differentiate
-      return dif_2(@str)
+
+    class Differentiation
+
+    def differentiate(str)
+      return dif_2(str)
     end
 
     def first_char_from(str, ch, ind)
@@ -185,18 +188,18 @@ module Silicium
     end
     def fill_var_loop_inner(str,var_hash,ind_hash,ind)
       var_hash[ind_hash] = str[ind+1,ind2-ind-1]
-      if (!(str[ind2+1] == '*' && str[ind2+2] == '*'))
-        str = str[0,ind2+1] + '**1' + str[ind2+1,str.length-1]
-      end
-      str = str[0,ind] + '#' + ind_hash.to_s + str[ind2+1,str.length-ind2-1]
-      ind_hash += 1
-      return [str, var_hash, ind_hash, ind]
-    end
-    def fill_variables_loop(str,var_hash,ind_hash,ind)
-      while (ind != str.length)
-        ind2 = find_closing_bracket(str,ind + 1)
-        if (str[ind2].nil?)
-          puts 'bad string'
+          if (!(str[ind2+1] == '*' && str[ind2+2] == '*'))
+            str = str[0,ind2+1] + '**1' + str[ind2+1,str.length-1]
+          end
+          str = str[0,ind] + '#' + ind_hash.to_s + str[ind2+1,str.length-ind2-1]
+          ind_hash += 1
+          return [str, var_hash, ind_hash, ind]
+        end
+        def fill_variables_loop(str,var_hash,ind_hash,ind)
+          while (ind != str.length)
+            ind2 = find_closing_bracket(str,ind + 1)
+            if (str[ind2].nil?)
+              puts 'bad string'
         else
           str, var_hash, ind_hash, ind = fill_var_loop_inner(str,var_hash, ind_hash, ind)
         end
@@ -364,6 +367,7 @@ module Silicium
       end
       str = run_difs(str)
       return str
+    end
     end
   end
 end

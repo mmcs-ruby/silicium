@@ -1,7 +1,7 @@
 require 'test_helper'
-require 'parser'
+require 'algebra'
 
-class ParserTest < Minitest::Test
+class AlgebraTest < Minitest::Test
   include Silicium::Algebra
 
   def test_that_normal_polynom
