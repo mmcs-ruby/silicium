@@ -32,7 +32,7 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_integrating_Monte_Carlo_base_exp_integral
-    assert_in_delta -1 + Math.exp(5), (integrating_Monte_Carlo_base(0, 5){ |x| Math.exp(x) }), 5
+    assert_in_delta (-1 + Math.exp(5)), (integrating_Monte_Carlo_base(0, 5){ |x| Math.exp(x) }), 5
   end
 
   def test_integrating_Monte_Carlo_base_sym_board
@@ -74,7 +74,7 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_bogosort_m_nil_arr
-    exception = assert_raises(ArgumentError) do
+    assert_raises(ArgumentError) do
       bogosort!(nil)
     end
   end
@@ -94,7 +94,7 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_bogosort_nil_arr
-    exception = assert_raises(ArgumentError) do
+    assert_raises(ArgumentError) do
       bogosort!(nil)
     end
   end
@@ -140,7 +140,7 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_half_division_root_neg
-    assert_in_delta -0.703, (half_division(-2, 2, 0.0001){|x| Math.exp(x) - x * x}), 0.001
+    assert_in_delta (-0.703), (half_division(-2, 2, 0.0001){|x| Math.exp(x) - x * x}), 0.001
   end
 
   def test_half_division_root_exist_pos
@@ -152,7 +152,7 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_half_division_root_not_exist
-    exception = assert_raises(RuntimeError) do
+    assert_raises(RuntimeError) do
       half_division(-0.5, 0.5, 0.0001){|x| x * x + x + 1}
     end
   end
@@ -179,7 +179,7 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_hook_jeeves_step
-    exception = assert_raises(ArgumentError) do
+    assert_raises(ArgumentError) do
       test_hook_jeeves_step(-0.5, 0.5, 0.0001)
     end
   end
