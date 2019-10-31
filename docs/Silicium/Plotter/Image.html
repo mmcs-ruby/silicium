@@ -136,7 +136,7 @@
 
           
           <div class="method-source-code" id="new-source">
-            <pre><span class="ruby-comment"># File lib/plotter.rb, line 53</span>
+            <pre><span class="ruby-comment"># File lib/plotter.rb, line 49</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">initialize</span>(<span class="ruby-identifier">width</span>, <span class="ruby-identifier">height</span>, <span class="ruby-identifier">bg_color</span> = <span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Color</span><span class="ruby-operator">::</span><span class="ruby-constant">TRANSPARENT</span>)
   <span class="ruby-ivar">@image</span> = <span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Image</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">width</span>, <span class="ruby-identifier">height</span>, <span class="ruby-identifier">bg_color</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -177,7 +177,7 @@
 
           
           <div class="method-source-code" id="bar_chart-source">
-            <pre><span class="ruby-comment"># File lib/plotter.rb, line 70</span>
+            <pre><span class="ruby-comment"># File lib/plotter.rb, line 66</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">bar_chart</span>(<span class="ruby-identifier">bars</span>, <span class="ruby-identifier">bar_width</span>, <span class="ruby-identifier">bars_color</span> = <span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Color</span>(<span class="ruby-string">&#39;red @ 1.0&#39;</span>), <span class="ruby-identifier">axis_color</span> = <span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Color</span><span class="ruby-operator">::</span><span class="ruby-constant">BLACK</span>)
   <span class="ruby-keyword">if</span> <span class="ruby-identifier">bars</span>.<span class="ruby-identifier">count</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">bar_width</span> <span class="ruby-operator">&gt;</span> <span class="ruby-ivar">@image</span>.<span class="ruby-identifier">width</span>
     <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-string">&#39;Not enough big size of image to plot these number of bars&#39;</span>
@@ -229,7 +229,7 @@
 
           
           <div class="method-source-code" id="export-source">
-            <pre><span class="ruby-comment"># File lib/plotter.rb, line 95</span>
+            <pre><span class="ruby-comment"># File lib/plotter.rb, line 91</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">export</span>(<span class="ruby-identifier">filename</span>)
   <span class="ruby-ivar">@image</span>.<span class="ruby-identifier">save</span>(<span class="ruby-identifier">filename</span>, <span class="ruby-value">:interlace</span> <span class="ruby-operator">=&gt;</span> <span class="ruby-keyword">true</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -262,7 +262,7 @@
 
           
           <div class="method-source-code" id="rectangle-source">
-            <pre><span class="ruby-comment"># File lib/plotter.rb, line 57</span>
+            <pre><span class="ruby-comment"># File lib/plotter.rb, line 53</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">rectangle</span>(<span class="ruby-identifier">x</span>, <span class="ruby-identifier">y</span>, <span class="ruby-identifier">width</span>, <span class="ruby-identifier">height</span>, <span class="ruby-identifier">color</span>)
   <span class="ruby-identifier">x_end</span> = <span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">width</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
   <span class="ruby-identifier">y_end</span> = <span class="ruby-identifier">y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">height</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>

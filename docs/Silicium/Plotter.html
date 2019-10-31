@@ -62,7 +62,17 @@
     
     
     
+    <!-- Method Quickref -->
+<div id="method-list-section" class="nav-section">
+  <h3>Methods</h3>
+
+  <ul class="link-list" role="directory">
     
+    <li ><a href="#method-i-color">#color</a>
+    
+  </ul>
+</div>
+
   </div>
 </nav>
 
@@ -86,6 +96,83 @@
     
 
     
+     <section id="public-instance-5Buntitled-5D-method-details" class="method-section">
+       <header>
+         <h3>Public Instance Methods</h3>
+       </header>
+
+    
+      <div id="method-i-color" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">color</span><span
+            class="method-args">(*args)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Factory method to return a color value, based on the arguments given.</p>
+
+<p>@overload Color(r, g, b, a)</p>
+
+<pre>@param (see ChunkyPNG::Color.rgba)
+@return [Integer] The rgba color value.</pre>
+
+<p>@overload Color(r, g, b)</p>
+
+<pre>@param (see ChunkyPNG::Color.rgb)
+@return [Integer] The rgb color value.</pre>
+
+<p>@overload Color(hex_value, opacity = nil)</p>
+
+<pre>@param (see ChunkyPNG::Color.from_hex)
+@return [Integer] The hex color value, with the opacity applied if one
+  was given.</pre>
+
+<p>@overload Color(color_name, opacity = nil)</p>
+
+<pre>@param (see ChunkyPNG::Color.html_color)
+@return [Integer] The hex color value, with the opacity applied if one
+  was given.</pre>
+
+<p>@overload Color(color_value, opacity = nil)</p>
+
+<pre>@param [Integer, :to_i] The color value.
+@return [Integer] The color value, with the opacity applied if one was
+  given.</pre>
+
+<p>@return [Integer] The determined color value as RGBA integer. @raise [ArgumentError] if the arguments weren&#39;t understood as a color.</p>
+          
+          
+
+          
+          <div class="method-source-code" id="color-source">
+            <pre><span class="ruby-comment"># File lib/plotter.rb, line 34</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">color</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword">case</span> <span class="ruby-identifier">args</span>.<span class="ruby-identifier">length</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">1</span>; <span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Color</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">first</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-value">2</span>; (<span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Color</span>.<span class="ruby-identifier">parse</span>(<span class="ruby-identifier">args</span>.<span class="ruby-identifier">first</span>) <span class="ruby-operator">&amp;</span> <span class="ruby-value">0xffffff00</span>) <span class="ruby-operator">|</span> <span class="ruby-identifier">args</span>[<span class="ruby-value">1</span>].<span class="ruby-identifier">to_i</span>
+  <span class="ruby-keyword">when</span> <span class="ruby-value">3</span>; <span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Color</span>.<span class="ruby-identifier">rgb</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword">when</span> <span class="ruby-value">4</span>; <span class="ruby-constant">ChunkyPNG</span><span class="ruby-operator">::</span><span class="ruby-constant">Color</span>.<span class="ruby-identifier">rgba</span>(<span class="ruby-operator">*</span><span class="ruby-identifier">args</span>)
+  <span class="ruby-keyword">else</span> <span class="ruby-identifier">raise</span> <span class="ruby-constant">ArgumentError</span>, <span class="ruby-node">&quot;Don&#39;t know how to create a color from #{args.inspect}!&quot;</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+    </section>
+  
   </section>
 
 </main>
