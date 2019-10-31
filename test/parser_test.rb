@@ -77,4 +77,10 @@ class ParserTest < Minitest::Test
   def test_differentiate_normal_with_negative_5
     assert_equal(differentiate_inner("-5*x**5"), "-5*5*x**4")
   end
+
+=begin
+  def test_exception
+    assert_raises(ArgumentError){differentiate_inner()}
+  end
+=end
 end
