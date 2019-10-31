@@ -1,10 +1,8 @@
 require 'test_helper'
 require 'parser'
-#require 'test_helper'
-#require 'parser'
 
 class ParserTest < Minitest::Test
-  include Silicium::Polynom
+  include Silicium::Algebra
 
   def test_that_normal_polynom
     assert(polycop('x^2 + 2 * x + 7'), "Fail")
