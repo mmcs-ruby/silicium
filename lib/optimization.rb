@@ -15,18 +15,18 @@ module Silicium
       1.0 / (1 + Math.exp(-x))
     end
 
-    #integrating using method Monte Carlo (f - function, a, b - integrating limits, n - amount of random numbers)
+    # integrating using method Monte Carlo (f - function, a, b - integrating limits, n - amount of random numbers)
     def integrating_Monte_Carlo_base(a, b, n = 100000, &block)
       res = 0
       range = a..b.to_f
-      for i in 1..(n + 1)
+      (1..(n + 1)).each do
          x = rand(range)
          res += (b - a) * 1.0 / n * block.call(x)
       end
       res
     end
 
-    #return true if array is sorted
+    # return true if array is sorted
     def sorted?(a)
       return false if a.nil?
       for i in 0..a.length - 2
@@ -39,24 +39,16 @@ module Silicium
 
     #fastest(but it is not exactly) sort, modify sequance
     def bogosort!(a)
-      if (a.nil?)
-        raise ArgumentError, "Nil array in bogosort"
-      end
-      while (!sorted?(a))
-        a.shuffle!
-      end
+      raise ArgumentError, "Nil array in bogosort"  if a.nil?
+      a.shuffle! until sorted?(a)
       a
     end
 
     #fastest(but it is not exactly) sort
     def bogosort(a)
-      if (a.nil?)
-        raise ArgumentError, "Nil array in bogosort"
-      end
+      raise ArgumentError, "Nil array in bogosort"  if a.nil?
       crutch = a
-      while (!sorted?(crutch))
-        crutch = a.shuffle
-      end
+      (crutch = a.shuffle) until sorted?(crutch)
       crutch
     end
 
@@ -82,13 +74,13 @@ module Silicium
       [cur_f, x[i]]
     end
 
-    #switch step if current func value > previous func value
+    # switch step if current func value > previous func value
     def switch_step(cur_f, prev_f, step, i)
       return step[i] / 2.0 if cur_f >= prev_f #you can switch 2.0 on something else
       step[i]
     end
-    #Hook - Jeeves method for find minimum point (x - array of start variables, step - step of one iteration, eps - allowable error, alfa - slowdown of step,
-    #block - function which takes array x, WAENING function doesn't control  correctness of input
+    # Hook - Jeeves method for find minimum point (x - array of start variables, step - step of one iteration, eps - allowable error, alfa - slowdown of step,
+    # block - function which takes array x, WAENING function doesn't control  correctness of input
     def hook_jeeves(x, step, eps = 0.1, &block)
       prev_f = block.call(x)
       acc = accuracy(step)
@@ -105,14 +97,14 @@ module Silicium
       x
     end
 
-    #find centr of interval
+    # find centr of interval
     def middle(a, b)
       (a + b) / 2.0
     end
 
     #do one half division step
     def half_division_step(a, b, c, &block)
-      if (block.call(a) * block.call(c) < 0)
+      if (block.call(a) * block.call(c)).negative?
         b = c
         c = middle(a, c)
       else
@@ -122,19 +114,17 @@ module Silicium
       [a, b, c]
     end
 
-    #find root in [a, b], if he exist, if number of iterations > iters -> error
+    # find root in [a, b], if he exist, if number of iterations > iters -> error
     def half_division(a, b, eps = 0.001, &block)
       iters = 1000000
       c = middle(a, b)
-      while ((block.call(c).abs) > eps)
+      while (block.call(c).abs) > eps
         tmp = half_division_step(a, b, c, &block)
         a = tmp[0]
         b = tmp[1]
         c = tmp[2]
         iters -= 1
-        if iters == 0
-          raise RuntimeError, "Root not found! Check does he exist, or change eps or iters"
-        end
+        raise RuntimeError, 'Root not found! Check does he exist, or change eps or iters' if iters == 0
       end
       c
     end
