@@ -1,5 +1,6 @@
 require 'test_helper'
 require 'algebra'
+require 'algebra_diff'
 
 class AlgebraTest < Minitest::Test
   include Silicium::Algebra
