@@ -28,7 +28,7 @@ module Silicium
       coeff
     end
 
-    # String implementation of result
+    # String implementation of result (optimization part)
     def str_res_impl(coeff_res, sgn_array)
       res_size = coeff_res.size
       res_exp = ""
@@ -41,7 +41,8 @@ module Silicium
       res_exp
     end
 
-    # String implementation of remained part
+    
+    # String implementation of remained part (optimization part)
     def str_rem_impl(coeff_1)
       c = coeff_1.size
       rem_exp = ""
