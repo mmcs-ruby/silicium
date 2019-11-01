@@ -1,7 +1,8 @@
 module Silicium
-  class IntegralDoesntExistError < RuntimeError
-
-  end
+  class IntegralDoesntExistError < RuntimeError; end
+  
+  class NumberofIterOutofRangeError < RuntimeError; end
+    
   ##
   # A class providing numerical integration methods
   class NumericalIntegration
@@ -116,13 +117,13 @@ module Silicium
     # @param [Block] block - integrated function as Block
     def self.wrapper_method(a_b, eps, method_name, &block)
       n = 1
-      max_it = 1_000_000
+      max_it = 10_000
       begin
         begin
           result = send(method_name, a_b[0], a_b[1], n, &block)
           check_value(result)
           n *= 5
-          raise IntegralDoesntExistError if n > max_it
+          raise NumberofIterOutofRangeError if n > max_it
           result1 = send(method_name, a_b[0], a_b[1], n, &block)
           check_value(result1)
         end until (result - result1).abs < eps
