@@ -78,7 +78,7 @@ module Silicium
         end
       end
       res_exp = str_res_impl(coeff_result, sgn_array)
-      rem_exp = str_rem_impl(coeff_1)
+      rem_exp = str_rem_impl(coeff_1[coeff_2.size..coeff_1.size-1])
       [res_exp, rem_exp]
     end
   end
