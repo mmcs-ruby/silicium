@@ -6,8 +6,8 @@ class NumericalIntegrationTest < Minitest::Test
   @@delta = 0.0001
 
   def test_log_three_eights_integration
-    assert_in_delta Math.log(3.5),
-                    NumericalIntegration.three_eights_integration(2, 7) { |x| 1 / x }, @@delta
+    assert_in_delta Math.log(1.25),
+                    NumericalIntegration.three_eights_integration(4, 5) { |x| 1 / x }, @@delta
   end
 
   def test_error_three_eights_integration
@@ -284,10 +284,6 @@ class NumericalIntegrationTest < Minitest::Test
     wrap_polynom_accuracy(&NumericalIntegration.method(:trapezoid))
   end
 
-  def test_polynom_accuracy_0_00001_trapezoid
-    wrap_polynom_accuracy_0_00001(&NumericalIntegration.method(:trapezoid))
-  end
-
   def test_error_trapezoid
     wrap_error(&NumericalIntegration.method(:trapezoid))
   end
@@ -318,6 +314,10 @@ class NumericalIntegrationTest < Minitest::Test
 
   def test_domain_log_quotient_error_trapezoid
     wrap_domain_log_quotient_error(&NumericalIntegration.method(:trapezoid))
+  end
+
+  def test_number_of_iter_out_of_range_error_trapezoid
+    wrap_number_of_iter_out_of_range_error(&NumericalIntegration.method(:trapezoid))
   end
 
   def test_log_middle_rectangles
@@ -364,10 +364,6 @@ class NumericalIntegrationTest < Minitest::Test
     wrap_polynom_accuracy(&NumericalIntegration.method(:middle_rectangles))
   end
 
-  def test_polynom_accuracy_0_00001_middle_rectangles
-    wrap_polynom_accuracy_0_00001(&NumericalIntegration.method(:middle_rectangles))
-  end
-
   def test_error_middle_rectangles
     wrap_error(&NumericalIntegration.method(:middle_rectangles))
   end
@@ -399,19 +395,23 @@ class NumericalIntegrationTest < Minitest::Test
     wrap_domain_log_quotient_error(&NumericalIntegration.method(:middle_rectangles))
   end
 
+  def test_number_of_iter_out_of_range_error_middle_rectangles
+    wrap_number_of_iter_out_of_range_error(&NumericalIntegration.method(:middle_rectangles))
+  end
+
   private
 
   def wrap_log(&block)
-    assert_in_delta Math.log(3.5), block.call(2, 7){ |x| 1 / x }, @@delta
+    assert_in_delta 0.182322, block.call(1, 1.2){ |x| 1 / x }, @@delta
   end
  
   def wrap_sin(&block)
-    assert_in_delta Math.sin(8) + Math.sin(10), block.call(-10, 8){ |x| Math.cos(x) }, @@delta
+    assert_in_delta 0.04446, block.call(-0.5, -0.45){ |x| Math.cos(x) }, @@delta
   end
 
   def wrap_arctan(&block)
-    assert_in_delta Math.atan(Math::PI),
-                    block.call(0, Math::PI){ |x| 1 / (1 + x ** 2) }, @@delta
+    assert_in_delta Math.atan(Math::PI / 12),
+                    block.call(0, Math::PI / 12){ |x| 1 / (1 + x ** 2) }, @@delta
   end
 
   def wrap_arcsin(&block)
@@ -420,23 +420,23 @@ class NumericalIntegrationTest < Minitest::Test
   end
 
   def wrap_something_scary(&block)
-    assert_in_delta 163.678,
-                    block.call(4.5, 5, 0.001){ |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
+    assert_in_delta 13.8479,
+                    block.call(4.5, 4.55, 0.001){ |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
   end
 
   def wrap_something_scary_accuracy_001(&block)
-    assert_in_delta 442.82,
-                    block.call(2, 5, 0.01){ |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.01
+    assert_in_delta 74.5912,
+                    block.call(4.5, 4.75, 0.01){ |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.01
   end
 
   def wrap_something_scary_accuracy_01(&block)
-    assert_in_delta 442.8,
-                    block.call(2, 5, 0.1){ |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.1
+    assert_in_delta 74.5912,
+                    block.call(4.5, 4.75, 0.1){ |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.1
   end
 
   def wrap_reverse(&block)
-    assert_in_delta (-1 * (Math.sin(3) + Math.sin(4))),
-                    block.call(4, -3){ |x| Math.cos(x) }, @@delta
+    assert_in_delta (-0.247404),
+                    block.call(0, -0.25){ |x| Math.cos(x) }, @@delta
   end
 
   def wrap_one_point(&block)
@@ -454,11 +454,6 @@ class NumericalIntegrationTest < Minitest::Test
                     block.call(-0.001, 0.001, 0.00001){ |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
   end
 
-  def wrap_polynom_accuracy_0_00001(&block)
-    assert_in_delta (-0.32),
-                    block.call(-0.001, 0.001, 0.00001){ |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
-  end
-
   def wrap_error(&block)
     assert_raises IntegralDoesntExistError do
       block.call(0, 0.5){ |x| 1 / x }
@@ -467,7 +462,7 @@ class NumericalIntegrationTest < Minitest::Test
 
   def wrap_nan_error(&block)
     assert_raises IntegralDoesntExistError do
-      block.call(0, 1){ |x| 1 / Math.log(x) }
+      block.call(1, 1.2){ |x| 1 / Math.log(x) }
     end
   end
 
@@ -507,6 +502,10 @@ class NumericalIntegrationTest < Minitest::Test
     end
   end
 
-  
+  def wrap_number_of_iter_out_of_range_error(&block)
+    assert_raises NumberofIterOutofRangeError do
+      block.call(1, 200){ |x| 1 / x }
+    end
+  end
 
 end
