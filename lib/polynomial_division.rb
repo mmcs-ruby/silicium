@@ -51,7 +51,7 @@ module Silicium
       res_exp = ""
       rem_exp = ""
       (0..res_size-1).each do |i|
-        res_exp += (coeff_result[i].to_s+"*x**"+(res_size - i - 1).to_s)
+        res_exp += ((coeff_result[i].ceil(3)).to_s+"*x**"+(res_size - i - 1).to_s)
         if sgn_array[i+1] != '-'
           res_exp += sgn_array[i+1]
         end
@@ -62,7 +62,7 @@ module Silicium
           rem_exp += '+'
         end
         if coeff_1[i] != 0.0
-          rem_exp += (coeff_1[i].to_s+"*x**"+(c - i - 1).to_s)
+          rem_exp += ((coeff_1[i].ceil(3)).to_s+"*x**"+(c - i - 1).to_s)
         end
       end
       if rem_exp[0] == '+'
