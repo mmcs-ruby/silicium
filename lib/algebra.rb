@@ -19,7 +19,6 @@ module Silicium
     ## polycop('x^2 + 2 * x + 7')		# => True
     ## polycop('x^2 +2nbbbbb * x + 7')		# => False
     def polycop(str)
-
       str_var = ''
       parsed = str.split(/[-+]/)
       parsed.each do |term|
@@ -66,7 +65,7 @@ module Silicium
 
       ##
       # +get_coef(str)+ transforms polynom into array of coefficients
-      #
+      # arr[0] = a0 * x^0 ; arr[1] = a1 * x^1 ; ... arr[n] = an * x^(n-1)
       ## get_coef('')    # =>
       def get_coef(str)
         tokens = str.split(/[-+]/)
@@ -76,14 +75,7 @@ module Silicium
           term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
           par_cf = $1
           par_deg = $2
-          # check if term is free term
-          if term.scan(/[a-z]/).empty?
-            cur_cf = term.to_f
-            cur_deg = 0
-          else
-            cur_cf = par_cf.nil? ? 1 : par_cf.to_f
-            cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
-          end
+          cur_cf, cur_deg = initialize_cf_deg(term, par_cf, par_deg)
           # initialize deg for the first time
           deg = cur_deg if deg == 0
           # add 0 coefficient to missing degrees
@@ -94,7 +86,18 @@ module Silicium
         insert_zeroes(cf, deg) unless deg.zero?
         return cf.reverse
       end
-
+      # intialize cur_cf and cur_deg depend on current term
+      def initialize_cf_deg(term,par_cf,par_deg)
+        # check that term is free
+        if term.scan(/[a-z]/).empty?
+          cur_cf = term.to_f
+          cur_deg = 0
+        else
+          cur_cf = par_cf.nil? ? 1 : par_cf.to_f
+          cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
+        end
+        return [cur_cf,cur_deg]
+      end
       ##
       # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
       def insert_zeroes(arr, count)
