@@ -9,6 +9,9 @@ module Silicium
       sgn_array = []                    # Array of signs
       if str[0] != '-'
         sgn_array.push('+')
+      else
+        sgn_array.push('-')
+        str[0] = ''
       end
       token = str.split(/[-+]/)
       (0..str.size-1).each do |i|
@@ -55,6 +58,7 @@ module Silicium
       if rem_exp[0] == '+'
         rem_exp[0] = ''
       end
+      rem_exp
     end
 
     # This function returns array of 2 strings: first is the result of division polynom poly_1 on polynom poly_2
