@@ -1,88 +1,112 @@
 module Silicium
 
+  ##
+  # +Algebra+ module helps to perform calculations with polynoms
   module Algebra
     attr_reader :str
-    class Polynom
-      def initializer(str)
-        raise PolynomError, 'Invalid string for polynom ' unless polycop(str)
-        @str = str
-      end
 
-      def polycop(str)
-        allowed_w = ['ln','lg','log']
-        str_var = ''
-        parsed = str.split(/[-+]/)
-        parsed.each do |term|
-          return false if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
-          cur_var = $2
-          str_var = cur_var if str_var == ''
-          return false if !cur_var.nil? && str_var != cur_var
-          # check for extra letters in term
-          letters = term.scan(/[a-z]{2,}/)
-          letters = letters.join
-          if !letters.empty? && !allowed_w.include?(letters)
-            return false
-          end
+    ##
+    # +initializer(str)+ creates a correct ruby str from given one
+    def initializer(str)
+      raise PolynomError, 'Invalid string for polynom ' unless polycop(str)
+      @str = str
+    end
+
+    ##
+    # +polycop(str)+ determines whether the str is an appropriate function
+    # which only has one variable
+    #
+    ## polycop('x^2 + 2 * x + 7')		# => True
+    ## polycop('x^2 +2nbbbbb * x + 7')		# => False
+    def polycop(str)
+      allowed_w = ['ln','lg','log']
+      str_var = ''
+      parsed = str.split(/[-+]/)
+      parsed.each do |term|
+        return false if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
+        cur_var = $2
+        str_var = cur_var if str_var == ''
+        return false if !cur_var.nil? && str_var != cur_var
+        # check for extra letters in term
+        letters = term.scan(/[a-z]{2,}/)
+        letters = letters.join
+        if !letters.empty? && !allowed_w.include?(letters)
+          return false
         end
-        # save variable letter in
-        @letter_var = str_var # sorry for that
-        return true
       end
-      # transform @str into syntactically correct ruby str
-      def to_ruby_s(val)
-        temp_str = @str
-        temp_str.gsub!('^','**')
-        temp_str.gsub!(/lg|log|ln/,'Math::\1')
-        temp_str.gsub!(@letter_var, val)
-        return temp_str
-      end
+      # save variable letter in
+      @letter_var = str_var # sorry for that
+      return true
+    end
 
-      def evaluate(val)
-        res = to_ruby_s(val)
-        eval(res)
-      end
+    ##
+    # +to_ruby_s(val)+ transforms @str into a correct ruby stк
+    # works for logarithms, trigonometry and misspelled power
+    #
+    ## to_ruby_s('')    # =>
+    def to_ruby_s(val)
+      temp_str = @str
+      temp_str.gsub!('^','**')
+      temp_str.gsub!(/lg|log|ln/,'Math::\1')
+      temp_str.gsub!(@letter_var, val)
+      return temp_str
+    end
+
+    # +evaluate(val)+ counts the result using a given value
+    def evaluate(val)
+      res = to_ruby_s(val)
+      eval(res)
     end
 
 
-
+    ##
+    # +PolynomRootsReal+
     module PolynomRootsReal
-      # transform polynom into array of coefficients
-      def to_kf(str)
+
+      ##
+      # +get_coef(str)+ transforms polynom into array of coefficients
+      #
+      ## get_coef('')    # =>
+      def get_coef(str)
         tokens = str.split(/[-+]/)
-        kf = Array.new(0.0)
+        cf = Array.new(0.0)
         deg = 0
         tokens.each do |term|
           term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
-          par_kf = $1
+          par_cf = $1
           par_deg = $2
           # check if term is free term
           if term.scan(/[a-z]/).empty?
-            cur_kf = term.to_f
+            cur_cf = term.to_f
             cur_deg = 0
           else
-            cur_kf = par_kf.nil? ? 1 : par_kf.to_f
+            cur_cf = par_cf.nil? ? 1 : par_cf.to_f
             cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
           end
           # initialize deg for the first time
           deg = cur_deg if deg == 0
           # add 0 coefficient to missing degrees
-          insert_zeros(kf, deg - cur_deg - 1) if deg - cur_deg > 1
-          kf << cur_kf
+          insert_zeroes(cf, deg - cur_deg - 1) if deg - cur_deg > 1
+          cf << cur_cf
           deg = cur_deg
         end
-        insert_zeros(kf,deg) unless deg.zero?
-        return kf
+        insert_zeroes(cf, deg) unless deg.zero?
+        return cf
       end
 
-      def insert_zeros(arr,count)
+      ##
+      # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
+      def insert_zeroes(arr, count)
         loop do
           arr << 0.0
           count -= 1
           break if count == 0
         end
       end
-      # evaluate polinom, which defined by array of coefficients
-      def eval_by_kf(deg,val,kf)
+
+      ##
+      # +eval_by_cf(deg,val,cf)+ finds the result of polynom defined by array of coefficients
+      def eval_by_cf(deg, val, kf)
         s = 1.0
         i = deg - 1
         loop do
@@ -92,18 +116,24 @@ module Silicium
         end
         return s
       end
-      # find polynom root by binary search in interval, which has root
-      def binary_root_finder(deg,edge_neg,edge_pos,kf)
+
+      ##
+      # +binary_root_finder(deg,edge_neg,edge_pos,cf)+ finds result of polynom using binary search
+      # +edge_neg+ and +edge_pos+ define the interval used for binary search
+      def binary_root_finder(deg,edge_neg,edge_pos,cf)
         loop do
           x = 0.5 * (edge_neg + edge_pos)
           return x if x == edge_pos || x == edge_neg
-          if eval_by_kf(deg,x,kf) > 0
+          if eval_by_cf(deg, x, cf) > 0
             edge_pos = x
           else
             edge_neg = x
           end
         end
       end
+
+      ##
+      #
       def step_up(level,kf_dif,root_dif,cur_root_count)
         major = find_major(level, kf_dif[level])
         cur_root_count[level] = 0
@@ -130,19 +160,20 @@ module Silicium
           break if i > cur_root_count[level-1]
         end
       end
-      # find value, which we will use as infinity
-      def find_major(level,kf_dif)
+
+      ##
+      # +find_major(level,cf_dif)+ finds value, which we will use as infinity
+      def find_major(level,cf_dif)
         major = 0.0
         i = 0
         loop do
-          s = kf_dif[i]
+          s = cf_dif[i]
           major = s if s > major
           i += 1
           break if i == level
         end
         return major + 1.0
       end
-
       def hit_root(arr_pack)
         level,edge,val,root_dif,cur_roots_count = arr_pack
         if val == 0
@@ -153,7 +184,6 @@ module Silicium
         return false
       end
     end
-
     def form_left(args_pack)
       i,major,level,root_dif,kf_dif = args_pack
       edge_left = i.zero? ? -major : root_dif[level-1][i-1]
@@ -169,7 +199,10 @@ module Silicium
       return [edge_right,right_val,sigh_right]
     end
 
+
   end
 end
+
 class PolynomError < StandardError
 end
+

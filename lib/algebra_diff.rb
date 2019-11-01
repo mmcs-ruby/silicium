@@ -1,50 +1,62 @@
 module Silicium
   module Algebra
+    ##
+    # differentiating methods
     class Differentiation
 
+      ##
+      # +differentiate(str)+ differentiates given string
       def differentiate(str)
         return dif_2(str)
       end
 
+      ##
+      # +first_char_from(str, ch, ind)+
       def first_char_from(str, ch, ind)
         i = ind
-        while((str[i] != ch) && (i != str.length))
+        while(str[i] != ch) && (i != str.length)
           i+=1
         end
         return i
       end
 
+      ##
+      # +find_closing_bracket(str,ind)+ finds the first closing bracket in str starting from given index
       def find_closing_bracket(str, ind)
         i = ind
         kind_of_a_stack = 0
-        while(i != str.length)
-          case str[i]
-          when '('
+        while i != str.length
+          if str[i] == '('
             kind_of_a_stack += 1
-          when ')'
-            if(kind_of_a_stack == 0)
+          elsif str[i] ==  ')'
+            kind_of_a_stack -= 1
+            if kind_of_a_stack == 0
               return i
-            else
-              kind_of_a_stack -= 1
             end
           end
           i+=1
         end
         return i
       end
+
+      ##
+      # +fill_var_loop_inner(str,var_hash,ind_hash,ind)+
       def fill_var_loop_inner(str,var_hash,ind_hash,ind)
         var_hash[ind_hash] = str[ind+1,ind2-ind-1]
-        if (!(str[ind2+1] == '*' && str[ind2+2] == '*'))
+        unless str[ind2+1] == '*' && str[ind2+2] == '*'
           str = str[0,ind2+1] + '**1' + str[ind2+1,str.length-1]
         end
         str = str[0,ind] + '#' + ind_hash.to_s + str[ind2+1,str.length-ind2-1]
         ind_hash += 1
         return [str, var_hash, ind_hash, ind]
       end
+
+      ##
+      #
       def fill_variables_loop(str,var_hash,ind_hash,ind)
-        while (ind != str.length)
+        while ind != str.length
           ind2 = find_closing_bracket(str,ind + 1)
-          if (str[ind2].nil?)
+          if str[ind2].nil?
             puts 'bad string'
           else
             str, var_hash, ind_hash, ind = fill_var_loop_inner(str,var_hash, ind_hash, ind)
@@ -53,6 +65,9 @@ module Silicium
         end
         return [str, var_hash]
       end
+
+      ##
+      # +fill_variables(str)+
       def fill_variables(str)
         var_hash = Hash.new
         ind_hash = 0
@@ -63,6 +78,8 @@ module Silicium
         return [str, var_hash]
       end
 
+      ##
+      # +extract_variables(str,var_hash)+
       def extract_variables(str,var_hash)
         ind = str[/#(\d+)/,1]
         if (ind.nil?)
@@ -79,6 +96,8 @@ module Silicium
         end
       end
 
+      ##
+      # +run_difs(str)+ selects how to differentiate str
       def run_difs(str)
         return case str
                when /\A-?\d+\Z/
@@ -94,8 +113,10 @@ module Silicium
                end
       end
 
+      ##
+      # +dif_x_a(a)+ goes for variable with a coefficient
       def dif_x_a(a)
-        if (a.nil? || a == "1*" || a == '')
+        if a.nil? || a == "1*" || a == ''
           a = ""
           a_char = ""
         else
@@ -104,8 +125,11 @@ module Silicium
         end
         return [a, a_char]
       end
+
+      ##
+      # +dif_x_c(c)+ goes for constant
       def dif_x_c(c)
-        if (c.nil? || c == "*1" || c == "/1" || c == '')
+        if c.nil? || c == "*1" || c == "/1" || c == ''
           c = ""
           c_char = ""
         else
@@ -114,31 +138,38 @@ module Silicium
         end
         return [c, c_char]
       end
-      def dif_x(a,b,c) # a*x^b*c
+
+      ##
+      # +dif_x(a,b,c)+ goes for a*x^b*c
+      def dif_x(a,b,c)
         a, a_char = dif_x_a(a)
         c, c_char = dif_x_c(c)
-        if (b.nil? || b == "**1")
+        if b.nil? || b == "**1"
           return eval(a+a_char+"1"+c_char+c).to_s
         else
           new_b = '**' + (b[2,b.length - 2].to_i - 1).to_s
-          if (new_b == '**1')
+          if new_b == '**1'
             new_b = ''
           end
           return eval(a+a_char+b[2,b.length - 2]+c_char+c).to_s + '*x' + new_b
         end
       end
 
+      ##
+      # +trigonometry_difs(str)+ goes for trigonometry
       def trigonometry_difs(str)
         return case str
                when /sin<(.+)>/
                  dif_sin($1)
                when /cos<(.+)>/
                  dif_cos($1)
-
                else
                  '0'
                end
       end
+
+      ##
+      # +dif_sin(param)+ helps +trigonometry_difs(str)+
       def dif_sin(param)
         arg = dif_2(param)
         return case arg
@@ -153,6 +184,8 @@ module Silicium
                end
       end
 
+      ##
+      # +dif_cos(param)+ helps +trigonometry_difs(str)+
       def dif_cos(param)
         arg = dif_2(param)
         return case arg
@@ -167,12 +200,15 @@ module Silicium
                end
       end
 
+      ##
+      # +fix_str_for_dif(str)+ gets rid of useless brackets
       def fix_str_for_dif(str)
         str = fix_trig_brackets(str)
         str = fix_useless_brackets(str)
-        return str
       end
 
+      ##
+      # +fix_trig_brackets(str)+ helps +fix_str_for_dif(str)+ with trigonometry
       def fix_trig_brackets(str)
         reg = /(sin|cos)\((.+)\)/
         cur_el_1 = str[reg,1]
@@ -185,6 +221,8 @@ module Silicium
         return str
       end
 
+      ##
+      # +fix_useless_brackets(str)+ helps +fix_str_for_dif(str)+ with extra brackets
       def fix_useless_brackets(str)
         reg1 = /\((-?\d+([*\/]\d)*|-?x([*\/]\d)*)\)/
         cur_el = str[reg1,1]
@@ -195,15 +233,17 @@ module Silicium
         return str
       end
 
+      ##
+      # +dif_2(str)+
       def dif_2(str)
         var_hash = Hash.new
         str = fix_str_for_dif(str)
         str, var_hash = fill_variables(str)
         str.gsub!(/(?!^)-/,'+-')
         summ = str.split('+')
-        if (summ.length > 1)
+        if summ.length > 1
           arr = summ.map{|x|dif_2(extract_variables(x,var_hash))}.select{|x|x!="0"}
-          if (arr == [])
+          if arr == []
             return "0"
           else
             res = arr.join('+')
@@ -214,7 +254,11 @@ module Silicium
         str = run_difs(str)
         return str
       end
+
     end
   end
 end
+
+
+
 
