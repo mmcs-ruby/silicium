@@ -3,59 +3,61 @@ module Silicium
   ##
   # +Algebra+ module helps to perform calculations with polynoms
   module Algebra
-    attr_reader :str
+    class Polynom
+      attr_reader :str
 
-    ##
-    # +initializer(str)+ creates a correct ruby str from given one
-    def initializer(str)
-      raise PolynomError, 'Invalid string for polynom ' unless polycop(str)
-      @str = str
-    end
-
-    ##
-    # +polycop(str)+ determines whether the str is an appropriate function
-    # which only has one variable
-    #
-    ## polycop('x^2 + 2 * x + 7')		# => True
-    ## polycop('x^2 +2nbbbbb * x + 7')		# => False
-    def polycop(str)
-      allowed_w = ['ln','lg','log']
-      str_var = ''
-      parsed = str.split(/[-+]/)
-      parsed.each do |term|
-        return false if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
-        cur_var = $2
-        str_var = cur_var if str_var == ''
-        return false if !cur_var.nil? && str_var != cur_var
-        # check for extra letters in term
-        letters = term.scan(/[a-z]{2,}/)
-        letters = letters.join
-        if !letters.empty? && !allowed_w.include?(letters)
-          return false
-        end
+      ##
+      # +initializer(str)+ creates a correct ruby str from given one
+      def initializer(str)
+        raise PolynomError, 'Invalid string for polynom ' unless polycop(str)
+        @str = str
       end
-      # save variable letter in
-      @letter_var = str_var # sorry for that
-      return true
-    end
 
-    ##
-    # +to_ruby_s(val)+ transforms @str into a correct ruby stк
-    # works for logarithms, trigonometry and misspelled power
-    #
-    ## to_ruby_s('')    # =>
-    def to_ruby_s(val)
-      temp_str = @str
-      temp_str.gsub!('^','**')
-      temp_str.gsub!(/lg|log|ln/,'Math::\1')
-      temp_str.gsub!(@letter_var, val)
-      return temp_str
-    end
+      ##
+      # +polycop(str)+ determines whether the str is an appropriate function
+      # which only has one variable
+      #
+      ## polycop('x^2 + 2 * x + 7')		# => True
+      ## polycop('x^2 +2nbbbbb * x + 7')		# => False
+      def polycop(str)
+        allowed_w = ['ln','lg','log']
+        str_var = ''
+        parsed = str.split(/[-+]/)
+        parsed.each do |term|
+          return false if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
+          cur_var = $2
+          str_var = cur_var if str_var == ''
+          return false if !cur_var.nil? && str_var != cur_var
+          # check for extra letters in term
+          letters = term.scan(/[a-z]{2,}/)
+          letters = letters.join
+          if !letters.empty? && !allowed_w.include?(letters)
+            return false
+          end
+        end
+        # save variable letter in
+        @letter_var = str_var # sorry for that
+        return true
+      end
 
-    # +evaluate(val)+ counts the result using a given value
-    def evaluate(val)
-      res = to_ruby_s(val)
-      eval(res)
+      ##
+      # +to_ruby_s(val)+ transforms @str into a correct ruby stк
+      # works for logarithms, trigonometry and misspelled power
+      #
+      ## to_ruby_s('')    # =>
+      def to_ruby_s(val)
+        temp_str = @str
+        temp_str.gsub!('^','**')
+        temp_str.gsub!(/lg|log|ln/,'Math::\1')
+        temp_str.gsub!(@letter_var, val)
+        return temp_str
+      end
+
+      # +evaluate(val)+ counts the result using a given value
+      def evaluate(val)
+        res = to_ruby_s(val)
+        eval(res)
+      end
     end
 
 

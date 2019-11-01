@@ -1,66 +1,70 @@
 require 'test_helper'
 require 'algebra'
 require 'algebra_diff'
+require 'polynomial_division'
 
 class AlgebraTest < Minitest::Test
   include Silicium::Algebra
 
+  #New class objects
+  @@polynom = Polynom.new
   @@diff = Differentiation.new
+  @@polynom_div = Polynom_division.new
 
   def test_that_normal_polynom
-    assert(polycop('x^2 + 2 * x + 7'), "Fail")
+    assert(@@polynom.polycop('x^2 + 2 * x + 7'), "Fail")
   end
 
   def test_that_normal_polynom_2
-    assert(polycop('2 * x^5 - x + 2 * x'), "Fail")
+    assert(@@polynom.polycop('2 * x^5 - x + 2 * x'), "Fail")
   end
 
   def test_that_normal_polynom_3
-    assert(polycop(''), "Fail")
+    assert(@@polynom.polycop(''), "Fail")
   end
 
   def test_that_normal_polynom_with_ln
-    assert(polycop('2 * ln x'), "Fail")
+    assert(@@polynom.polycop('2 * ln x'), "Fail")
   end
 
   def test_that_normal_polynom_with_log
-    assert(polycop('log x + 2 * 4'), "Fail")
+    assert(@@polynom.polycop('log x + 2 * 4'), "Fail")
   end
 
   def test_that_normal_polynom_with_lg
-    assert(polycop('4 * x^3 * lg x'), "Fail")
+    assert(@@polynom.polycop('4 * x^3 * lg x'), "Fail")
   end
 
   def test_that_normal_polynom_with_log_ln_lg
-    assert(polycop('log x + ln y - lg z'), "Fail")
+    assert(@@polynom.polycop('log x + ln y - lg z'), "Fail")
   end
 
   def test_that_work_exit
-    assert(!polycop('eval(exit)'), "Fail")
+    assert(!@@polynom.polycop('eval(exit)'), "Fail")
   end
 
   def test_that_work_exit_2
-    assert(!polycop('x^2 +2nbbbbb * x + 7'), "Fail")
+    assert(!@@polynom.polycop('x^2 +2nbbbbb * x + 7'), "Fail")
   end
 
   def test_that_work_exit_3
-    assert(polycop('x*b4 + 1'), "Fail")
+    assert(@@polynom.polycop('x*b4 + 1'), "Fail")
   end
 
   def test_that_work_degrees
-    assert(polycop('x**4 + 1'), "Fail")
+    assert(@@polynom.polycop('x**4 + 1'), "Fail")
   end
 
   def test_that_work_normal_degrees_2
-    assert(polycop('(3*x)x***4 + 1'), "Fail")
+    assert(@@polynom.polycop('(3*x)x***4 + 1'), "Fail")
   end
 
   def test_that_work_degrees_2
-    assert(!polycop('3*x^4 - 2*x^3 + 7y - 1'), "Fail")
+    assert(!@@polynom.polycop('3*x^4 - 2*x^3 + 7y - 1'), "Fail")
   end
 
   def test_that_work_degrees_3
-    assert(polycop('x**4 + 1'), "Fail")
+    assert(@@polynom.polycop('x**4 + 1'), "Fail")
   end
 
   def test_differentiate_normal
@@ -140,10 +144,17 @@ class AlgebraTest < Minitest::Test
   end
 
   def test_that_work_polycop_exceptions
-    assert_raises(NameError){polycop(4 * x)}
+    assert_raises(NameError){@@polynom.polycop(4 * x)}
   end
 
   def test_that_work_differentiate_exceptions
     assert_raises(NameError){@@diff.differentiate(4 * x)}
   end
+
+  def test_that_work_polynom_division
+    rez_division = @@polynom_div.polynom_division("3*x**3+0*x**2+2*x**1+6*x**0",'2*x**1-5*x**0')
+    assert_equal_as_sets(['1.5*x**2+3.75*x**1+10.375*x**0', ''], rez_division)
+  end
+
+
 end
