@@ -126,12 +126,7 @@ module Silicium
           put_point_in_part(down, point, :counter_clockwise)
         end
       end
-
-      hull = up
-      (1..(down.size - 2)).reverse_each do |j|
-        hull.push(down[j])
-      end
-      hull
+      up + down[1...-1]
     end
 
     def process_cf(line_equation, variable)
