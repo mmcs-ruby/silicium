@@ -134,8 +134,8 @@ module Silicium
 
       ##
       #
-      def step_up(level,kf_dif,root_dif,cur_root_count)
-        major = find_major(level, kf_dif[level])
+      def step_up(level,cf_dif,root_dif,cur_root_count)
+        major = find_major(level, cf_dif[level])
         cur_root_count[level] = 0
         i = 0
         # main loop
@@ -155,7 +155,7 @@ module Silicium
             edge_pos = edge_left
           end
           # start binary_root_finder
-          root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, kf_dif[level])
+          root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, cf_dif[level])
           i += 1
           break if i > cur_root_count[level-1]
         end
@@ -198,8 +198,6 @@ module Silicium
       sigh_right = right_val.positive? ? 1 : -1
       return [edge_right,right_val,sigh_right]
     end
-
-
   end
 end
 
