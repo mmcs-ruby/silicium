@@ -8,7 +8,7 @@ module Silicium
 
     # Computes integral from +a+ to +b+ of +block+ with accuracy +eps+
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
-      wrapper_method([a, b], eps, 'three_eights_integration_n', &block)
+      wrapper_method([a, b], eps, :three_eights_integration_n, &block)
     end
 
     # Computes integral from +a+ to +b+ of +block+ with +n+ segmentations
@@ -41,7 +41,7 @@ module Silicium
 
     # Simpson integration with specified accuracy
     def self.simpson_integration(a, b, eps = 0.0001, &block)
-      wrapper_method([a, b], eps, 'simpson_integration_with_a_segment', &block)
+      wrapper_method([a, b], eps, :simpson_integration_with_a_segment, &block)
     end
 
     # Left Rectangle Method and Right Rectangle Method
@@ -84,7 +84,7 @@ module Silicium
 
     # Middle Rectangles Method  with specified accuracy
     def self.middle_rectangles(a, b, eps = 0.0001, &block)
-      wrapper_method([a, b], eps, 'middle_rectangles_with_a_segment', &block)
+      wrapper_method([a, b], eps, :middle_rectangles_with_a_segment, &block)
     end
 
 
@@ -103,34 +103,45 @@ module Silicium
 
     # Trapezoid Method with specified accuracy
     def self.trapezoid(a, b, eps = 0.0001, &block)
-      wrapper_method([a, b], eps, 'trapezoid_with_a_segment', &block)
+      wrapper_method([a, b], eps, :trapezoid_with_a_segment ,&block)
     end
 
     private
 
+    ##
     # Wrapper method for num_integratons methods
-    def self.wrapper_method(a_b, eps, func, &block)
+    # @param [Array] a_b integration range
+    # @param [Numeric] eps
+    # @param [Proc] proc - integration Proc
+    # @param [Block] block - integrated function as Block
+    def self.wrapper_method(a_b, eps, method_name, &block)
       n = 1
       max_it = 1_000_000
       begin
         begin
-          result = eval "#{func}(a_b[0], a_b[1], n, &block)"
+          result = send(method_name, a_b[0], a_b[1], n, &block)
+          check_value(result)
           n *= 5
-          result1 = eval "#{func}(a_b[0], a_b[1], n, &block)"
-          if result.nan? || result1.nan?
-            raise IntegralDoesntExistError, 'We have not-a-number result :('
-          end
-          if result == Float::INFINITY || result1 == Float::INFINITY
-            raise IntegralDoesntExistError, 'We have infinity :('
-          end
           raise IntegralDoesntExistError if n > max_it
+          result1 = send(method_name, a_b[0], a_b[1], n, &block)
+          check_value(result1)
         end until (result - result1).abs < eps
+          
       rescue Math::DomainError
         raise IntegralDoesntExistError, 'Domain error in math function'
       rescue ZeroDivisionError
         raise IntegralDoesntExistError, 'Divide by zero'
       end
       (result + result1) / 2.0
+    end
+
+    def self.check_value(value)
+      if value.nan?
+        raise IntegralDoesntExistError, 'We have not-a-number result :('
+      end
+      if value == Float::INFINITY
+        raise IntegralDoesntExistError, 'We have infinity :('
+      end
     end
   end
 end

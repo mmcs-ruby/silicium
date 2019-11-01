@@ -22,3 +22,4 @@ deploy:
   on:
     tags: true
     repo: mmcs-ruby/silicium
+    branch: master
