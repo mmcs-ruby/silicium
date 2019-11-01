@@ -112,9 +112,9 @@ module Silicium
         loop do
           edge_left,left_val,sign_left = form_left([i,major,level,root_dif,kf_dif ])
           # if we hit in root(unlikely)
-          continue if hit_root(level, edge_left, left_val, root_dif, cur_root_count)
+          continue if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
           edge_right,right_val,sigh_right = form_right([i,major,level,root_dif,kf_dif])
-          continue if hit_root(level, edge_right, right_val, root_dif, cur_root_count)
+          continue if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
           # if sign on edges is equal, there are no roots
           continue if sigh_right == sign_left
           if sign_left.negative?
@@ -143,7 +143,8 @@ module Silicium
         return major + 1.0
       end
 
-      def hit_root(level,edge,val,root_dif,cur_roots_count)
+      def hit_root(arr_pack)
+        level,edge,val,root_dif,cur_roots_count = arr_pack
         if val == 0
           root_dif[level][cur_roots_count[level]] = edge
           cur_roots_count[level] += 1
