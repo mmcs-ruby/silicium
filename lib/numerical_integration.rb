@@ -111,6 +111,7 @@ module Silicium
     # Wrapper method for num_integratons methods
     def self.wrapper_method(a_b, eps, func, &block)
       n = 1
+      max_it = 1_000_000
       begin
         begin
           result = eval "#{func}(a_b[0], a_b[1], n, &block)"
@@ -122,6 +123,7 @@ module Silicium
           if result == Float::INFINITY || result1 == Float::INFINITY
             raise IntegralDoesntExistError, 'We have infinity :('
           end
+          raise IntegralDoesntExistError if n > max_it
         end until (result - result1).abs < eps
       rescue Math::DomainError
         raise IntegralDoesntExistError, 'Domain error in math function'
