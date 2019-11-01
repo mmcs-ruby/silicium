@@ -116,15 +116,17 @@ module Silicium
     # @param [Block] block - integrated function as Block
     def self.wrapper_method(a_b, eps, method_name, &block)
       n = 1
-      a, b = a_b
+      max_it = 1_000_000
       begin
         begin
-          result = send(method_name, a, b, n, &block)
+          result = send(method_name, a_b[0], a_b[1], n, &block)
           check_value(result)
           n *= 5
-          result1 = send(method_name, a, b, n, &block)
+          raise IntegralDoesntExistError if n > max_it
+          result1 = send(method_name, a_b[0], a_b[1], n, &block)
           check_value(result1)
         end until (result - result1).abs < eps
+          
       rescue Math::DomainError
         raise IntegralDoesntExistError, 'Domain error in math function'
       rescue ZeroDivisionError
