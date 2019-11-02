@@ -1,6 +1,8 @@
 module Silicium
   require_relative 'trans'
+  require_relative 'adding'
   require_relative 'multi'
+
   # here goes the sparse module
   module Sparse
     # here goes the Sparse class
