@@ -223,4 +223,20 @@ class SiliciumTest < Minitest::Test
     assert_in_delta Math.exp(-2), accept_annealing(4, 2, 1000, 0.001), 0.0001
   end
 
+  def test_simulated_annealing_sqr_polynom_func
+    assert_in_delta 3.0, (simulated_annealing(-5, 5){|x| x * x - 6 * x + 10}), 0.1
+  end
+
+  def test_simulated_annealing_sqr_func
+    assert_in_delta 0.0, (simulated_annealing(-10, 10){|x| x * x}), 0.1
+  end
+
+  def test_simulated_annealing_sin_func
+    assert_in_delta 3 * Math::PI / 2, (simulated_annealing(Math::PI, Math::PI * 2){|x| Math.sin x}), 0.1
+  end
+
+  def test_annealing_step
+    assert_equal 10, annealing_step(100, -10, 10)
+  end
+
 end

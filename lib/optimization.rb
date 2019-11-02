@@ -152,5 +152,39 @@ module Silicium
       Math.exp(p)
     end
 
+    #do one annealing step
+    def annealing_step(x, min_board, max_board)
+      x += rand(-0.5..0.5)
+      if (x > max_board)
+        x = max_board
+      end
+      if (x < min_board)
+        x = min_board
+      end
+      x
+    end
+
+    #Annealing method to find min of function with one argument, between min_board max_board,
+    def simulated_annealing(min_board, max_board, t = 10000, &block)
+      d = Math.exp(-5) #Constant of annealing
+      x = rand(min_board * 1.0..max_board * 1.0)
+      xm = x
+      min = block.call(x)
+      while (t > 0.00001)
+        x = xm
+        for i in 0..30 #30 - just because
+          x = annealing_step(x, min_board, max_board)
+          z = block.call(x)
+          if (z < min || accept_annealing(z, min, t, d) > rand(0.0..1.0))
+            min = z
+            xm = x
+          end
+        end
+        t *= 0.9999 #tempreture drops
+      end
+      xm
+    end
+
+
   end
 end
