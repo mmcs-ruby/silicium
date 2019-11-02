@@ -14,19 +14,25 @@ module Silicium
           sgn_array.push('-')
           str[0] = ''
         end
-      end
-      size = token.size - 1
-      coeff = Array.new                 # Array of coefficients
-      (0..size).each do |i|
-        degree = token[i].split('*')    # Split by '*' to get coefficient and degree
-        degree[0] == 'x' ? coeff[i] = 1.0 : coeff[i] = degree[0].to_f
-        if sgn_array[i] == '-'
-          coeff[i] *= -1
+        token = str.split(/[-+]/)
+        (0..str.size-1).each do |i|
+          if str[i] == '-' || str[i] == '+'
+            sgn_array.push(str[i])
+          end
+        end
+        size = token.size - 1
+        coeff = Array.new                 # Array of coefficients
+        (0..size).each do |i|
+          degree = token[i].split('*')    # Split by '*' to get coefficient and degree
+          degree[0] == 'x' ? coeff[i] = 1.0 : coeff[i] = degree[0].to_f
+          if sgn_array[i] == '-'
+            coeff[i] *= -1
+          end
         end
         coeff
       end
 
-      # String implementation of result (optimization part)
+# String implementation of result
       def str_res_impl(coeff_res, sgn_array)
         res_size = coeff_res.size
         res_exp = ""
@@ -39,8 +45,7 @@ module Silicium
         res_exp
       end
 
-
-      # String implementation of remained part (optimization part)
+# String implementation of remained part
       def str_rem_impl(coeff_1)
         c = coeff_1.size
         rem_exp = ""
@@ -56,8 +61,8 @@ module Silicium
         rem_exp
       end
 
-      # This function returns array of 2 strings: first is the result of division polynom poly_1 on polynom poly_2
-      # Second - remainder
+# This function returns array of 2 strings: first is the result of division polynom poly_1 on polynom poly_2
+# Second - remainder
       def polynom_division(poly_1, poly_2)
         coeff_1 = polynom_parser(poly_1)
         coeff_2 = polynom_parser(poly_2)
@@ -73,12 +78,16 @@ module Silicium
           end
         end
         res_exp = str_res_impl(coeff_result, sgn_array)
-        rem_exp = str_rem_impl(coeff_1)
+        rem_exp = str_rem_impl(coeff_1[coeff_2.size-1..coeff_1.size-1])
         [res_exp, rem_exp]
       end
-      res_exp = str_res_impl(coeff_result, sgn_array)
-      rem_exp = str_rem_impl(coeff_1[coeff_2.size-1..coeff_1.size-1])
-      [res_exp, rem_exp]
     end
   end
 end
+
+
+
+
+
+
+
