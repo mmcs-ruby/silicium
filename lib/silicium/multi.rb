@@ -5,6 +5,7 @@ module Silicium
       ##
       # @param [Integer] pos - Position of a row to return
       # @raise [ArgumentError] if position was less or bigger than count of cols
+      # @return [Array] The array contains elements of row
       #
       # Returns a row of sparse matrix by its position
       def get_row(pos)
@@ -20,6 +21,7 @@ module Silicium
       ##
       # @param [Integer] pos - Position of a column to return
       # @raise [ArgumentError] if position was less or bigger than count of rows
+      # @return [Array] The array that contains elements of column
       #
       # Returns a column of sparse matrix by its position
       def get_col(pos)
@@ -32,6 +34,8 @@ module Silicium
         row
       end
 
+      ##
+      # @return [Array] The array that contains rows of matrix
       # Returns sparse matrix in its regular view
       def regular_view
         i = 0
