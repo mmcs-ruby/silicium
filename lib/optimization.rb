@@ -164,6 +164,11 @@ module Silicium
       x
     end
 
+    #update current min and xm if cond
+    def annealing_cond(z, min, t, d)
+      (z < min || accept_annealing(z, min, t, d) > rand(0.0..1.0))
+    end
+
     #Annealing method to find min of function with one argument, between min_board max_board,
     def simulated_annealing(min_board, max_board, t = 10000, &block)
       d = Math.exp(-5) #Constant of annealing
@@ -175,7 +180,7 @@ module Silicium
         for i in 0..30 #30 - just because
           x = annealing_step(x, min_board, max_board)
           z = block.call(x)
-          if (z < min || accept_annealing(z, min, t, d) > rand(0.0..1.0))
+          if (annealing_cond(z, min, t, d))
             min = z
             xm = x
           end

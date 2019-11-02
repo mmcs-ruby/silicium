@@ -239,4 +239,8 @@ class SiliciumTest < Minitest::Test
     assert_equal 10, annealing_step(100, -10, 10)
   end
 
+  def test_annealing_cond
+    assert(annealing_cond(2, 4, 100, 1))
+  end
+
 end
