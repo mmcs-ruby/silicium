@@ -171,7 +171,7 @@ module Silicium
 
     #Annealing method to find min of function with one argument, between min_board max_board,
     def simulated_annealing(min_board, max_board, t = 10000, &block)
-      d = Math.exp(-5) #Constant of annealing
+      #d = Math.exp(-5) Constant of annealing
       x = rand(min_board * 1.0..max_board * 1.0)
       xm = x
       min = block.call(x)
@@ -180,7 +180,7 @@ module Silicium
         for i in 0..30 #30 - just because
           x = annealing_step(x, min_board, max_board)
           z = block.call(x)
-          if (annealing_cond(z, min, t, d))
+          if (annealing_cond(z, min, t, Math.exp(-5)))
             min = z
             xm = x
           end
