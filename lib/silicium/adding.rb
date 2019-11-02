@@ -2,21 +2,6 @@ module Silicium
   module Sparse
     #addition for SparseMatrix class
     class SparseMatrix
-
-      ##
-      # @param [Integer] num - number of the returned line
-      # @raise [ArgumentError] If number of row was less or bigger than count of cols
-      # @return [Array] The array of elements of a row
-      #
-      # Returns a raw of sparse matrix elements
-      def get_row(num)
-        row = Array.new(@m, 0)
-        @triplets.select {|x| x[0] == num }.each do |x|
-          row[x[1]] = x[2]
-        end
-        row
-      end
-
       ##
       # @param [SparseMatrix] matrix - second matrix for adding
       # @raise [ArgumentError] If the size of the first matrix doesn't match the size of the second matrix
