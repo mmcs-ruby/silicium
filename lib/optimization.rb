@@ -19,7 +19,7 @@ module Silicium
     def integrating_Monte_Carlo_base(a, b, n = 100000, &block)
       res = 0
       range = a..b.to_f
-      for i in 1..(n + 1)
+      for i in 0..n 
          x = rand(range)
          res += (b - a) * 1.0 / n * block.call(x)
       end
@@ -145,6 +145,8 @@ module Silicium
         matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] + matrix[0, 2] * matrix[1, 0] * matrix[2, 1] -
         matrix[0, 2] * matrix[1, 1] * matrix[2, 0] - matrix[0, 0] * matrix[1, 2] * matrix[2, 1] - matrix[0, 1] * matrix[1, 0] * matrix[2, 2]
     end
+
+
 
   end
 end
