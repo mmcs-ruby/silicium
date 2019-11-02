@@ -54,6 +54,8 @@ module Silicium
       #
       # Returns a matrix in its regular view but multiplied by other matrix
       def multiply(matrix)
+        raise 'wrong argument' if @n != matrix.m
+
         rows = regular_view
         i = 0
         temp = Array.new(@n).map { |x| x = [] }
