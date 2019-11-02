@@ -23,7 +23,7 @@ module Silicium
       coeff = Array.new                 # Array of coefficients
       (0..size).each do |i|
         degree = token[i].split('*')    # Split by '*' to get coefficient and degree
-        coeff[i]=degree[0].to_f
+        degree[0] == 'x' ? coeff[i] = 1.0 : coeff[i] = degree[0].to_f
         if sgn_array[i] == '-'
           coeff[i] *= -1
         end
@@ -78,7 +78,7 @@ module Silicium
         end
       end
       res_exp = str_res_impl(coeff_result, sgn_array)
-      rem_exp = str_rem_impl(coeff_1[coeff_2.size..coeff_1.size-1])
+      rem_exp = str_rem_impl(coeff_1[coeff_2.size-1..coeff_1.size-1])
       [res_exp, rem_exp]
     end
   end
