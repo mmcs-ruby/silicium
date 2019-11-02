@@ -104,7 +104,6 @@ class SparseTest < Minitest::Test
 
     assert_equal [],m.adding(m1).triplets
   end
-end
 
   def test_that_multiply_works_on_square_matrices
     m1 = SparseMatrix.new(2, 2)
@@ -133,6 +132,7 @@ end
     assert_equal [[2, 0], [0, 2]], arr
   end
 end
+
 
 
 
