@@ -171,4 +171,14 @@ class AlgebraTest < Minitest::Test
     rez_division = @@polynom_div.polynom_division("x**5+0*x**4-6*x**3+0*x**2+0*x**1+21*x**0",'-1*x**2+0*x**1+1*x**0')
     assert_equal_as_sets(['-0.0*x**3+-0.0*x**2+6.0*x**1+-0.0*x**0', '0.0*x**5+0.0*x**4+0.0*x**3+0.0*x**2-6.0*x**1+21.0*x**0'], rez_division)
   end
+
+  def test_that_work_polynom_dividion_5
+    rez_division = @@polynom_div.polynom_division("2*x**7+4*x**6+0*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0",'1*x**7+0*x**6+0*x**5+0*x**4-1*x**3+0*x**2+0*x**1+0*x**0')
+    assert_equal_as_sets(['2.0*x**0', '0.0*x**7+4.0*x**6+0.0*x**5+0.0*x**4+2.0*x**3-1.0*x**2+0.0*x**1+1.0*x**0'], rez_division)
+  end
+
+  def test_that_work_polynom_dividion_6
+    rez_division = @@polynom_div.polynom_division("-3*x**3-2*x**2-x**1-1",'1*x**2+0*x**1-1')
+    assert_equal_as_sets(['-3.0*x**1-2.0*x**0', '0.0*x**3+0.0*x**2-3.0*x**1-3.0*x**0'], rez_division)
+  end
 end
