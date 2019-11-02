@@ -215,4 +215,12 @@ class SiliciumTest < Minitest::Test
     end
   end
 
+  def test_accept_annealing_min_found
+    assert_in_delta 1.0, accept_annealing(2, 2, 100, 0.001), 0.00001
+  end
+
+  def test_accept_annealing_min_not_found
+    assert_in_delta Math.exp(-2), accept_annealing(4, 2, 1000, 0.001), 0.0001
+  end
+
 end
