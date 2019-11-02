@@ -1,5 +1,6 @@
 module Silicium
   require_relative 'trans'
+  require_relative 'multi'
 
   # here goes the sparse module
   module Sparse
@@ -7,6 +8,8 @@ module Silicium
     # here goes the Sparse class
     class SparseMatrix
       attr_reader :triplets
+      attr_reader :n
+      attr_reader :m
 
       # Initialize matrix with count of rows and columns
       def initialize(rows, cols)
