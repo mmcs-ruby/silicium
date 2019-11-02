@@ -72,21 +72,43 @@
     
     <li ><a href="#method-i-counter_clockwise">#counter_clockwise</a>
     
+    <li ><a href="#method-i-cut_by_eq">#cut_by_eq</a>
+    
     <li ><a href="#method-i-directing_vector3d">#directing_vector3d</a>
     
     <li ><a href="#method-i-distance_point_line2d">#distance_point_line2d</a>
     
-    <li ><a href="#method-i-distance_point_to_line3d">#distance_point_to_line3d</a>
+    <li ><a href="#method-i-distance_point_line_equation2d">#distance_point_line_equation2d</a>
     
     <li ><a href="#method-i-distance_point_to_point2d">#distance_point_to_point2d</a>
     
     <li ><a href="#method-i-distance_point_to_point3d">#distance_point_to_point3d</a>
     
+    <li ><a href="#method-i-height_point_3d">#height_point_3d</a>
+    
+    <li ><a href="#method-i-insert_eq">#insert_eq</a>
+    
     <li ><a href="#method-i-minimal_convex_hull_2d">#minimal_convex_hull_2d</a>
+    
+    <li ><a href="#method-i-needed_variables_order-3F">#needed_variables_order?</a>
+    
+    <li ><a href="#method-i-not_polygon-3F">#not_polygon?</a>
     
     <li ><a href="#method-i-oriented_area">#oriented_area</a>
     
-    <li ><a href="#method-i-point_on_the_line3d">#point_on_the_line3d</a>
+    <li ><a href="#method-i-point_to_line_distance_3d">#point_to_line_distance_3d</a>
+    
+    <li ><a href="#method-i-process_cf">#process_cf</a>
+    
+    <li ><a href="#method-i-process_free_member">#process_free_member</a>
+    
+    <li ><a href="#method-i-process_line_by_coordinates">#process_line_by_coordinates</a>
+    
+    <li ><a href="#method-i-put_point_in_part">#put_point_in_part</a>
+    
+    <li ><a href="#method-i-vector_length">#vector_length</a>
+    
+    <li ><a href="#method-i-vectors_product">#vectors_product</a>
     
   </ul>
 </div>
@@ -158,7 +180,7 @@
 
           
           <div class="method-source-code" id="clockwise-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 72</span>
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 83</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">clockwise</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>)
   <span class="ruby-identifier">oriented_area</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>).<span class="ruby-identifier">negative?</span>
 <span class="ruby-keyword">end</span></pre>
@@ -191,9 +213,42 @@
 
           
           <div class="method-source-code" id="counter_clockwise-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 79</span>
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 90</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">counter_clockwise</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>)
   <span class="ruby-identifier">oriented_area</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>).<span class="ruby-identifier">positive?</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-cut_by_eq" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">cut_by_eq</span><span
+            class="method-args">(line_equation)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="cut_by_eq-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 147</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">cut_by_eq</span>(<span class="ruby-identifier">line_equation</span>)
+  <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>), <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;=&#39;</span>, <span class="ruby-string">&#39;&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -209,7 +264,7 @@
         
         <div class="method-heading">
           <span class="method-name">directing_vector3d</span><span
-            class="method-args">(c)</span>
+            class="method-args">(line_equation)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -218,9 +273,7 @@
 
         <div class="method-description">
           
-          <pre>Creates an array- directing vector in three-dimensional space .
-The equation is specified in the canonical form.
-Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
+          <p>Creates an array- directing vector in three-dimensional space . The equation is specified in the canonical form. Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</p>
 
 <p>Important: mandatory order of variables: x, y, z</p>
           
@@ -228,30 +281,9 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
           
           <div class="method-source-code" id="directing_vector3d-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 128</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">directing_vector3d</span>(<span class="ruby-identifier">c</span>)
-  <span class="ruby-identifier">c</span>=<span class="ruby-identifier">c</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39; &#39;</span>,<span class="ruby-string">&#39;&#39;</span>)
-  <span class="ruby-identifier">c1</span>=<span class="ruby-identifier">c</span>.<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">c</span>.<span class="ruby-identifier">length</span>,<span class="ruby-string">&#39;=&#39;</span>)
-  <span class="ruby-identifier">res</span>=<span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>()
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">c1</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;x&#39;</span>)
-    <span class="ruby-identifier">before</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>)<span class="ruby-value">+1</span>
-    <span class="ruby-identifier">after</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>)
-    <span class="ruby-identifier">res</span>[<span class="ruby-value">0</span>]=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;*&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;(&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;)&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span>
-    <span class="ruby-identifier">c1</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">after</span>,<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>)
-  <span class="ruby-keyword">else</span> <span class="ruby-identifier">res</span>[<span class="ruby-value">0</span>]=<span class="ruby-value">0.0</span> <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">c1</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;y&#39;</span>)
-    <span class="ruby-identifier">before</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>)<span class="ruby-value">+1</span>
-    <span class="ruby-identifier">after</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>)
-    <span class="ruby-identifier">res</span>[<span class="ruby-value">1</span>]=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;*&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;(&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;)&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span>
-    <span class="ruby-identifier">c1</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">after</span>,<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>)
-  <span class="ruby-keyword">else</span> <span class="ruby-identifier">res</span>[<span class="ruby-value">1</span>]=<span class="ruby-value">0.0</span> <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">c1</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;z&#39;</span>)
-    <span class="ruby-identifier">before</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>)<span class="ruby-value">+1</span>
-    <span class="ruby-identifier">after</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>)
-    <span class="ruby-identifier">res</span>[<span class="ruby-value">2</span>]=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;*&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;(&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;)&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span>
-    <span class="ruby-identifier">c1</span>=<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">after</span>,<span class="ruby-identifier">c1</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>)
-  <span class="ruby-keyword">else</span> <span class="ruby-identifier">res</span>[<span class="ruby-value">1</span>]=<span class="ruby-value">0.0</span> <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">res</span>
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 169</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">directing_vector3d</span>(<span class="ruby-identifier">line_equation</span>)
+  <span class="ruby-identifier">process_line_by_coordinates</span>(<span class="ruby-identifier">line_equation</span>, <span class="ruby-value">:process_cf</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -282,7 +314,7 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
           
           <div class="method-source-code" id="distance_point_line2d-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 59</span>
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 60</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">distance_point_line2d</span>(<span class="ruby-identifier">p1</span>, <span class="ruby-identifier">p2</span>, <span class="ruby-identifier">a</span>)
   <span class="ruby-identifier">line_segment_length</span> = <span class="ruby-identifier">distance_point_to_point2d</span>(<span class="ruby-identifier">p1</span>, <span class="ruby-identifier">p2</span>)
   ((<span class="ruby-identifier">p2</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">p1</span>.<span class="ruby-identifier">y</span>) <span class="ruby-operator">*</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">-</span> (<span class="ruby-identifier">p2</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">p1</span>.<span class="ruby-identifier">x</span>) <span class="ruby-operator">*</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">p2</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">p1</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">p2</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">p1</span>.<span class="ruby-identifier">x</span>).<span class="ruby-identifier">abs</span> <span class="ruby-operator">/</span> (<span class="ruby-identifier">line_segment_length</span> <span class="ruby-operator">*</span> <span class="ruby-value">1.0</span>)
@@ -297,11 +329,11 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
       </div>
 
     
-      <div id="method-i-distance_point_to_line3d" class="method-detail ">
+      <div id="method-i-distance_point_line_equation2d" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">distance_point_to_line3d</span><span
-            class="method-args">(a,c)</span>
+          <span class="method-name">distance_point_line_equation2d</span><span
+            class="method-args">(a, b, c, p)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -310,28 +342,18 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
         <div class="method-description">
           
-          <pre>Calculates the distance from a point given by a Point3d structure
-to a straight line given by a canonical equation.
-Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
-
-<p>Important: mandatory order of variables: x, y, z</p>
+          <p>The distance from a point to a line on a plane Line defined by an equation return 0 if the equation does not define a line.</p>
           
           
 
           
-          <div class="method-source-code" id="distance_point_to_line3d-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 193</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">distance_point_to_line3d</span>(<span class="ruby-identifier">a</span>,<span class="ruby-identifier">c</span>)
-  <span class="ruby-identifier">s</span>=<span class="ruby-identifier">directing_vector3d</span>(<span class="ruby-identifier">c</span>)
-  <span class="ruby-identifier">m</span>=<span class="ruby-identifier">point_on_the_line3d</span>(<span class="ruby-identifier">c</span>)
-  <span class="ruby-identifier">ma</span>=<span class="ruby-constant">Point3d</span>.<span class="ruby-identifier">new</span>(<span class="ruby-identifier">m</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">x</span>,<span class="ruby-identifier">m</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span>,<span class="ruby-identifier">m</span>[<span class="ruby-value">2</span>]<span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">z</span>)
-
-  <span class="ruby-comment">#Vector product of vectors.</span>
-  <span class="ruby-identifier">sm</span>=<span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>()
-  <span class="ruby-keyword">for</span> <span class="ruby-identifier">i</span> <span class="ruby-keyword">in</span> <span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>
-    <span class="ruby-identifier">sm</span>[<span class="ruby-identifier">i</span>]=<span class="ruby-identifier">ma</span>[(<span class="ruby-identifier">i</span><span class="ruby-value">+1</span>)<span class="ruby-operator">%</span><span class="ruby-value">3</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">s</span>[(<span class="ruby-identifier">i</span><span class="ruby-value">+2</span>)<span class="ruby-operator">%</span><span class="ruby-value">3</span>]<span class="ruby-operator">-</span><span class="ruby-identifier">ma</span>[(<span class="ruby-identifier">i</span><span class="ruby-value">+2</span>)<span class="ruby-operator">%</span><span class="ruby-value">3</span>]<span class="ruby-operator">*</span><span class="ruby-identifier">s</span>[(<span class="ruby-identifier">i</span><span class="ruby-value">+1</span>)<span class="ruby-operator">%</span><span class="ruby-value">3</span>]
+          <div class="method-source-code" id="distance_point_line_equation2d-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 69</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">distance_point_line_equation2d</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>, <span class="ruby-identifier">p</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">a</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">b</span> <span class="ruby-operator">==</span> <span class="ruby-value">0</span>
+    <span class="ruby-keyword">return</span> <span class="ruby-value">0</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">return</span> (<span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">sm</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span><span class="ruby-operator">+</span><span class="ruby-identifier">sm</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span><span class="ruby-operator">+</span><span class="ruby-identifier">sm</span>[<span class="ruby-value">2</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span>)<span class="ruby-operator">/</span><span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">s</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span><span class="ruby-operator">+</span><span class="ruby-identifier">s</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span><span class="ruby-operator">+</span><span class="ruby-identifier">s</span>[<span class="ruby-value">2</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span>))
+  (<span class="ruby-identifier">a</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">b</span> <span class="ruby-operator">*</span> <span class="ruby-identifier">p</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">c</span>).<span class="ruby-identifier">abs</span> <span class="ruby-operator">/</span> <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">a</span><span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">b</span><span class="ruby-operator">**</span><span class="ruby-value">2</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -347,7 +369,7 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
         
         <div class="method-heading">
           <span class="method-name">distance_point_to_point2d</span><span
-            class="method-args">(a,b)</span>
+            class="method-args">(a, b)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -362,9 +384,9 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
           
           <div class="method-source-code" id="distance_point_to_point2d-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 45</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">distance_point_to_point2d</span>(<span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span>)
-  <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>((<span class="ruby-identifier">b</span>.<span class="ruby-identifier">x</span><span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">x</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span><span class="ruby-operator">+</span>(<span class="ruby-identifier">b</span>.<span class="ruby-identifier">y</span><span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span>)
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 19</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">distance_point_to_point2d</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>)
+  <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>((<span class="ruby-identifier">b</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">x</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">b</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -380,7 +402,7 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
         
         <div class="method-heading">
           <span class="method-name">distance_point_to_point3d</span><span
-            class="method-args">(a,b)</span>
+            class="method-args">(a, b)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -395,9 +417,77 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
           
           <div class="method-source-code" id="distance_point_to_point3d-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 51</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">distance_point_to_point3d</span>(<span class="ruby-identifier">a</span>,<span class="ruby-identifier">b</span>)
-  <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>((<span class="ruby-identifier">b</span>.<span class="ruby-identifier">x</span><span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">x</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span><span class="ruby-operator">+</span>(<span class="ruby-identifier">b</span>.<span class="ruby-identifier">y</span><span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span><span class="ruby-operator">+</span>(<span class="ruby-identifier">b</span>.<span class="ruby-identifier">z</span><span class="ruby-operator">-</span><span class="ruby-identifier">a</span>.<span class="ruby-identifier">z</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span>)
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 52</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">distance_point_to_point3d</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>)
+  <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>((<span class="ruby-identifier">b</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">x</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">b</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> (<span class="ruby-identifier">b</span>.<span class="ruby-identifier">z</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">z</span>)<span class="ruby-operator">**</span><span class="ruby-value">2</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-height_point_3d" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">height_point_3d</span><span
+            class="method-args">(line_equation)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          <p>Creates an array of coordinates of the point ([x, y, z] on the line given by the equation in the canonical form. Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</p>
+
+<p>Important: mandatory order of variables: x, y, z</p>
+          
+          
+
+          
+          <div class="method-source-code" id="height_point_3d-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 201</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">height_point_3d</span>(<span class="ruby-identifier">line_equation</span>)
+  <span class="ruby-identifier">process_line_by_coordinates</span>(<span class="ruby-identifier">line_equation</span>, <span class="ruby-value">:process_free_member</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-insert_eq" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">insert_eq</span><span
+            class="method-args">(line_equation)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="insert_eq-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 232</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">insert_eq</span>(<span class="ruby-identifier">line_equation</span>)
+  <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39; &#39;</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">length</span>, <span class="ruby-string">&#39;=&#39;</span>)
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -428,40 +518,98 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
           
           <div class="method-source-code" id="minimal_convex_hull_2d-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 87</span>
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 110</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">minimal_convex_hull_2d</span>(<span class="ruby-identifier">points</span>)
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">points</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
+  <span class="ruby-keyword">return</span> <span class="ruby-identifier">points</span> <span class="ruby-keyword">if</span> <span class="ruby-identifier">not_polygon?</span>(<span class="ruby-identifier">points</span>)
 
   <span class="ruby-identifier">points</span>.<span class="ruby-identifier">sort_by!</span> { <span class="ruby-operator">|</span><span class="ruby-identifier">p</span><span class="ruby-operator">|</span> [<span class="ruby-identifier">p</span>.<span class="ruby-identifier">x</span>, <span class="ruby-identifier">p</span>.<span class="ruby-identifier">y</span>] }
-  <span class="ruby-identifier">p1</span> = <span class="ruby-identifier">points</span>[<span class="ruby-value">0</span>]
-  <span class="ruby-identifier">p2</span> = <span class="ruby-identifier">points</span>.<span class="ruby-identifier">last</span>
-  <span class="ruby-identifier">up</span> = [<span class="ruby-identifier">p1</span>]
-  <span class="ruby-identifier">down</span> = [<span class="ruby-identifier">p1</span>]
+  <span class="ruby-identifier">first</span> = <span class="ruby-identifier">points</span>[<span class="ruby-value">0</span>]
+  <span class="ruby-identifier">last</span> = <span class="ruby-identifier">points</span>.<span class="ruby-identifier">last</span>
+  <span class="ruby-identifier">up</span> = [<span class="ruby-identifier">first</span>]
+  <span class="ruby-identifier">down</span> = [<span class="ruby-identifier">first</span>]
 
   (<span class="ruby-value">1</span><span class="ruby-operator">...</span><span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">point</span> = <span class="ruby-identifier">points</span>[<span class="ruby-identifier">i</span>]
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">clockwise</span>(<span class="ruby-identifier">p1</span>, <span class="ruby-identifier">point</span>, <span class="ruby-identifier">p2</span>)
-      <span class="ruby-keyword">while</span> <span class="ruby-identifier">up</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">2</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">clockwise</span>(<span class="ruby-identifier">up</span>[<span class="ruby-identifier">up</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>], <span class="ruby-identifier">up</span>[<span class="ruby-identifier">up</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>], <span class="ruby-identifier">point</span>)
-        <span class="ruby-identifier">up</span>.<span class="ruby-identifier">pop</span>
-      <span class="ruby-keyword">end</span>
-      <span class="ruby-identifier">up</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">point</span>)
+    <span class="ruby-identifier">is_last</span> = <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">is_last</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">clockwise</span>(<span class="ruby-identifier">first</span>, <span class="ruby-identifier">point</span>, <span class="ruby-identifier">last</span>)
+      <span class="ruby-identifier">put_point_in_part</span>(<span class="ruby-identifier">up</span>, <span class="ruby-identifier">point</span>, <span class="ruby-value">:clockwise</span>)
     <span class="ruby-keyword">end</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">is_last</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">counter_clockwise</span>(<span class="ruby-identifier">first</span>, <span class="ruby-identifier">point</span>, <span class="ruby-identifier">last</span>)
+      <span class="ruby-identifier">put_point_in_part</span>(<span class="ruby-identifier">down</span>, <span class="ruby-identifier">point</span>, <span class="ruby-value">:counter_clockwise</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
 
-    <span class="ruby-keyword">if</span> <span class="ruby-identifier">i</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">counter_clockwise</span>(<span class="ruby-identifier">p1</span>, <span class="ruby-identifier">point</span>, <span class="ruby-identifier">p2</span>)
-      <span class="ruby-keyword">while</span> <span class="ruby-identifier">down</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">2</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">counter_clockwise</span>(<span class="ruby-identifier">down</span>[<span class="ruby-identifier">down</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>], <span class="ruby-identifier">down</span>[<span class="ruby-identifier">down</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>], <span class="ruby-identifier">point</span>)
-        <span class="ruby-identifier">down</span>.<span class="ruby-identifier">pop</span>
-      <span class="ruby-keyword">end</span>
-      <span class="ruby-identifier">down</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">point</span>)
-    <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">end</span>
-  <span class="ruby-identifier">hull</span> = []
-  (<span class="ruby-value">0</span><span class="ruby-operator">...</span><span class="ruby-identifier">up</span>.<span class="ruby-identifier">size</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">j</span><span class="ruby-operator">|</span>
-    <span class="ruby-identifier">hull</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">up</span>[<span class="ruby-identifier">j</span>])
-  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">hull</span> = <span class="ruby-identifier">up</span>
   (<span class="ruby-value">1</span><span class="ruby-operator">..</span>(<span class="ruby-identifier">down</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>)).<span class="ruby-identifier">reverse_each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">j</span><span class="ruby-operator">|</span>
     <span class="ruby-identifier">hull</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">down</span>[<span class="ruby-identifier">j</span>])
   <span class="ruby-keyword">end</span>
   <span class="ruby-identifier">hull</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-needed_variables_order-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">needed_variables_order?</span><span
+            class="method-args">(before, after)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="needed_variables_order-3F-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 176</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">needed_variables_order?</span>(<span class="ruby-identifier">before</span>, <span class="ruby-identifier">after</span>)
+  <span class="ruby-identifier">before</span> <span class="ruby-operator">&lt;</span> <span class="ruby-identifier">after</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-not_polygon-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">not_polygon?</span><span
+            class="method-args">(points)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="not_polygon-3F-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 94</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">not_polygon?</span>(<span class="ruby-identifier">points</span>)
+  <span class="ruby-identifier">points</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">1</span> <span class="ruby-operator">||</span> <span class="ruby-identifier">points</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">==</span> <span class="ruby-value">2</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           
@@ -492,7 +640,7 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
           
           <div class="method-source-code" id="oriented_area-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 65</span>
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 76</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">oriented_area</span>(<span class="ruby-identifier">a</span>, <span class="ruby-identifier">b</span>, <span class="ruby-identifier">c</span>)
   <span class="ruby-identifier">a</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">b</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">y</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">c</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span>) <span class="ruby-operator">+</span> <span class="ruby-identifier">c</span>.<span class="ruby-identifier">x</span> <span class="ruby-operator">*</span> (<span class="ruby-identifier">a</span>.<span class="ruby-identifier">y</span> <span class="ruby-operator">-</span> <span class="ruby-identifier">b</span>.<span class="ruby-identifier">y</span>)
 <span class="ruby-keyword">end</span></pre>
@@ -506,11 +654,11 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
       </div>
 
     
-      <div id="method-i-point_on_the_line3d" class="method-detail ">
+      <div id="method-i-point_to_line_distance_3d" class="method-detail ">
         
         <div class="method-heading">
-          <span class="method-name">point_on_the_line3d</span><span
-            class="method-args">(c)</span>
+          <span class="method-name">point_to_line_distance_3d</span><span
+            class="method-args">(point, line_eq)</span>
           
           <span class="method-click-advice">click to toggle source</span>
           
@@ -519,43 +667,253 @@ Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
 
         <div class="method-description">
           
-          <pre>Creates an array of coordinates of the point ([x, y, z] on the line
-given by the equation in the canonical form.
-Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</pre>
+          <p>Calculates the distance from a point given by a <a href="Geometry.html#Point3d"><code>Point3d</code></a> structure to a straight line given by a canonical equation. Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51</p>
 
 <p>Important: mandatory order of variables: x, y, z</p>
           
           
 
           
-          <div class="method-source-code" id="point_on_the_line3d-source">
-            <pre><span class="ruby-comment"># File lib/geometry.rb, line 159</span>
-<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">point_on_the_line3d</span>(<span class="ruby-identifier">c</span>)
-  <span class="ruby-identifier">c2</span>=<span class="ruby-identifier">c</span>.<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39; &#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">insert</span>(<span class="ruby-identifier">c</span>.<span class="ruby-identifier">length</span>,<span class="ruby-string">&#39;=&#39;</span>)
-  <span class="ruby-identifier">m</span>=<span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>() <span class="ruby-comment">#line has point</span>
+          <div class="method-source-code" id="point_to_line_distance_3d-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 223</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">point_to_line_distance_3d</span>(<span class="ruby-identifier">point</span>, <span class="ruby-identifier">line_eq</span>)
+  <span class="ruby-identifier">dir_vector</span> = <span class="ruby-identifier">directing_vector3d</span>(<span class="ruby-identifier">line_eq</span>)
+  <span class="ruby-identifier">line_point</span> = <span class="ruby-identifier">height_point_3d</span>(<span class="ruby-identifier">line_eq</span>)
+  <span class="ruby-identifier">height_vector</span> = [<span class="ruby-identifier">line_point</span>[<span class="ruby-value">0</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">point</span>.<span class="ruby-identifier">x</span>, <span class="ruby-identifier">line_point</span>[<span class="ruby-value">1</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">point</span>.<span class="ruby-identifier">y</span>, <span class="ruby-identifier">line_point</span>[<span class="ruby-value">2</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">point</span>.<span class="ruby-identifier">z</span>]
 
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">c2</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;x&#39;</span>)
-    <span class="ruby-identifier">before</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;x&#39;</span>)<span class="ruby-value">+1</span>
-    <span class="ruby-identifier">after</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>)
-    <span class="ruby-identifier">m</span>[<span class="ruby-value">0</span>]=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;/&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span><span class="ruby-operator">*</span>(<span class="ruby-value">-1</span>)
-    <span class="ruby-identifier">c2</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>),<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>)
-  <span class="ruby-keyword">else</span> <span class="ruby-identifier">m</span>[<span class="ruby-value">0</span>]=<span class="ruby-value">0.0</span>
+  <span class="ruby-identifier">height_on_dir</span> = <span class="ruby-identifier">vectors_product</span>(<span class="ruby-identifier">height_vector</span>, <span class="ruby-identifier">dir_vector</span>)
+  <span class="ruby-identifier">vector_length</span>(<span class="ruby-identifier">height_on_dir</span>) <span class="ruby-operator">/</span> <span class="ruby-identifier">vector_length</span>(<span class="ruby-identifier">dir_vector</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-process_cf" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_cf</span><span
+            class="method-args">(line_equation, variable)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="process_cf-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 137</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">process_cf</span>(<span class="ruby-identifier">line_equation</span>, <span class="ruby-identifier">variable</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">variable</span>)
+    <span class="ruby-identifier">before</span> = <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>) <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">after</span> = <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>)
+    <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;=&#39;</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;*&#39;</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;(&#39;</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;)&#39;</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span>
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-value">0.0</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">c2</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;y&#39;</span>)
-    <span class="ruby-identifier">before</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;y&#39;</span>)<span class="ruby-value">+1</span>
-    <span class="ruby-identifier">after</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>)
-    <span class="ruby-identifier">m</span>[<span class="ruby-value">1</span>]=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;/&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span><span class="ruby-operator">*</span>(<span class="ruby-value">-1</span>)
-    <span class="ruby-identifier">c2</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>),<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>)
-  <span class="ruby-keyword">else</span> <span class="ruby-identifier">m</span>[<span class="ruby-value">1</span>]=<span class="ruby-value">0.0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-process_free_member" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_free_member</span><span
+            class="method-args">(line_equation, variable)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="process_free_member-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 180</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">process_free_member</span>(<span class="ruby-identifier">line_equation</span>, <span class="ruby-identifier">variable</span>)
+  <span class="ruby-keyword">if</span> <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-identifier">variable</span>)
+    <span class="ruby-identifier">before</span> = <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">index</span>(<span class="ruby-identifier">variable</span>) <span class="ruby-operator">+</span> <span class="ruby-value">1</span>
+    <span class="ruby-identifier">after</span> = <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>)
+
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">needed_variables_order?</span>(<span class="ruby-identifier">before</span>, <span class="ruby-identifier">after</span>)
+      <span class="ruby-identifier">throw</span> <span class="ruby-constant">VariablesOrderException</span>
+    <span class="ruby-keyword">end</span>
+
+    <span class="ruby-identifier">line_equation</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;/&#39;</span>, <span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span> <span class="ruby-operator">*</span> (<span class="ruby-value">-1</span>)
+  <span class="ruby-keyword">else</span>
+    <span class="ruby-value">0.0</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">if</span> <span class="ruby-identifier">c2</span>.<span class="ruby-identifier">include?</span>(<span class="ruby-string">&#39;z&#39;</span>)
-    <span class="ruby-identifier">before</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;z&#39;</span>)<span class="ruby-value">+1</span>
-    <span class="ruby-identifier">after</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;/&#39;</span>)
-    <span class="ruby-identifier">m</span>[<span class="ruby-value">2</span>]=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">before</span><span class="ruby-operator">..</span><span class="ruby-identifier">after</span>).<span class="ruby-identifier">gsub</span>(<span class="ruby-string">&#39;/&#39;</span>,<span class="ruby-string">&#39;&#39;</span>).<span class="ruby-identifier">to_f</span><span class="ruby-operator">*</span>(<span class="ruby-value">-1</span>)
-    <span class="ruby-identifier">c2</span>=<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">slice</span>(<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">index</span>(<span class="ruby-string">&#39;=&#39;</span>),<span class="ruby-identifier">c2</span>.<span class="ruby-identifier">length</span>).<span class="ruby-identifier">sub</span>(<span class="ruby-string">&#39;=&#39;</span>,<span class="ruby-string">&#39;&#39;</span>)
-  <span class="ruby-keyword">else</span> <span class="ruby-identifier">m</span>[<span class="ruby-value">2</span>]=<span class="ruby-value">0.0</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-process_line_by_coordinates" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">process_line_by_coordinates</span><span
+            class="method-args">(line_equation, func)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="process_line_by_coordinates-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 151</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">process_line_by_coordinates</span>(<span class="ruby-identifier">line_equation</span>, <span class="ruby-identifier">func</span>)
+  <span class="ruby-identifier">copy_line</span> = <span class="ruby-identifier">insert_eq</span>(<span class="ruby-identifier">line_equation</span>)
+  <span class="ruby-identifier">func</span> = <span class="ruby-identifier">method</span>(<span class="ruby-identifier">func</span>)
+  <span class="ruby-identifier">res</span> = []
+  <span class="ruby-identifier">res</span>[<span class="ruby-value">0</span>] = <span class="ruby-identifier">func</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">copy_line</span>, <span class="ruby-string">&#39;x&#39;</span>)
+  <span class="ruby-identifier">copy_line</span> = <span class="ruby-identifier">cut_by_eq</span>(<span class="ruby-identifier">copy_line</span>)
+  <span class="ruby-identifier">res</span>[<span class="ruby-value">1</span>] = <span class="ruby-identifier">func</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">copy_line</span>, <span class="ruby-string">&#39;y&#39;</span>)
+  <span class="ruby-identifier">copy_line</span> = <span class="ruby-identifier">cut_by_eq</span>(<span class="ruby-identifier">copy_line</span>)
+  <span class="ruby-identifier">res</span>[<span class="ruby-value">2</span>] = <span class="ruby-identifier">func</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">copy_line</span>, <span class="ruby-string">&#39;z&#39;</span>)
+  <span class="ruby-identifier">res</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-put_point_in_part" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">put_point_in_part</span><span
+            class="method-args">(part, point, direction)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="put_point_in_part-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 98</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">put_point_in_part</span>(<span class="ruby-identifier">part</span>, <span class="ruby-identifier">point</span>, <span class="ruby-identifier">direction</span>)
+  <span class="ruby-identifier">direction</span> = <span class="ruby-identifier">method</span>(<span class="ruby-identifier">direction</span>)
+  <span class="ruby-keyword">while</span> <span class="ruby-identifier">part</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">&gt;=</span> <span class="ruby-value">2</span> <span class="ruby-operator">&amp;&amp;</span> <span class="ruby-operator">!</span><span class="ruby-identifier">direction</span>.<span class="ruby-identifier">call</span>(<span class="ruby-identifier">part</span>[<span class="ruby-identifier">part</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">2</span>], <span class="ruby-identifier">part</span>[<span class="ruby-identifier">part</span>.<span class="ruby-identifier">size</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>], <span class="ruby-identifier">point</span>)
+    <span class="ruby-identifier">part</span>.<span class="ruby-identifier">pop</span>
   <span class="ruby-keyword">end</span>
-  <span class="ruby-keyword">return</span> <span class="ruby-identifier">m</span>
+  <span class="ruby-identifier">part</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">point</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-vector_length" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">vector_length</span><span
+            class="method-args">(vector)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="vector_length-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 213</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">vector_length</span>(<span class="ruby-identifier">vector</span>)
+  <span class="ruby-constant">Math</span>.<span class="ruby-identifier">sqrt</span>(<span class="ruby-identifier">vector</span>[<span class="ruby-value">0</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">vector</span>[<span class="ruby-value">1</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span> <span class="ruby-operator">+</span> <span class="ruby-identifier">vector</span>[<span class="ruby-value">2</span>]<span class="ruby-operator">**</span><span class="ruby-value">2</span>)
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-vectors_product" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">vectors_product</span><span
+            class="method-args">(v1, v2)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="vectors_product-source">
+            <pre><span class="ruby-comment"># File lib/geometry.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">vectors_product</span>(<span class="ruby-identifier">v1</span>, <span class="ruby-identifier">v2</span>)
+  <span class="ruby-identifier">res</span> = <span class="ruby-constant">Array</span>.<span class="ruby-identifier">new</span>(<span class="ruby-value">3</span>)
+  (<span class="ruby-value">0</span><span class="ruby-operator">..</span><span class="ruby-value">2</span>).<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">i</span><span class="ruby-operator">|</span>
+    <span class="ruby-identifier">res</span>[<span class="ruby-identifier">i</span>] = <span class="ruby-identifier">v1</span>[(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">%</span> <span class="ruby-value">3</span>] <span class="ruby-operator">*</span> <span class="ruby-identifier">v2</span>[(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>) <span class="ruby-operator">%</span> <span class="ruby-value">3</span>] <span class="ruby-operator">-</span> <span class="ruby-identifier">v1</span>[(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">2</span>) <span class="ruby-operator">%</span> <span class="ruby-value">3</span>] <span class="ruby-operator">*</span> <span class="ruby-identifier">v2</span>[(<span class="ruby-identifier">i</span> <span class="ruby-operator">+</span> <span class="ruby-value">1</span>) <span class="ruby-operator">%</span> <span class="ruby-value">3</span>]
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

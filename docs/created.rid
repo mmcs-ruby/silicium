@@ -1,8 +1,9 @@
-Tue, 29 Oct 2019 13:32:12 +0300
-README.md	Fri, 25 Oct 2019 08:28:50 +0300
-lib/geometry.rb	Tue, 29 Oct 2019 08:22:11 +0300
-lib/graph.rb	Tue, 29 Oct 2019 08:22:11 +0300
-lib/numerical_integration.rb	Tue, 29 Oct 2019 13:32:08 +0300
-lib/optimization.rb	Fri, 18 Oct 2019 14:43:33 +0300
-lib/plotter.rb	Tue, 29 Oct 2019 13:23:03 +0300
-lib/silicium.rb	Tue, 29 Oct 2019 13:24:28 +0300
+Thu, 31 Oct 2019 23:42:50 +0300
+README.md	Thu, 31 Oct 2019 23:22:28 +0300
+lib/geometry.rb	Thu, 31 Oct 2019 23:22:28 +0300
+lib/graph.rb	Thu, 31 Oct 2019 23:30:10 +0300
+lib/numerical_integration.rb	Wed, 30 Oct 2019 00:11:01 +0300
+lib/optimization.rb	Thu, 31 Oct 2019 23:38:51 +0300
+lib/plotter.rb	Thu, 31 Oct 2019 23:28:23 +0300
+lib/silicium.rb	Wed, 30 Oct 2019 00:11:01 +0300
+lib/theory_of_probability.rb	Thu, 31 Oct 2019 23:22:28 +0300

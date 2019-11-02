@@ -80,6 +80,18 @@ class GeometryTest < Minitest::Test
     assert_in_delta(241.00095342953614, distance_point_line2d(Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)), 0.0001)
   end
 
+  def test_distance_point_line_equation2d_simple
+    assert_equal(4, distance_point_line_equation2d(2,0,8, Point.new(0, 0)))
+  end
+
+  def test_distance_point_line_equation2d_simple2
+    assert_equal(0, distance_point_line_equation2d(0,0,8, Point.new(0, 0)))
+  end
+
+  def test_distance_point_line_equation2d_normal
+    assert_in_delta(8.043152845265821, distance_point_line_equation2d(3, 2, 8, Point.new(5, 3)), 0.0001)
+  end
+
   def test_init_line2d_with_same_points
     assert_raises ArgumentError do
       Line2dCanon.new(Point.new(0, 0), Point.new(0, 0))
