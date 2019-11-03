@@ -44,25 +44,34 @@ module Silicium
       wrapper_method([a, b], eps, 'simpson_integration_with_a_segment', &block)
     end
 
-    # Left Rectangle Method and Right Rectangle Method
+    # Left Rectangle Method
     def self.left_rect_integration(left_p, right_p, eps = 0.0001, &block)
-      splits = 1
-      res1 = left_rect_integration_n(left_p, right_p, 1, &block)
-      res2 = left_rect_integration_n(left_p, right_p, 5, &block)
-      while (res1 - res2).abs > eps
-        res1 = left_rect_integration_n(left_p, right_p, splits, &block)
-        splits *= 5
-        res2 = left_rect_integration_n(left_p, right_p, splits, &block)
-      end
-      (res1 + res2) / 2.0
+      wrapper_method([left_p, right_p], eps, 'left_rect_integration_n', &block)
     end
 
-    # Left Rectangle Auxiliary Method and Right Rectangle Auxiliary Method
+    # Left Rectangle Auxiliary Method
     def self.left_rect_integration_n(left_p, right_p, splits, &block)
       dx = (right_p - left_p) / splits.to_f
       result = 0
       i = 0
       while i < splits
+        result += block.call(left_p + i * dx)
+        i += 1
+      end
+      result * dx
+    end
+
+    # Right Rectangle Method
+    def self.right_rect_integration(left_p, right_p, eps = 0.0001, &block)
+      wrapper_method([left_p, right_p], eps, 'right_rect_integration_n', &block)
+    end
+
+    # Right Rectangle Auxiliary Method
+    def self.right_rect_integration_n(left_p, right_p, splits, &block)
+      dx = (right_p - left_p) / splits.to_f
+      result = 0
+      i = 1
+      while i <= splits
         result += block.call(left_p + i * dx)
         i += 1
       end
