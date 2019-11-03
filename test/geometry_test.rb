@@ -81,15 +81,16 @@ class GeometryTest < Minitest::Test
   end
 
   def test_distance_point_line_equation2d_simple
-    assert_equal(4, distance_point_line_equation2d(2,0,8, Point.new(0, 0)))
+    assert_equal(4, Line2dCanon.new(Point.new(0,-4),Point.new(1,-4)).distance_point_to_line(Point.new(0, 0)))
   end
+  208
 
   def test_distance_point_line_equation2d_simple2
-    assert_equal(0, distance_point_line_equation2d(0,0,8, Point.new(0, 0)))
+    assert_equal(4, Line2dCanon.new(Point.new(-4,0),Point.new(-4, 1)).distance_point_to_line(Point.new(0, 0)))
   end
 
   def test_distance_point_line_equation2d_normal
-    assert_in_delta(8.043152845265821, distance_point_line_equation2d(3, 2, 8, Point.new(5, 3)), 0.0001)
+    assert_in_delta(8.049844718999243, Line2dCanon.new(Point.new(-2,-1), Point.new(0,-4)).distance_point_to_line(Point.new(5, 3)), 0.0001)
   end
 
   def test_init_line2d_same_points
