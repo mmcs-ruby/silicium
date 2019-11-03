@@ -105,6 +105,58 @@ module Silicium
 
     end
 
+    ##
+    # Class represents vector
+    # in three-dimensional space
+    class Vector3d
+      attr_reader :x
+      attr_reader :y
+      attr_reader :z
+
+      ##
+      # Initializes with one objects of type Point3d
+      def initialize(point)
+        @x = point.x
+        @y = point.y
+        @z = point.z
+      end
+
+      ##
+      # Checks if vector is zero vector
+      def zero_vector?
+        (@x.eql?(0) && @y.eql?(0) && @z.eql?(0)).eql?(true)? true : false
+      end
+
+      ##
+      # Returns length of the vector
+      def length
+        Math.sqrt(@x**2 + @y**2 + @z**2)
+      end
+
+      ##
+      # Add one vector to another
+      def addition!(other_vector)
+        @x+=other_vector.x
+        @y+=other_vector.y
+        @z+=other_vector.z
+      end
+
+      ##
+      # Sub one vector from another
+      def subtraction!(other_vector)
+        @x-=other_vector.x
+        @y-=other_vector.y
+        @z-=other_vector.z
+      end
+
+      ##
+      # Mult vector by number
+      def multiplication_by_number!(r)
+        @x*=r
+        @y*=r
+        @z*=r
+      end
+    end
 
     ##
     # The distance from a point to a line on a plane
