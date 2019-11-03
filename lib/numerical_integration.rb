@@ -47,7 +47,7 @@ module Silicium
 
     # Left Rectangle Method
     def self.left_rect_integration(left_p, right_p, eps = 0.0001, &block)
-      wrapper_method([left_p, right_p], eps, 'left_rect_integration_n', &block)
+      wrapper_method([left_p, right_p], eps, :left_rect_integration_n, &block)
     end
 
     # Left Rectangle Auxiliary Method
@@ -64,7 +64,7 @@ module Silicium
 
     # Right Rectangle Method
     def self.right_rect_integration(left_p, right_p, eps = 0.0001, &block)
-      wrapper_method([left_p, right_p], eps, 'right_rect_integration_n', &block)
+      wrapper_method([left_p, right_p], eps, :right_rect_integration_n, &block)
     end
 
     # Right Rectangle Auxiliary Method

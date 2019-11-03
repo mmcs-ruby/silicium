@@ -194,50 +194,156 @@ class NumericalIntegrationTest < Minitest::Test
     end
   end
 
-#
   def test_log_left_rect_integration
-    assert_in_delta Math.log(3.5),
-                    ::Silicium::NumericalIntegration.left_rect_integration(2, 7) { |x| 1 / x }, @@delta
+    wrap_log(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_sin_left_rect_integration
-    assert_in_delta Math.sin(8) + Math.sin(10),
-                    ::Silicium::NumericalIntegration.left_rect_integration(-10, 8) { |x| Math.cos(x) }, @@delta
+    wrap_sin(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_arctan_left_rect_integration
-    assert_in_delta Math.atan(Math::PI),
-                    ::Silicium::NumericalIntegration.left_rect_integration(0, Math::PI) { |x| 1 / (1 + x ** 2) }, @@delta
+    wrap_arctan(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_arcsin_left_rect_integration
-    assert_in_delta Math::PI / 6,
-                    ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0) { |x| 1 / Math.sqrt(1 - x ** 2) }, @@delta
+    wrap_arcsin(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_something_scary_left_rect_integration
-    assert_in_delta 442.818,
-                    ::Silicium::NumericalIntegration.left_rect_integration(2, 5, 0.001) { |x| (x ** 4 + Math.cos(x) + Math.sin(x)) / Math.log(x) }, 0.001
+    wrap_something_scary(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_something_scary_accuracy_001_left_rect_integration
+    wrap_something_scary_accuracy_001(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_something_scary_accuracy_01_left_rect_integration
+    wrap_something_scary_accuracy_01(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_reverse_left_rect_integration
-    assert_in_delta (-(Math.sin(3) + Math.sin(4))),
-                    ::Silicium::NumericalIntegration.left_rect_integration(4, -3) { |x| Math.cos(x) }, @@delta
+    wrap_reverse(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_one_point_left_rect_integration
-    assert_in_delta 0,
-                    ::Silicium::NumericalIntegration.left_rect_integration(42, 42) { |x| Math.sin(x) / x }, @@delta
+    wrap_one_point(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_polynom_left_rect_integration
-    assert_in_delta (-159.75),
-                    ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, @@delta
+    wrap_polynom(&NumericalIntegration.method(:left_rect_integration))
   end
 
   def test_polynom_accuracy_left_rect_integration
-    assert_in_delta (-159.75),
-                    ::Silicium::NumericalIntegration.left_rect_integration(-0.5, 0.5, 0.00001) { |x| x ** 5 + 3 * x ** 2 + 18 * x - 160 }, 0.00001
+    wrap_polynom_accuracy(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_error_left_rect_integration
+    wrap_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_nan_error_left_rect_integration
+    wrap_nan_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_domain_sqrt_error_left_rect_integration
+    wrap_domain_sqrt_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_domain_log_error_left_rect_integration
+    wrap_domain_log_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_domain_asin_error_left_rect_integration
+    wrap_domain_asin_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_domain_sqrt2_error_left_rect_integration
+    wrap_domain_sqrt2_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_domain_log_difference_error_left_rect_integration
+    wrap_domain_log_difference_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_domain_log_quotient_error_left_rect_integration
+    wrap_domain_log_quotient_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_number_of_iter_out_of_range_error_left_rect_integration
+    wrap_number_of_iter_out_of_range_error(&NumericalIntegration.method(:left_rect_integration))
+  end
+
+  def test_log_right_rect_integration
+    wrap_log(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_sin_right_rect_integration
+    wrap_sin(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_arctan_right_rect_integration
+    wrap_arctan(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_arcsin_right_rect_integration
+    wrap_arcsin(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_something_scary_right_rect_integration
+    wrap_something_scary(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_something_scary_accuracy_001_right_rect_integration
+    wrap_something_scary_accuracy_001(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_something_scary_accuracy_01_right_rect_integration
+    wrap_something_scary_accuracy_01(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_reverse_right_rect_integration
+    wrap_reverse(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_one_point_right_rect_integration
+    wrap_one_point(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_polynom_right_rect_integration
+    wrap_polynom(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_polynom_accuracy_right_rect_integration
+    wrap_polynom_accuracy(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_domain_sqrt_error_right_rect_integration
+    wrap_domain_sqrt_error(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_domain_log_error_right_rect_integration
+    wrap_domain_log_error(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_domain_asin_error_right_rect_integration
+    wrap_domain_asin_error(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_domain_sqrt2_error_right_rect_integration
+    wrap_domain_sqrt2_error(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_domain_log_difference_error_right_rect_integration
+    wrap_domain_log_difference_error(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_domain_log_quotient_error_right_rect_integration
+    wrap_domain_log_quotient_error(&NumericalIntegration.method(:right_rect_integration))
+  end
+
+  def test_number_of_iter_out_of_range_error_right_rect_integration
+    wrap_number_of_iter_out_of_range_error(&NumericalIntegration.method(:right_rect_integration))
   end
 
   def test_log_trapezoid
