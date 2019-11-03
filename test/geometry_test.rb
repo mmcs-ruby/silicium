@@ -531,33 +531,90 @@ class GeometryTest < Minitest::Test
       assert_equal(true,v1.x.eql?(1.5) && v1.y.eql?(1.5) && v1.z.eql?(1.5))
     end
 
-  def test_multiplication_by_number_vector_1
-    v= Vector3d.new(Point3d.new(0,0,0))
-    v.multiplication_by_number!(0)
-    assert_equal(true,v.zero_vector?)
-  end
+    def test_multiplication_by_number_vector_1
+      v= Vector3d.new(Point3d.new(0,0,0))
+      v.multiplication_by_number!(0)
+      assert_equal(true,v.zero_vector?)
+    end
 
-  def test_multiplication_by_number_vector_2
-    v= Vector3d.new(Point3d.new(0,0,0))
-    v.multiplication_by_number!(10)
-    assert_equal(true,v.zero_vector?)
-  end
+    def test_multiplication_by_number_vector_2
+      v= Vector3d.new(Point3d.new(0,0,0))
+      v.multiplication_by_number!(10)
+      assert_equal(true,v.zero_vector?)
+    end
 
-  def test_multiplication_by_number_vector_3
-    v= Vector3d.new(Point3d.new(1,1,1))
-    v.multiplication_by_number!(10)
-    assert_equal(true,v.x.eql?(10) && v.y.eql?(10) && v.z.eql?(10))
-  end
+    def test_multiplication_by_number_vector_3
+      v= Vector3d.new(Point3d.new(1,1,1))
+      v.multiplication_by_number!(10)
+      assert_equal(true,v.x.eql?(10) && v.y.eql?(10) && v.z.eql?(10))
+    end
 
-  def test_multiplication_by_number_vector_4
-    v= Vector3d.new(Point3d.new(1,1,1))
-    v.multiplication_by_number!(-1)
-    assert_equal(true,v.x.eql?(-1) && v.y.eql?(-1) && v.z.eql?(-1))
-  end
+    def test_multiplication_by_number_vector_4
+      v= Vector3d.new(Point3d.new(1,1,1))
+      v.multiplication_by_number!(-1)
+      assert_equal(true,v.x.eql?(-1) && v.y.eql?(-1) && v.z.eql?(-1))
+    end
 
-  def test_multiplication_by_number_vector_5
-    v= Vector3d.new(Point3d.new(3,4,5))
-    v.multiplication_by_number!(2.3)
-    assert_equal(true,v.x.eql?(6.9) && v.y.eql?(9.2) && v.z.eql?(11.5))
-  end
+    def test_multiplication_by_number_vector_5
+      v= Vector3d.new(Point3d.new(1,4,5))
+      v.multiplication_by_number!(2.3)
+      assert_equal(true,v.x.eql?(2.3) && v.y.eql?(9.2) && v.z.eql?(11.5))
+    end
+
+    def test_scalar_multiplication_1
+      v1= Vector3d.new(Point3d.new(0,0,0))
+      v2= Vector3d.new(Point3d.new(1,1,1))
+      assert_equal(0,v1.scalar_multiplication(v2))
+    end
+
+    def test_scalar_multiplication_2
+      v1= Vector3d.new(Point3d.new(1,1,1))
+      v2= Vector3d.new(Point3d.new(1,1,1))
+      assert_equal(3,v1.scalar_multiplication(v2))
+    end
+
+    def test_scalar_multiplication_3
+      v1= Vector3d.new(Point3d.new(-5,0.5,3))
+      v2= Vector3d.new(Point3d.new(1,10,5))
+      assert_equal(15,v1.scalar_multiplication(v2))
+    end
+
+    def test_1_cos_between_vectors
+      v1= Vector3d.new(Point3d.new(1,1,1))
+      v2= Vector3d.new(Point3d.new(2,2,2))
+      assert_in_delta(1,v1.cos_between_vectors(v2),0.00001)
+    end
+
+    def test_2_cos_between_vectors
+      v1= Vector3d.new(Point3d.new(0,1,2))
+      v2= Vector3d.new(Point3d.new(7,6,5))
+      assert_in_delta(0.6822422923379534,v1.cos_between_vectors(v2),0.00001)
+    end
+
+    def test_3_cos_between_vectors
+      v1= Vector3d.new(Point3d.new(-5,0,3))
+      v2= Vector3d.new(Point3d.new(2,2,8))
+      assert_in_delta(0.2829582292090551,v1.cos_between_vectors(v2),0.00001)
+    end
+
+    def test_vector_multiplication_1
+      v1= Vector3d.new(Point3d.new(0,0,0))
+      v2= Vector3d.new(Point3d.new(2,1,-2))
+      vr=v1.vector_multiplication(v2)
+      assert_equal(true,vr.zero_vector?)
+    end
+
+    def test_vector_multiplication_2
+      v1= Vector3d.new(Point3d.new(1,2,3))
+      v2= Vector3d.new(Point3d.new(2,1,-2))
+      vr=v1.vector_multiplication(v2)
+      assert_equal(true,vr.x.eql?(-7) && vr.y.eql?(8) && vr.z.eql?(-3))
+    end
+
+    def test_vector_multiplication_3
+      v1= Vector3d.new(Point3d.new(-1,2,-2))
+      v2= Vector3d.new(Point3d.new(2,1,-1))
+      vr=v1.vector_multiplication(v2)
+      assert_equal(true,vr.x.eql?(0) && vr.y.eql?(-5) && vr.z.eql?(-5))
+    end
 end
