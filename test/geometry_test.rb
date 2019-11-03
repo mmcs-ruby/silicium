@@ -92,36 +92,222 @@ class GeometryTest < Minitest::Test
     assert_in_delta(8.043152845265821, distance_point_line_equation2d(3, 2, 8, Point.new(5, 3)), 0.0001)
   end
 
-  def test_init_line2d_with_same_points
-    assert_raises ArgumentError do
-      Line2dCanon.new(Point.new(0, 0), Point.new(0, 0))
+  def test_init_line2d_same_points
+    assert_raises ArgumentError  do
+      Line2dCanon.new(Point.new(0,0),Point.new(0,0))
     end
   end
 
-  def test_init_line2d_with_same_x_arguments
-    assert_raises ArgumentError do
-      Line2dCanon.new(Point.new(0, 5), Point.new(0, 10))
-    end
+  def test_init_line2d_vertical_y
+    line = Line2dCanon.new(Point.new(3,5),Point.new(3,10))
+    assert_in_delta(0, line.y_coefficient)
   end
 
-  def test_init_slope_line2d_with_points_simple
-    assert_equal(0, Line2dCanon.new(Point.new(0, 0), Point.new(1, 0)).slope)
+  def test_init_line2d_vertical_x
+    line = Line2dCanon.new(Point.new(3,5),Point.new(3,10))
+    assert_in_delta(- 3, line.free_coefficient/line.x_coefficient)
   end
 
-  def test_init_free_term_line2d_with_points_simple
-    assert_equal(0, Line2dCanon.new(Point.new(0, 0), Point.new(1, 0)).free_term)
+  def test_init_line2d_horizontal_x
+    line = Line2dCanon.new(Point.new(5, 3), Point.new(10, 3))
+    assert_in_delta(0, line.x_coefficient)
   end
 
-  def test_init_slope_line2d_with_points_hard
-    assert_in_delta(0.333333333, Line2dCanon.new(Point.new(0, 3), Point.new(3, 4)).slope, 0.0001)
+  def test_init_line2d_horizontal_y
+    line = Line2dCanon.new(Point.new(5, 3), Point.new(10, 3))
+    assert_in_delta(- 3, line.free_coefficient/line.y_coefficient)
   end
 
-  def test_init_free_term_line2d_with_points_hard
-    assert_in_delta(1.333333333, Line2dCanon.new(Point.new(2, 2), Point.new(5, 3)).free_term, 0.0001)
+  def test_init_line2d_x_axis_free
+    line = Line2dCanon.new(Point.new(0, 0), Point.new(7, 0))
+    assert_in_delta(0, line.free_coefficient)
+  end
+
+  def test_init_line2d_x_axis_x
+    line = Line2dCanon.new(Point.new(0, 0), Point.new(7, 0))
+    assert_in_delta(0, line.x_coefficient)
+  end
+
+  def test_init_line2d_y_axis_free
+    line = Line2dCanon.new(Point.new(0, 0), Point.new(0, 7))
+    assert_in_delta(0, line.free_coefficient)
+  end
+
+  def test_init_line2d_y_axis_y
+    line = Line2dCanon.new(Point.new(0, 0), Point.new(0, 7))
+    assert_in_delta(0, line.y_coefficient)
+  end
+
+  def test_init_line2d_zero_free
+    line = Line2dCanon.new(Point.new(7, 7), Point.new(2, 2))
+    assert_in_delta(0, line.free_coefficient)
+  end
+
+  def test_init_line2d_zero_free_x_y
+    line = Line2dCanon.new(Point.new(1, 2), Point.new(2, 4))
+    assert_in_delta(-2, line.x_coefficient/line.y_coefficient)
+  end
+
+  def test_init_line2d_common_x_free
+    line = Line2dCanon.new(Point.new(0, -1), Point.new(-5, 4))
+    assert_in_delta(1, line.x_coefficient/line.free_coefficient)
+  end
+
+  def test_init_line2d_common_x_y
+    line = Line2dCanon.new(Point.new(0, -1), Point.new(-5, 4))
+    assert_in_delta(1, line.x_coefficient/line.y_coefficient)
   end
 
   def test_method_pointis_on_line_returns_true_simple
-    assert_equal(true, Line2dCanon.new(Point.new(0, 0), Point.new(1, 0)).point_is_on_line?(Point.new(500, 0)))
+    assert_equal(true, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(500,0)))
+  end
+
+  def test_method_pointis_on_line_returns_false_simple
+    assert_equal(false, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(1,1)))
+  end
+
+  def test_is_parallel_same_line
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(7, 7))
+    line2 = Line2dCanon.new(Point.new(1, 1), Point.new(3, 3))
+    assert(line1.is_parallel?(line2))
+  end
+
+  def test_is_parallel_horizontal
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(5, 0))
+    line2 = Line2dCanon.new(Point.new(0, 3), Point.new(7, 3))
+    assert(line1.is_parallel?(line2))
+  end
+
+  def test_is_parallel_vertical
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 7))
+    line2 = Line2dCanon.new(Point.new(7, 0), Point.new(7, 9))
+    assert(line1.is_parallel?(line2))
+  end
+
+  def test_is_parallel_intersecting
+    line1 = Line2dCanon.new(Point.new(3, 6), Point.new(12, 4))
+    line2 = Line2dCanon.new(Point.new(3, 6), Point.new(2, 1))
+    assert(!line1.is_parallel?(line2))
+  end
+
+  def test_is_intersecting_parallel
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(1, 1))
+    line2 = Line2dCanon.new(Point.new(1, 0), Point.new(2, 1))
+    assert(!line1.is_intersecting?(line2))
+  end
+
+  def test_is_intersecting_horizon
+    line1 = Line2dCanon.new(Point.new(0, 5), Point.new(3, 5))
+    line2 = Line2dCanon.new(Point.new(2, 7), Point.new(9, 7))
+    assert(!line1.is_intersecting?(line2))
+  end
+
+  def test_is_intersecting_vertical
+    line1 = Line2dCanon.new(Point.new(7, 0), Point.new(7, 9))
+    line2 = Line2dCanon.new(Point.new(5, -1), Point.new(5, 3))
+    assert(!line1.is_intersecting?(line2))
+  end
+
+  def test_is_intersecting_inter
+    line1 = Line2dCanon.new(Point.new(3, 1), Point.new(12, 5))
+    line2 = Line2dCanon.new(Point.new(3, 1), Point.new(13, 42))
+    assert(line1.is_intersecting?(line2))
+  end
+
+  def test_is_intersecting_axis
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(15, 0))
+    line2 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 42))
+    assert(line1.is_intersecting?(line2))
+  end
+
+  def test_is_perpendicular_parallel
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(1, 1))
+    line2 = Line2dCanon.new(Point.new(1, 0), Point.new(2, 1))
+    assert(!line1.is_perpendicular?(line2))
+  end
+
+  def test_is_perpendicular_axis
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(15, 0))
+    line2 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 42))
+    assert(line1.is_perpendicular?(line2))
+  end
+
+  def test_is_perpendicular_straight
+    line1 = Line2dCanon.new(Point.new(3, 3), Point.new(0, 3))
+    line2 = Line2dCanon.new(Point.new(3, 3), Point.new(3, 0))
+    assert(line1.is_perpendicular?(line2))
+  end
+
+  def test_is_perpendicular_common
+    line1 = Line2dCanon.new(Point.new(1, 1), Point.new(2, 2))
+    line2 = Line2dCanon.new(Point.new(0, 1), Point.new(1, 0))
+    assert(line1.is_perpendicular?(line2))
+  end
+
+  def test_is_perpendicular_intersec
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(5, 3))
+    line2 = Line2dCanon.new(Point.new(0, 0), Point.new(-3, 4))
+    assert(!line1.is_perpendicular?(line2))
+  end
+
+  def test_intersection_point_parallel
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(1, 1))
+    line2 = Line2dCanon.new(Point.new(1, 0), Point.new(2, 1))
+    assert_nil(line1.intersection_point(line2))
+  end
+
+  def test_intersection_point_same
+    line1 = Line2dCanon.new(Point.new(3, 3), Point.new(5, 5))
+    line2 = Line2dCanon.new(Point.new(0, 0), Point.new(9, 9))
+    assert_nil(line1.intersection_point(line2))
+  end
+
+  def test_intersection_point_axis
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(15, 0))
+    line2 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 42))
+    assert_equal(Point.new(0, 0), line1.intersection_point(line2))
+  end
+
+  def test_intersection_point_perp
+    line1 = Line2dCanon.new(Point.new(3, 3), Point.new(0, 3))
+    line2 = Line2dCanon.new(Point.new(3, 3), Point.new(3, 0))
+    assert_equal(Point.new(3, 3), line1.intersection_point(line2))
+  end
+
+  def test_intersection_point_common
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(12, 42))
+    line2 = Line2dCanon.new(Point.new(1, 2), Point.new(-2, 17))
+    assert_equal(Point.new(1, 2), line1.intersection_point(line2))
+  end
+
+  def test_line_distance_intersec
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(12, 42))
+    line2 = Line2dCanon.new(Point.new(1, 2), Point.new(-2, 17))
+    assert_in_delta(0, line1.distance_to_line(line2))
+  end
+
+  def test_line_distance_axis
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(15, 0))
+    line2 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 42))
+    assert_in_delta(0, line1.distance_to_line(line2))
+  end
+
+  def test_line_distance_vertical
+    line1 = Line2dCanon.new(Point.new(7, 0), Point.new(7, 9))
+    line2 = Line2dCanon.new(Point.new(5, -1), Point.new(5, 3))
+    assert_in_delta(2, line1.distance_to_line(line2))
+  end
+
+  def test_line_distance_horizontal
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(5, 0))
+    line2 = Line2dCanon.new(Point.new(0, 3), Point.new(7, 3))
+    assert_in_delta(3, line1.distance_to_line(line2))
+  end
+
+  def test_line_distance_common
+    line1 = Line2dCanon.new(Point.new(0, 0), Point.new(1, 1))
+    line2 = Line2dCanon.new(Point.new(1, 0), Point.new(2, 1))
+    assert_in_delta(Math.sqrt(2) / 2, line1.distance_to_line(line2))
   end
 
   def test_method_pointis_on_line_returns_false_simple
