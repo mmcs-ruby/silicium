@@ -19,8 +19,6 @@ module Silicium
         end
       end
 
-      
-
     end
   end
 end
