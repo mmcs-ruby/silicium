@@ -28,12 +28,14 @@ module Silicium
       attr_reader :y_coefficient
       attr_reader :free_coefficient
 
+      ##
+      # Initializes with two objects of type Point
       def initialize(point1, point2)
-        if (point1.x == point2.x) && (point1.y == point2.y)
+        if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)
           raise ArgumentError, "You need 2 different points"
         end
 
-        if point1.x == point2.x
+        if point1.x.equal?(point2.x)
           @x_coefficient = 1
           @y_coefficient = 0
           @free_coefficient = - point1.x
@@ -53,43 +55,38 @@ module Silicium
 
       ##
       # Checks if two lines are parallel
-      def is_parallel?(another_line)
-        @x_coefficient.equal?(another_line.x_coefficient) && @y_coefficient.equal?(another_line.y_coefficient)
+      def parallel?(other_line)
+        @x_coefficient.equal?(other_line.x_coefficient) && @y_coefficient.equal?(other_line.y_coefficient)
       end
 
       ##
       # Checks if two lines are intersecting
-      def is_intersecting?(another_line)
-        @x_coefficient != another_line.x_coefficient || @y_coefficient != another_line.y_coefficient
+      def intersecting?(other_line)
+        @x_coefficient != other_line.x_coefficient || @y_coefficient != other_line.y_coefficient
       end
 
       ##
       # Checks if two lines are perpendicular
-      def is_perpendicular?(another_line)
-        (@x_coefficient * another_line.x_coefficient).equal?(- @y_coefficient * another_line.y_coefficient)
+      def perpendicular?(other_line)
+        (@x_coefficient * other_line.x_coefficient).equal?(- @y_coefficient * other_line.y_coefficient)
       end
 
       ##
       # Returns a point of intersection of two lines
       # If not intersecting returns nil
-      def intersection_point(another_line)
-        unless is_intersecting?(another_line)
-          return nil
-        end
-        divisor = @x_coefficient * another_line.y_coefficient - another_line.x_coefficient * @y_coefficient
-        x = (@y_coefficient * another_line.free_coefficient - another_line.y_coefficient * @free_coefficient) / divisor
-        y = (@free_coefficient * another_line.x_coefficient - another_line.free_coefficient * @x_coefficient) / divisor
+      def intersection_point(other_line)
+        return nil unless intersecting?(other_line)
+        divisor = @x_coefficient * other_line.y_coefficient - other_line.x_coefficient * @y_coefficient
+        x = (@y_coefficient * other_line.free_coefficient - other_line.y_coefficient * @free_coefficient) / divisor
+        y = (@free_coefficient * other_line.x_coefficient - other_line.free_coefficient * @x_coefficient) / divisor
         Point.new(x, y)
       end
 
       ##
       # Returns distance between lines
-      def distance_to_line(another_line)
-        if is_intersecting?(another_line)
-          return 0
-        end
-
-        (@free_coefficient - another_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
+      def distance_to_line(other_line)
+        return 0 if intersecting?(other_line)
+        (@free_coefficient - other_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
       end
     end
 
