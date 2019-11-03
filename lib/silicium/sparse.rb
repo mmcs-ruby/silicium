@@ -1,5 +1,6 @@
 module Silicium
 
+  require_relative 'conversions'
   require_relative 'trans'
   module Sparse
     # here goes the Sparse class
