@@ -7,12 +7,16 @@ module Silicium
   # A class providing numerical integration methods
   class NumericalIntegration
 
-    # Computes integral from +a+ to +b+ of +block+ with accuracy +eps+
+    ##
+    # Computes integral by the 3/8 rule
+    # from +a+ to +b+ of +block+ with accuracy +eps+
     def self.three_eights_integration(a, b, eps = 0.0001, &block)
       wrapper_method([a, b], eps, :three_eights_integration_n, &block)
     end
 
-    # Computes integral from +a+ to +b+ of +block+ with +n+ segmentations
+    ##
+    # Computes integral by the 3/8 rule
+    # from +a+ to +b+ of +block+ with +n+ segmentations
     def self.three_eights_integration_n(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
@@ -26,8 +30,9 @@ module Silicium
       result
     end
 
-
-    # Simpson integration with a segment
+    ##
+    # Computes integral by the Simpson's rule
+    # from +a+ to +b+ of +block+ with +n+ segmentations
     def self.simpson_integration_with_a_segment(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
@@ -40,47 +45,58 @@ module Silicium
       result
     end
 
-    # Simpson integration with specified accuracy
+    ##
+    # Computes integral by the Simpson's rule
+    # from +a+ to +b+ of +block+ with accuracy +eps+
     def self.simpson_integration(a, b, eps = 0.0001, &block)
       wrapper_method([a, b], eps, :simpson_integration_with_a_segment, &block)
     end
 
-    # Left Rectangle Method
-    def self.left_rect_integration(left_p, right_p, eps = 0.0001, &block)
-      wrapper_method([left_p, right_p], eps, :left_rect_integration_n, &block)
+    ##
+    # Computes integral by the Left Rectangles method
+    # from +a+ to +b+ of +block+ with accuracy +eps+
+    def self.left_rect_integration(a, b, eps = 0.0001, &block)
+      wrapper_method([a, b], eps, :left_rect_integration_n, &block)
     end
 
-    # Left Rectangle Auxiliary Method
-    def self.left_rect_integration_n(left_p, right_p, splits, &block)
-      dx = (right_p - left_p) / splits.to_f
+    ##
+    # Computes integral by the Left Rectangles method
+    # from +a+ to +b+ of +block+ with +n+ segmentations
+    def self.left_rect_integration_n(a, b, splits, &block)
+      dx = (b - a) / splits.to_f
       result = 0
       i = 0
       while i < splits
-        result += block.call(left_p + i * dx)
+        result += block.call(a + i * dx)
         i += 1
       end
       result * dx
     end
 
-    # Right Rectangle Method
-    def self.right_rect_integration(left_p, right_p, eps = 0.0001, &block)
-      wrapper_method([left_p, right_p], eps, :right_rect_integration_n, &block)
+    ##
+    # Computes integral by the Right Rectangles method
+    # from +a+ to +b+ of +block+ with accuracy +eps+
+    def self.right_rect_integration(a, b, eps = 0.0001, &block)
+      wrapper_method([a, b], eps, :right_rect_integration_n, &block)
     end
 
-    # Right Rectangle Auxiliary Method
-    def self.right_rect_integration_n(left_p, right_p, splits, &block)
-      dx = (right_p - left_p) / splits.to_f
+    ##
+    # Computes integral by the Right Rectangles method
+    # from +a+ to +b+ of +block+ with +n+ segmentations
+    def self.right_rect_integration_n(a, b, splits, &block)
+      dx = (b - a) / splits.to_f
       result = 0
       i = 1
       while i <= splits
-        result += block.call(left_p + i * dx)
+        result += block.call(a + i * dx)
         i += 1
       end
       result * dx
     end
 
-
-    # Middle Rectangles Method with a segment
+    ##
+    # Computes integral by the Middle Rectangles method
+    # from +a+ to +b+ of +block+ with +n+ segmentations
     def self.middle_rectangles_with_a_segment(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
@@ -92,13 +108,16 @@ module Silicium
       result
     end
 
-    # Middle Rectangles Method  with specified accuracy
+    ##
+    # Computes integral by the Middle Rectangles method
+    # from +a+ to +b+ of +block+ with accuracy +eps+
     def self.middle_rectangles(a, b, eps = 0.0001, &block)
       wrapper_method([a, b], eps, :middle_rectangles_with_a_segment, &block)
     end
 
-
-    # Trapezoid Method with a segment
+    ##
+    # Computes integral by the Trapezoid method
+    # from +a+ to +b+ of +block+ with +n+ segmentations
     def self.trapezoid_with_a_segment(a, b, n, &block)
       dx = (b - a) / n.to_f
       result = 0
@@ -111,7 +130,9 @@ module Silicium
       result * dx
     end
 
-    # Trapezoid Method with specified accuracy
+    ##
+    # Computes integral by the Trapezoid method
+    # from +a+ to +b+ of +block+ with accuracy +eps+
     def self.trapezoid(a, b, eps = 0.0001, &block)
       wrapper_method([a, b], eps, :trapezoid_with_a_segment ,&block)
     end
