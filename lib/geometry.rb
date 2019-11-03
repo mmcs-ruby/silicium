@@ -112,15 +112,14 @@ module Silicium
       attr_reader :x
       attr_reader :y
       attr_reader :z
-
       ##
       # Initializes with one objects of type Point3d
+      # 2nd point is (0,0,0)
       def initialize(point)
         @x = point.x
         @y = point.y
         @z = point.z
       end
-
       ##
       # Checks if vector is zero vector
       def zero_vector?
@@ -155,6 +154,27 @@ module Silicium
         @x*=r
         @y*=r
         @z*=r
+      end
+
+      ##
+      # Returns scalar multiplication of 2 vectors
+      def scalar_multiplication(other_vector)
+        self.x*other_vector.x + self.y*other_vector.y + self.z*other_vector.z
+      end
+
+      ##
+      # Returns cos between two vectors
+      def cos_between_vectors(other_vector)
+        (self.scalar_multiplication(other_vector))/(self.length*other_vector.length).to_f
+      end
+
+      ##
+      # Returns vector multiplication of 2 vectors
+      def vector_multiplication(other_vector)
+        x=@y*other_vector.z - @z*other_vector.y
+        y=@z*other_vector.x - @x*other_vector.z
+        z=@x*other_vector.y - @y*other_vector.x
+        Vector3d.new(Point3d.new(x, y, z))
       end
     end
 
