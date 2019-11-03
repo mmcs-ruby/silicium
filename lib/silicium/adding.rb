@@ -1,15 +1,18 @@
 module Silicium
   module Sparse
-    #addition for SparseMatrix class
+    # addition for SparseMatrix class
     class SparseMatrix
       ##
       # @param [SparseMatrix] matrix - second matrix for adding
-      # @raise [ArgumentError] If the size of the first matrix doesn't match the size of the second matrix
+      # @raise [ArgumentError] If the size of the first matrix doesn't
+      # match the size of the second matrix
       # @return [SparseMatrix] Matrix as the sum of the other two matrices
       #
       # Makes the sum of two matrix
       def adding(matrix)
-        res = SparseMatrix.new(@n,@m)
+        raise 'wrong argument' if @n != matrix.m
+
+        res = SparseMatrix.new(@n, @m)
         (0..@n).each { |i|
           help_row1 = get_row(i)
           help_row2 = matrix.get_row(i)
