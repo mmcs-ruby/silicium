@@ -1,9 +1,9 @@
 module Silicium
   module Sparse
-    #addition for SparseMatrix class
+    # here goes tha addition to SparseMatrix class
     class SparseMatrix
-
-      #returns a transposed copy of matrix
+      ##
+      # Returns a transposed copy of matrix
       def transpose
         new = copy
         new.triplets.each do |triplet|
@@ -12,13 +12,13 @@ module Silicium
         new
       end
 
-      #transposes matrix
+      ##
+      # Transposes matrix
       def transpose!
         triplets.each do |triplet|
           triplet[0], triplet[1] = triplet[1], triplet[0]
         end
       end
-
     end
   end
 end
