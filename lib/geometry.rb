@@ -120,6 +120,13 @@ module Silicium
       (a * p.x + b * p.y + c).abs / Math.sqrt(a**2 + b**2)
     end
 
+    ##
+    # The distance from a point to a line on a plane
+    # Normalized equation of the line
+    def distance_point_line_normalized2d(a, b, c, p)
+      (p.x * a + p.y * b - c).abs
+    end
+
     def oriented_area(a, b, c)
       a.x * (b.y - c.y) + b.x * (c.y - a.y) + c.x * (a.y - b.y)
     end
