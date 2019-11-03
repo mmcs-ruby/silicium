@@ -169,85 +169,85 @@ class GeometryTest < Minitest::Test
   def test_is_parallel_same_line
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(7, 7))
     line2 = Line2dCanon.new(Point.new(1, 1), Point.new(3, 3))
-    assert(line1.is_parallel?(line2))
+    assert(line1.parallel?(line2))
   end
 
   def test_is_parallel_horizontal
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(5, 0))
     line2 = Line2dCanon.new(Point.new(0, 3), Point.new(7, 3))
-    assert(line1.is_parallel?(line2))
+    assert(line1.parallel?(line2))
   end
 
   def test_is_parallel_vertical
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 7))
     line2 = Line2dCanon.new(Point.new(7, 0), Point.new(7, 9))
-    assert(line1.is_parallel?(line2))
+    assert(line1.parallel?(line2))
   end
 
   def test_is_parallel_intersecting
     line1 = Line2dCanon.new(Point.new(3, 6), Point.new(12, 4))
     line2 = Line2dCanon.new(Point.new(3, 6), Point.new(2, 1))
-    assert(!line1.is_parallel?(line2))
+    assert(!line1.parallel?(line2))
   end
 
   def test_is_intersecting_parallel
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(1, 1))
     line2 = Line2dCanon.new(Point.new(1, 0), Point.new(2, 1))
-    assert(!line1.is_intersecting?(line2))
+    assert(!line1.intersecting?(line2))
   end
 
   def test_is_intersecting_horizon
     line1 = Line2dCanon.new(Point.new(0, 5), Point.new(3, 5))
     line2 = Line2dCanon.new(Point.new(2, 7), Point.new(9, 7))
-    assert(!line1.is_intersecting?(line2))
+    assert(!line1.intersecting?(line2))
   end
 
   def test_is_intersecting_vertical
     line1 = Line2dCanon.new(Point.new(7, 0), Point.new(7, 9))
     line2 = Line2dCanon.new(Point.new(5, -1), Point.new(5, 3))
-    assert(!line1.is_intersecting?(line2))
+    assert(!line1.intersecting?(line2))
   end
 
   def test_is_intersecting_inter
     line1 = Line2dCanon.new(Point.new(3, 1), Point.new(12, 5))
     line2 = Line2dCanon.new(Point.new(3, 1), Point.new(13, 42))
-    assert(line1.is_intersecting?(line2))
+    assert(line1.intersecting?(line2))
   end
 
   def test_is_intersecting_axis
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(15, 0))
     line2 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 42))
-    assert(line1.is_intersecting?(line2))
+    assert(line1.intersecting?(line2))
   end
 
   def test_is_perpendicular_parallel
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(1, 1))
     line2 = Line2dCanon.new(Point.new(1, 0), Point.new(2, 1))
-    assert(!line1.is_perpendicular?(line2))
+    assert(!line1.perpendicular?(line2))
   end
 
   def test_is_perpendicular_axis
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(15, 0))
     line2 = Line2dCanon.new(Point.new(0, 0), Point.new(0, 42))
-    assert(line1.is_perpendicular?(line2))
+    assert(line1.perpendicular?(line2))
   end
 
   def test_is_perpendicular_straight
     line1 = Line2dCanon.new(Point.new(3, 3), Point.new(0, 3))
     line2 = Line2dCanon.new(Point.new(3, 3), Point.new(3, 0))
-    assert(line1.is_perpendicular?(line2))
+    assert(line1.perpendicular?(line2))
   end
 
   def test_is_perpendicular_common
     line1 = Line2dCanon.new(Point.new(1, 1), Point.new(2, 2))
     line2 = Line2dCanon.new(Point.new(0, 1), Point.new(1, 0))
-    assert(line1.is_perpendicular?(line2))
+    assert(line1.perpendicular?(line2))
   end
 
   def test_is_perpendicular_intersec
     line1 = Line2dCanon.new(Point.new(0, 0), Point.new(5, 3))
     line2 = Line2dCanon.new(Point.new(0, 0), Point.new(-3, 4))
-    assert(!line1.is_perpendicular?(line2))
+    assert(!line1.perpendicular?(line2))
   end
 
   def test_intersection_point_parallel
@@ -313,9 +313,15 @@ class GeometryTest < Minitest::Test
   def test_method_pointis_on_line_returns_false_simple
     assert_equal(false, Line2dCanon.new(Point.new(0, 0), Point.new(1, 0)).point_is_on_line?(Point.new(1, 1)))
 
-    def test_process_cf
+    def test_process_cf_1
       assert_equal(3, process_cf('x/3', 'x'))
+    end
+
+    def test_process_cf_2
       assert_equal(3, process_cf('y-3/3', 'y'))
+    end
+
+    def test_process_cf_3
       assert_equal(3, process_cf('(z-500)/3', 'z'))
     end
 
@@ -335,22 +341,39 @@ class GeometryTest < Minitest::Test
     end
 
 
-    def test_needed_variables_order?
+    def test_needed_variables_order_1?
       assert_equal(true, needed_variables_order?(3, 6))
+    end
+
+    def test_needed_variables_order_2?
       assert_equal(false, needed_variables_order?(6, 6))
+    end
+    def test_needed_variables_order_3?
       assert_equal(false, needed_variables_order?(10, 6))
     end
 
-    def test_process_free_member
+    def test_process_free_member_1
       assert_equal(3, process_free_member('(x-3)/32', 'x'))
+    end
+
+    def test_process_free_member_2
       assert_equal(4, process_free_member('(y-4)/12', 'y'))
+    end
+
+    def test_process_free_member_3
       assert_equal(-4, process_free_member('(z+4)/3', 'z'))
+    end
+
+    def test_process_free_member_4
       assert_equal(0.0, process_free_member('y/3', 'z'))
     end
 
 
-    def test_height_point_3d
+    def test_height_point_3d_1
       assert_equal([3, 1, -1], height_point_3d('(x-3)/2=(y-1)/1=(z+1)/2'))
+  end
+
+    def test_height_point_3d_2
       assert_equal([3, 1, 0], height_point_3d('(x-3)/2=(y-1)/1'))
     end
 
