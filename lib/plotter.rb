@@ -95,16 +95,24 @@ module Silicium
       end
     end
 
-
     @CENTER_X = (get :width) / 2
     @CENTER_Y = (get :height) / 2
-    @MUL = (get :height)  / 4
+    @MUL = (get :height)  / 15
 
     def fn(x)
-      Math::asin(Math::sqrt(x))
-      #Math::cos(0.5*x)
+      #Math::asin(Math::sqrt(x))
+      Math::cos(0.5*x)
       #x**2
       #14/x
+    end
+
+    def draw_axes
+      (-(get :width)..(get :width)).each do |i|
+        draw_point(i, 0, 1, 'white')
+      end
+      (-(get :height)..(get :height)).each do |i|
+        draw_point(0, i, 1, 'white')
+      end
     end
 
     def reset_step(x, st, &f)
@@ -118,6 +126,16 @@ module Silicium
       end
     end
 
+    def draw_point(x, y, mul, col)
+      Line.new(
+          x1: @CENTER_X + x * mul, y1: @CENTER_Y - y * mul,
+          x2: @CENTER_X + 1 + x * mul, y2: @CENTER_Y + 2 - y * mul,
+          width: 1,
+          color: col,
+          z: 20
+      )
+    end
+
     def draw_fn(a, b, &func)
       step = 0.12
       c_step = step
@@ -125,18 +143,18 @@ module Silicium
 
       while arg < b do
         c_step = step
-        c_step = reset_step(arg, step) {|xx| fn(xx)}
-
-        Line.new(
-            x1: @CENTER_X + arg * @MUL, y1: @CENTER_Y - func.call(arg) * @MUL,
-            x2: @CENTER_X + 1 + arg * @MUL, y2: @CENTER_Y + 1 - func.call(arg) * @MUL,
-            width: 1,
-            color: 'lime',
-            z: 20
-        )
-        arg += c_step
+        begin
+          c_step = reset_step(arg, step) {|xx| fn(xx)}
+        rescue Math::DomainError
+          arg += c_step * 0.1
+        else
+          draw_point(arg, func.call(arg), @MUL, 'lime')
+        ensure
+          arg += c_step
+        end
       end
     end
+
     def show_window
       show
     end
