@@ -3,7 +3,7 @@ module Silicium
     # here goes the Sparse class
     class SparseMatrix
 
-      # Initializes sparse matrix from a regular one
+      # A static method for initializing sparse matrix from a regular one
       def self.sparse(mat)
         new = SparseMatrix.new(mat.count, mat[0].count)
         i = 0
