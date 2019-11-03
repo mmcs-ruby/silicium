@@ -203,20 +203,24 @@ module Silicium
     # Closest pair of points_________________________
 
     # find minimum distance between two points in set
-    def find_min_dist(points)
-      min = distance_point_to_point2d(points[0], points[1])
-      points.each do |i|
-        points.each do |j|
-          j = i+1
-          if (j < points.size)
-            if (distance_point_to_point2d(points[i], points[j])) < min
-              min = distance_point_to_point2d(points[i], points[j])
-            end
-          end
-        end
+    def bruteMin(points, current = Float::INFINITY)
+      if points.length < 2
+        return current
+      elsif
+        head = points[0]
+        points.delete_at[0]
+        newMin = min([points.each { |x| distance_point_to_point2d(head, x)}])
+        newCurrent = min([newMin, current])
+        return bruteMin(points, newCurrent)
       end
-      return min
     end
 
+    def divideMin(points)
+          half = (points.sort).length/2
+      #minimum = min([bruteMin(points[]), bruteMin(points[])])
+      nearLine = filter(lambda x: x[0] > half - minimum and x[0] < half + minimum, points)
+      return min([bruteMin(nearLine), minimum])
+
+    end
   end
-end
+
