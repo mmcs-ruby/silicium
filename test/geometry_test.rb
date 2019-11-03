@@ -158,11 +158,11 @@ class GeometryTest < Minitest::Test
     assert_in_delta(1, line.x_coefficient/line.y_coefficient)
   end
 
-  def test_method_pointis_on_line_returns_true_simple
+  def test_method_pointis_on_line_returns_true
     assert_equal(true, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(500,0)))
   end
 
-  def test_method_pointis_on_line_returns_false_simple
+  def test_method_pointis_on_line_returns_false
     assert_equal(false, Line2dCanon.new(Point.new(0,0),Point.new(1,0)).point_is_on_line?(Point.new(1,1)))
   end
 
@@ -371,7 +371,7 @@ class GeometryTest < Minitest::Test
 
     def test_height_point_3d_1
       assert_equal([3, 1, -1], height_point_3d('(x-3)/2=(y-1)/1=(z+1)/2'))
-  end
+    end
 
     def test_height_point_3d_2
       assert_equal([3, 1, 0], height_point_3d('(x-3)/2=(y-1)/1'))
