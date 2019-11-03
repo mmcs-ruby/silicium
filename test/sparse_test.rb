@@ -57,6 +57,22 @@ class SparseTest < Minitest::Test
 
   end
 
+  def test_conversion_full_to_sparse
+    mat = [[1, 0, 0],
+           [2, 0, 0],
+           [0, 0, 3]]
+    m = SparseMatrix.sparse(mat)
+
+    assert_equal [[0, 0, 1], [1, 0, 2], [2, 2, 3]], m.triplets
+
+    mat = [[1, 0, 0],
+           [0, 1, 1]]
+    m = SparseMatrix.sparse(mat)
+
+    assert_equal [[0, 0, 1], [1, 1, 1], [1, 2, 1]], m.triplets
+  end
+
+
 end
 
 
