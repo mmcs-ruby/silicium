@@ -21,6 +21,12 @@ module Silicium
     end
 
     ##
+    # Calculates the distance from given points in three-dimensional space
+    def distance_point_to_point3d(a, b)
+      Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2 + (b.z - a.z)**2)
+    end
+
+    ##
     # Class represents a line as equation Ax + By + C = 0
     # in two-dimensional space
     class Line2dCanon
@@ -88,14 +94,17 @@ module Silicium
         return 0 if intersecting?(other_line)
         (@free_coefficient - other_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
       end
+
+      ##
+      # The distance from a point to a line on a plane
+      # return 0 if the equation does not define a line.
+      def distance_point_to_line(point)
+        return 0 if @x_coefficient.eql?(0) && @y_coefficient.eql?(0)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
+      end
+
     end
 
-
-    ##
-    # Calculates the distance from given points in three-dimensional space
-    def distance_point_to_point3d(a, b)
-      Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2 + (b.z - a.z)**2)
-    end
 
     ##
     # The distance from a point to a line on a plane
@@ -104,17 +113,6 @@ module Silicium
     def distance_point_line2d(p1, p2, a)
       line_segment_length = distance_point_to_point2d(p1, p2)
       ((p2.y - p1.y) * a.x - (p2.x - p1.x) * a.y + p2.x * p1.y - p2.y * p1.x).abs / (line_segment_length * 1.0)
-    end
-    
-    ##
-    # The distance from a point to a line on a plane
-    # Line defined by an equation
-    # return 0 if the equation does not define a line.
-    def distance_point_line_equation2d(a, b, c, p)
-      if a == 0 and b == 0
-        return 0
-      end
-      (a * p.x + b * p.y + c).abs / Math.sqrt(a**2 + b**2)
     end
 
     def oriented_area(a, b, c)
