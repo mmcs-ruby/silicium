@@ -78,6 +78,20 @@ module Silicium
         end
         temp
       end
+
+      ##
+      # @param [Integer] num - A number to multiply to
+      #
+      # Multiplies matrix by a number
+      def mult_by_num(num)
+        return SparseMatrix.new(@n, @m) if num.zero?
+
+        res = copy
+        res.triplets.each do |triplet|
+          triplet[2] *= num
+        end
+        res
+      end
     end
   end
 end
