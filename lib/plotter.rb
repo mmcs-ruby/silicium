@@ -1,9 +1,11 @@
 require 'silicium'
 require 'chunky_png'
+require 'ruby2d'
+
 
 module Silicium
   module Plotter
-    ##
+    #
     # Factory method to return a color value, based on the arguments given.
     #
     # @overload Color(r, g, b, a)
@@ -91,6 +93,78 @@ module Silicium
       def export(filename)
         @image.save(filename, :interlace => true)
       end
+    end
+
+    CENTER_X = Window.width / 2
+    CENTER_Y = Window.height / 2
+    MUL = 70/1
+
+
+
+    def fn(x)
+      #Math::asin(Math::sqrt(x))
+      Math::cos(x * 3)
+      #x**2
+      #14/x
+    end
+
+    def draw_axes
+      Line.new( x1: 0, y1: CENTER_Y, x2: Window.width, y2: CENTER_Y,  width: 1,  color: 'white',  z: 20)
+      Line.new( x1: CENTER_X, y1: 0, x2: CENTER_X, y2: Window.height, width: 1,  color: 'white',  z: 20)
+    end
+
+    def reset_step(x, st, &f)
+      y1 = f.call(x)
+      y2 = f.call(x + st)
+
+      if (y1 - y2).abs / MUL > 1.0
+        [st / (y1 - y2).abs / MUL, 0.001].max
+      else
+        st / MUL * 2
+      end
+    end
+
+    def draw_point(x, y, mul, col)
+      Line.new(
+          x1: CENTER_X + x * mul, y1: CENTER_Y - y * mul,
+          x2: CENTER_X + 1 + x * mul, y2: CENTER_Y + 2 - y * mul,
+          width: 1,
+          color: col,
+          z: 20
+      )
+    end
+
+    def reduce_interval(a, b)
+      a *= MUL
+      b *= MUL
+
+      return [a, -Window.width * 1.1].max / MUL, [b, Window.width * 1.1].min / MUL
+    end
+
+    def draw_fn(a, b, &func)
+
+      a, b = reduce_interval(a, b)
+
+      step = 0.38
+      c_step = step
+      arg = a
+
+      while arg < b do
+        c_step = step
+        begin
+          c_step = reset_step(arg, step) {|xx| fn(xx)}
+        rescue Math::DomainError
+          arg += c_step * 0.1
+        else
+          draw_point(arg, func.call(arg), MUL, 'lime')
+        ensure
+          arg += c_step
+        end
+      end
+    end
+
+    def show_window
+      show
     end
   end
 end
