@@ -109,6 +109,57 @@ module Silicium
     def draw_axes
       Line.new( x1: 0, y1: CENTER_Y, x2: (get :width), y2: CENTER_Y,  width: 1,  color: 'white',  z: 20)
       Line.new( x1: CENTER_X, y1: 0, x2: CENTER_X, y2: (get :height), width: 1,  color: 'white',  z: 20)
+
+      x = CENTER_X
+      while x < (get :width) * 1.1 do
+        Line.new(
+            x1: x, y1: CENTER_Y - 4,
+            x2: x, y2: CENTER_Y + 3,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        x += MUL
+      end
+
+      x = CENTER_X
+      while x > (get :width) * -1.1 do
+        Line.new(
+            x1: x, y1: CENTER_Y - 4,
+            x2: x, y2: CENTER_Y + 3,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        x -= MUL
+      end
+
+      y = CENTER_Y
+      while y < (get :height) * 1.1 do
+        Line.new(
+            x1: CENTER_X - 3, y1: y,
+            x2: CENTER_X + 3, y2: y,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        y += MUL
+      end
+
+      y = CENTER_Y
+      while y > (get :height) * -1.1 do
+        Line.new(
+            x1: CENTER_X - 3, y1: y,
+            x2: CENTER_X + 3, y2: y,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        y -= MUL
+      end
+
+
+
     end
 
     def reset_step(x, st, &f)
