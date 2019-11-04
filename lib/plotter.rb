@@ -4,9 +4,10 @@ require 'chunky_png'
 module Silicium
   ##
   # Plotter module
-  # todo: desc
+  # Module contains classes, that are different kinds of plain plotters
   #
   module Plotter
+    include Silicium::Geometry
     ##
     # Factory method to return a color value, based on the arguments given.
     #
@@ -56,11 +57,11 @@ module Silicium
       end
 
       # TODO: Point from Geometry
-      def rectangle(x, y, width, height, color)
-        x_end = x + width - 1
-        y_end = y + height - 1
-        (x..x_end).each do |i|
-          (y..y_end).each do |j|
+      def rectangle(left_upper, width, height, color)
+        x_end = left_upper.x + width - 1
+        y_end = left_upper.y + height - 1
+        (left_upper.x..x_end).each do |i|
+          (left_upper.y..y_end).each do |j|
             @image[i, j] = color
           end
         end
@@ -69,41 +70,49 @@ module Silicium
       ##
       # Draws a bar chart in the plot using provided +bars+,
       # each of them has width of +bar_width+ and colored +bars_color+
-      def bar_chart(bars, bar_width, bars_color = ChunkyPNG::Color('red @ 1.0'), axis_color = ChunkyPNG::Color::BLACK)
+      def bar_chart(bars, bar_width,
+                    bars_color = ChunkyPNG::Color('red @ 1.0'),
+                    axis_color = ChunkyPNG::Color::BLACK)
         if bars.count * bar_width > @image.width
-          raise ArgumentError, 'Not enough big size of image to plot these number of bars'
+          raise ArgumentError,
+                'Not enough big size of image to plot these number of bars'
         end
 
         padding = 5
         # Values of x and y on borders of plot
-        minx = [bars.collect { |k, _| k }.min, 0].min
-        maxx = [bars.collect { |k, _| k }.max, 0].max
-        miny = [bars.collect { |_, v| v }.min, 0].min
-        maxy = [bars.collect { |_, v| v }.max, 0].max
+        min_x = [bars.collect { |k, _| k }.min, 0].min
+        max_x = [bars.collect { |k, _| k }.max, 0].max
+        min_y = [bars.collect { |_, v| v }.min, 0].min
+        max_y = [bars.collect { |_, v| v }.max, 0].max
+
         # Dots per unit for X
-        dpu_x = Float((@image.width - 2 * padding)) / (maxx - minx + bar_width)
+        dpu_x = Float((@image.width - 2 * padding)) / (max_x - min_x + bar_width)
         # Dots per unit for Y
-        dpu_y = Float((@image.height - 2 * padding)) / (maxy - miny)
-        rectangle(padding,
-                  @image.height - padding - (miny.abs * dpu_y).ceil,
+        dpu_y = Float((@image.height - 2 * padding)) / (max_y - min_y)
+        # Axis OX
+        rectangle(Point.new(padding,
+                            @image.height - padding - (min_y.abs * dpu_y).ceil),
                   @image.width - 2 * padding,
                   1,
-                  axis_color) # Axis OX
-        rectangle(padding + (minx.abs * dpu_x).ceil,
-                  padding, 1,
-                  @image.height - 2 * padding, axis_color) # Axis OY
+                  axis_color)
+        # Axis OY
+        rectangle(Point.new(padding + (min_x.abs * dpu_x).ceil, padding),
+                  1,
+                  @image.height - 2 * padding, axis_color)
 
         bars.each do |x, y| # Cycle drawing bars
-          rectangle(padding + ((x + minx.abs) * dpu_x).floor,
-                    @image.height - padding - (([y, 0].max + miny.abs) * dpu_y).ceil + (y.negative? ? 1 : 0),
-                    bar_width, (y.abs * dpu_y).ceil, bars_color)
+          l_up_x = padding + ((x + min_x.abs) * dpu_x).floor
+          l_up_y = @image.height - padding - (([y, 0].max + min_y.abs) * dpu_y).ceil + (y.negative? ? 1 : 0)
+          rectangle(Point.new(l_up_x, l_up_y),
+                    bar_width, (y.abs * dpu_y).ceil,
+                    bars_color)
         end
       end
 
       ##
       # Exports plotted image to file +filename+
       def export(filename)
-        @image.save(filename, :interlace => true)
+        @image.save(filename, interlace: true)
       end
     end
   end
