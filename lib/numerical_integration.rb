@@ -62,15 +62,10 @@ module Silicium
     ##
     # Computes integral by the Left Rectangles method
     # from +a+ to +b+ of +block+ with +n+ segmentations
-    def self.left_rect_integration_n(a, b, splits, &block)
-      dx = (b - a) / splits.to_f
-      result = 0
-      i = 0
-      while i < splits
-        result += block.call(a + i * dx)
-        i += 1
-      end
-      result * dx
+    def self.left_rect_integration_n(a, b, n, &block)
+      dx = (b - a) / n.to_f
+      result = amount_calculation(a, [0, n], dx, &block)
+      result
     end
 
     ##
@@ -83,15 +78,10 @@ module Silicium
     ##
     # Computes integral by the Right Rectangles method
     # from +a+ to +b+ of +block+ with +n+ segmentations
-    def self.right_rect_integration_n(a, b, splits, &block)
-      dx = (b - a) / splits.to_f
-      result = 0
-      i = 1
-      while i <= splits
-        result += block.call(a + i * dx)
-        i += 1
-      end
-      result * dx
+    def self.right_rect_integration_n(a, b, n, &block)
+      dx = (b - a) / n.to_f
+      result = amount_calculation(a, [1, n + 1], dx, &block)
+      result
     end
 
     ##
@@ -173,6 +163,22 @@ module Silicium
       if value == Float::INFINITY
         raise IntegralDoesntExistError, 'We have infinity :('
       end
+    end
+
+    ##
+    # Computes the sum of n rectangles on a segment
+    # of length dx at points of the form a + i * dx
+    # @param [Numeric] a - first division point
+    # @param [Array] i_n number of divisions
+    # @param [Numeric] dx - length of integration segment
+    # @param [Block] block - integrated function as Block
+    def self.amount_calculation(a, i_n, dx, &block)
+      result = 0
+      while i_n[0] < i_n[1]
+        result += block.call(a + i_n[0] * dx)
+        i_n[0] += 1
+      end
+      result * dx
     end
   end
 end
