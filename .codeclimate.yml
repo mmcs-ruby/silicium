@@ -1,0 +1,4 @@
+exclude_patterns:
+  - "html/"
+  - "test/"
+  - "docs/"

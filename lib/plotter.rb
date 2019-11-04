@@ -33,7 +33,7 @@ module Silicium
     #
     # @return [Integer] The determined color value as RGBA integer.
     # @raise [ArgumentError] if the arguments weren't understood as a color.
-    def Color(*args)
+    def color(*args)
       case args.length
       when 1; ChunkyPNG::Color.parse(args.first)
       when 2; (ChunkyPNG::Color.parse(args.first) & 0xffffff00) | args[1].to_i
