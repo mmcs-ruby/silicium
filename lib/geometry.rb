@@ -20,37 +20,213 @@ module Silicium
       Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2)
     end
 
-    # Class represents a line as equation y = k*x +b
-    # k - slope
-    # b - free_term
-    # in two-dimensional space
-    class Line2dCanon
-      attr_reader :slope
-      attr_reader :free_term
+    class Figure
+      include Geometry
+    end
 
-      def initialize(p1, p2)
-        if (p1.x == p2.x) && (p1.y == p2.y)
-          raise ArgumentError, "You need 2 diffrent points"
+    class Triangle < Figure
+
+      def initialize(p1, p2, p3)
+        s_p1p2 = distance_point_to_point2d(p1, p2)
+        s_p1p3 = distance_point_to_point2d(p1, p3)
+        s_p2p3 = distance_point_to_point2d(p2, p3)
+        if s_p1p2 + s_p2p3 <= s_p1p3 || s_p1p2 + s_p1p3 <= s_p2p3 || s_p2p3 + s_p1p3 <= s_p1p2
+          raise ArgumentError, "Triangle does not exist"
+        else
+          @side_p1p2 = s_p1p2
+          @side_p1p3 = s_p1p3
+          @side_p2p3 = s_p2p3
         end
-        if (p1.x == p2.x)
-          raise ArgumentError, "The straight line equation cannot be written in canonical form"
-        end
-        @slope = (p2.y - p1.y) / (p2.x - p1.x).to_f
-        @free_term = (p2.x * p1.y - p2.y * p1.x) / (p2.x - p1.x).to_f
       end
 
-      ##
-      # Checks the point lies on the line or not
-      def point_is_on_line?(p1)
-        p1.y == @slope * p1.x + @free_term
+      def perimeter
+        @side_p1p2 + @side_p1p3 + @side_p2p3
+      end
+
+      def area
+        half_perimeter = perimeter / 2.0
+        Math.sqrt(half_perimeter * (half_perimeter - @side_p1p2) * (half_perimeter - @side_p2p3) * (half_perimeter - @side_p1p3))
       end
     end
 
+    class Rectangle < Figure
+
+      def initialize(p1, p2, p3, p4)
+        if distance_point_to_point2d(p1, p3) != distance_point_to_point2d(p2, p4)
+          raise ArgumentError, "This is not a rectangle."
+        else
+          @side1 = distance_point_to_point2d(p1, p2)
+          @side2 = distance_point_to_point2d(p2, p3)
+          @side3 = distance_point_to_point2d(p3, p4)
+          @side4 = distance_point_to_point2d(p4, p1)
+        end
+
+        def perimeter
+          @side1 + @side2 + @side3 + @side4
+        end
+
+        def area
+          @side1 * @side2
+        end
+      end
+    end
 
     ##
     # Calculates the distance from given points in three-dimensional space
     def distance_point_to_point3d(a, b)
       Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2 + (b.z - a.z)**2)
+    end
+
+    ##
+    # Class represents a line as equation Ax + By + C = 0
+    # in two-dimensional space
+    class Line2dCanon
+      attr_reader :x_coefficient
+      attr_reader :y_coefficient
+      attr_reader :free_coefficient
+
+      ##
+      # Initializes with two objects of type Point
+      def initialize(point1, point2)
+        if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)
+          raise ArgumentError, "You need 2 different points"
+        end
+
+        if point1.x.equal?(point2.x)
+          @x_coefficient = 1
+          @y_coefficient = 0
+          @free_coefficient = - point1.x
+        else
+          slope_point = (point2.y - point1.y) / (point2.x - point1.x)
+          @x_coefficient = -slope_point
+          @y_coefficient = 1
+          @free_coefficient = - point1.y + slope_point * point1.x
+        end
+      end
+
+      ##
+      # Checks the point lies on the line or not
+      def point_is_on_line?(point)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
+      end
+
+      ##
+      # Checks if two lines are parallel
+      def parallel?(other_line)
+        @x_coefficient.equal?(other_line.x_coefficient) && @y_coefficient.equal?(other_line.y_coefficient)
+      end
+
+      ##
+      # Checks if two lines are intersecting
+      def intersecting?(other_line)
+        @x_coefficient != other_line.x_coefficient || @y_coefficient != other_line.y_coefficient
+      end
+
+      ##
+      # Checks if two lines are perpendicular
+      def perpendicular?(other_line)
+        (@x_coefficient * other_line.x_coefficient).equal?(- @y_coefficient * other_line.y_coefficient)
+      end
+
+      ##
+      # Returns a point of intersection of two lines
+      # If not intersecting returns nil
+      def intersection_point(other_line)
+        return nil unless intersecting?(other_line)
+        divisor = @x_coefficient * other_line.y_coefficient - other_line.x_coefficient * @y_coefficient
+        x = (@y_coefficient * other_line.free_coefficient - other_line.y_coefficient * @free_coefficient) / divisor
+        y = (@free_coefficient * other_line.x_coefficient - other_line.free_coefficient * @x_coefficient) / divisor
+        Point.new(x, y)
+      end
+
+      ##
+      # Returns distance between lines
+      def distance_to_line(other_line)
+        return 0 if intersecting?(other_line)
+        (@free_coefficient - other_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
+      end
+
+      ##
+      # The distance from a point to a line on a plane
+      # return 0 if the equation does not define a line.
+      def distance_point_to_line(point)
+        return 0 if @x_coefficient.eql?(0) && @y_coefficient.eql?(0)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
+      end
+
+    end
+
+    ##
+    # Class represents vector
+    # in three-dimensional space
+    class Vector3d
+      attr_reader :x
+      attr_reader :y
+      attr_reader :z
+      ##
+      # Initializes with one objects of type Point3d
+      # 2nd point is (0,0,0)
+      def initialize(point)
+        @x = point.x
+        @y = point.y
+        @z = point.z
+      end
+      ##
+      # Checks if vector is zero vector
+      def zero_vector?
+        (@x.eql?(0) && @y.eql?(0) && @z.eql?(0)).eql?(true)? true : false
+      end
+
+      ##
+      # Returns length of the vector
+      def length
+        Math.sqrt(@x**2 + @y**2 + @z**2)
+      end
+
+      ##
+      # Add one vector to another
+      def addition!(other_vector)
+        @x+=other_vector.x
+        @y+=other_vector.y
+        @z+=other_vector.z
+      end
+
+      ##
+      # Sub one vector from another
+      def subtraction!(other_vector)
+        @x-=other_vector.x
+        @y-=other_vector.y
+        @z-=other_vector.z
+      end
+
+      ##
+      # Mult vector by number
+      def multiplication_by_number!(r)
+        @x*=r
+        @y*=r
+        @z*=r
+      end
+
+      ##
+      # Returns scalar multiplication of 2 vectors
+      def scalar_multiplication(other_vector)
+        self.x*other_vector.x + self.y*other_vector.y + self.z*other_vector.z
+      end
+
+      ##
+      # Returns cos between two vectors
+      def cos_between_vectors(other_vector)
+        (self.scalar_multiplication(other_vector))/(self.length*other_vector.length).to_f
+      end
+
+      ##
+      # Returns vector multiplication of 2 vectors
+      def vector_multiplication(other_vector)
+        x=@y*other_vector.z - @z*other_vector.y
+        y=@z*other_vector.x - @x*other_vector.z
+        z=@x*other_vector.y - @y*other_vector.x
+        Vector3d.new(Point3d.new(x, y, z))
+      end
     end
 
     ##
@@ -61,16 +237,12 @@ module Silicium
       line_segment_length = distance_point_to_point2d(p1, p2)
       ((p2.y - p1.y) * a.x - (p2.x - p1.x) * a.y + p2.x * p1.y - p2.y * p1.x).abs / (line_segment_length * 1.0)
     end
-    
+
     ##
     # The distance from a point to a line on a plane
-    # Line defined by an equation
-    # return 0 if the equation does not define a line.
-    def distance_point_line_equation2d(a, b, c, p)
-      if a == 0 and b == 0
-        return 0
-      end
-      (a * p.x + b * p.y + c).abs / Math.sqrt(a**2 + b**2)
+    # Normalized equation of the line
+    def distance_point_line_normalized2d(a, b, c, p)
+      (p.x * a + p.y * b - c).abs
     end
 
     def oriented_area(a, b, c)
@@ -126,12 +298,7 @@ module Silicium
           put_point_in_part(down, point, :counter_clockwise)
         end
       end
-
-      hull = up
-      (1..(down.size - 2)).reverse_each do |j|
-        hull.push(down[j])
-      end
-      hull
+      up + down[1...-1]
     end
 
     def process_cf(line_equation, variable)

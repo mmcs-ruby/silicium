@@ -19,7 +19,7 @@ module Silicium
     def integrating_Monte_Carlo_base(a, b, n = 100000, &block)
       res = 0
       range = a..b.to_f
-      (1..(n + 1)).each do
+      (0..n).each do
          x = rand(range)
          res += (b - a) * 1.0 / n * block.call(x)
       end
@@ -127,6 +127,55 @@ module Silicium
         raise RuntimeError, 'Root not found! Check does he exist, or change eps or iters' if iters == 0
       end
       c
+    end
+
+    #Find determinant 3x3 matrix
+    def determinant_Sarryus(matrix)
+        raise ArgumentError, "Matrix size must be 3x3" if (matrix.row_count != 3 || matrix.column_count != 3)
+        matrix[0, 0] * matrix[1, 1] * matrix[2, 2] + matrix[0, 1] * matrix[1, 2] * matrix[2, 0] + matrix[0, 2] * matrix[1, 0] * matrix[2, 1] -
+        matrix[0, 2] * matrix[1, 1] * matrix[2, 0] - matrix[0, 0] * matrix[1, 2] * matrix[2, 1] - matrix[0, 1] * matrix[1, 0] * matrix[2, 2]
+    end
+
+    #return probability to accept
+    def accept_annealing(z, min, t, d)
+      p = (min - z) / (d * t * 1.0)
+      Math.exp(p)
+    end
+
+    #do one annealing step
+    def annealing_step(x, min_board, max_board)
+      x += rand(-0.5..0.5)
+      if (x > max_board)
+        x = max_board
+      end
+      if (x < min_board)
+        x = min_board
+      end
+      x
+    end
+
+    #update current min and xm if cond
+    def annealing_cond(z, min, t, d)
+      (z < min || accept_annealing(z, min, t, d) > rand(0.0..1.0))
+    end
+
+    #Annealing method to find min of function with one argument, between min_board max_board,
+    def simulated_annealing(min_board, max_board, t = 10000, &block)
+      d = Math.exp(-5) #Constant of annealing
+      x = rand(min_board * 1.0..max_board * 1.0)
+      xm = x
+      min = block.call(x)
+      while (t > 0.00001)
+        x = xm
+        x = annealing_step(x, min_board, max_board)
+        z = block.call(x)
+        if (annealing_cond(z, min, t, d))
+          min = z
+          xm = x
+        end
+        t *= 0.9999 #tempreture drops
+      end
+      xm
     end
 
 
