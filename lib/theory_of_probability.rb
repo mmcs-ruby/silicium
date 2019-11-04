@@ -224,4 +224,50 @@ module Silicium
 
     end
   end
+  module Cards
+    def generation_deck
+      k = ((0..8).to_a * 4).shuffle
+      player1 = k.drop(18)
+      player2 = k.take(18)
+    end
+    def recognize(player, p, temp0)
+      i = 0
+      while i < 1 || (i < 1 + p && p >= 0) do
+        if player.length > 0
+          p1 = player.shift
+          temp0 << p
+        end
+        i += 1
+      end
+    end
+    def distribution(temp, win)
+      while not temp.empty?
+        g = rand(0..temp.length)
+        win << temp[g]
+        temp.delete_at(g)
+      end
+    end
+    def who_win_now
+      a = p1 > p2 || (p1 == 0 && p2 == 8)
+      win = []
+      a ? win = player1 : win = player2
+    end
+    def we_step
+      while p1 == p2 && (player1.length > 0 || player2.length > 0)
+        recognize(player1, p1, temp)
+        recognize(player2, p2, temp)
+        who_win_now
+        distribution(temp, win)
+        counter += 1
+      end
+    end
+    def number_of_moves
+      counter = 0
+      while player1.length > 0 && player2.length > 0
+        p1 = -1
+        p2 = -1
+        we_step
+      end
+    end
+  end
 end
