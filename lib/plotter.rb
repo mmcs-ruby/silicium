@@ -8,6 +8,23 @@ module Silicium
   #
   module Plotter
     include Silicium::Geometry
+    # The Color module defines methods for handling colors. Within the Plotter
+    # library, the concepts of pixels and colors are both used, and they are
+    # both represented by a Integer.
+    #
+    # Pixels/colors are represented in RGBA components. Each of the four
+    # components is stored with a depth of 8 bits (maximum value = 255 =
+    # {Plotter::Color::MAX}). Together, these components are stored in a 4-byte
+    # Integer.
+    #
+    # A color will always be represented using these 4 components in memory.
+    # When the image is encoded, a more suitable representation can be used
+    # (e.g. rgb, grayscale, palette-based), for which several conversion methods
+    # are provided in this module.
+    module Color
+      extend ChunkyPNG::Color
+      include ChunkyPNG::Color
+    end
     ##
     # Factory method to return a color value, based on the arguments given.
     #
@@ -38,10 +55,10 @@ module Silicium
     # @raise [ArgumentError] if the arguments weren't understood as a color.
     def color(*args)
       case args.length
-      when 1 then ChunkyPNG::Color.parse(args.first)
-      when 2 then (ChunkyPNG::Color.parse(args.first) & 0xffffff00) | args[1].to_i
-      when 3 then ChunkyPNG::Color.rgb(*args)
-      when 4 then ChunkyPNG::Color.rgba(*args)
+      when 1 then Color.parse(args.first)
+      when 2 then (Color.parse(args.first) & 0xffffff00) | args[1].to_i
+      when 3 then Color.rgb(*args)
+      when 4 then Color.rgba(*args)
       else raise ArgumentError,
                  "Don't know how to create a color from #{args.inspect}!"
       end
@@ -52,11 +69,10 @@ module Silicium
       ##
       # Creates a new plot with chosen +width+ and +height+ parameters
       # with background colored +bg_color+
-      def initialize(width, height, bg_color = ChunkyPNG::Color::TRANSPARENT)
+      def initialize(width, height, bg_color = Color::TRANSPARENT)
         @image = ChunkyPNG::Image.new(width, height, bg_color)
       end
 
-      # TODO: Point from Geometry
       def rectangle(left_upper, width, height, color)
         x_end = left_upper.x + width - 1
         y_end = left_upper.y + height - 1
@@ -71,8 +87,8 @@ module Silicium
       # Draws a bar chart in the plot using provided +bars+,
       # each of them has width of +bar_width+ and colored +bars_color+
       def bar_chart(bars, bar_width,
-                    bars_color = ChunkyPNG::Color('red @ 1.0'),
-                    axis_color = ChunkyPNG::Color::BLACK)
+                    bars_color = Color('red @ 1.0'),
+                    axis_color = Color::BLACK)
         if bars.count * bar_width > @image.width
           raise ArgumentError,
                 'Not enough big size of image to plot these number of bars'
