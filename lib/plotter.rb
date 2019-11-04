@@ -69,8 +69,9 @@ module Silicium
       ##
       # Creates a new plot with chosen +width+ and +height+ parameters
       # with background colored +bg_color+
-      def initialize(width, height, bg_color = Color::TRANSPARENT)
+      def initialize(width, height, bg_color = Color::TRANSPARENT, padding = 5)
         @image = ChunkyPNG::Image.new(width, height, bg_color)
+        @padding = padding
       end
 
       def rectangle(left_upper, width, height, color)
@@ -83,6 +84,24 @@ module Silicium
         end
       end
 
+      private
+
+      def draw_axis(min, dpu, axis_color)
+        # Axis OX
+        rectangle(Point.new(
+                    @padding,
+                    @image.height - @padding - (min.y.abs * dpu.y).ceil
+                  ),
+                  @image.width - 2 * @padding,
+                  1,
+                  axis_color)
+        # Axis OY
+        rectangle(Point.new(@padding + (min.x.abs * dpu.x).ceil, @padding),
+                  1, @image.height - 2 * @padding, axis_color)
+      end
+
+      public
+
       ##
       # Draws a bar chart in the plot using provided +bars+,
       # each of them has width of +bar_width+ and colored +bars_color+
@@ -94,33 +113,29 @@ module Silicium
                 'Not enough big size of image to plot these number of bars'
         end
 
-        padding = 5
         # Values of x and y on borders of plot
-        min_x = [bars.collect { |k, _| k }.min, 0].min
-        max_x = [bars.collect { |k, _| k }.max, 0].max
-        min_y = [bars.collect { |_, v| v }.min, 0].min
-        max_y = [bars.collect { |_, v| v }.max, 0].max
+        min = Point.new([bars.collect { |k, _| k }.min, 0].min,
+                        [bars.collect { |_, v| v }.min, 0].min)
+        max = Point.new([bars.collect { |k, _| k }.max, 0].max,
+                        [bars.collect { |_, v| v }.max, 0].max)
 
-        # Dots per unit for X
-        dpu_x = Float((@image.width - 2 * padding)) / (max_x - min_x + bar_width)
-        # Dots per unit for Y
-        dpu_y = Float((@image.height - 2 * padding)) / (max_y - min_y)
-        # Axis OX
-        rectangle(Point.new(padding,
-                            @image.height - padding - (min_y.abs * dpu_y).ceil),
-                  @image.width - 2 * padding,
-                  1,
-                  axis_color)
-        # Axis OY
-        rectangle(Point.new(padding + (min_x.abs * dpu_x).ceil, padding),
-                  1,
-                  @image.height - 2 * padding, axis_color)
+        # Dots per unit
+        dpu = Point.new(
+          (@image.width - 2 * @padding).to_f / (max.x - min.x + bar_width),
+          (@image.height - 2 * @padding).to_f / (max.y - min.y)
+        )
+
+        draw_axis(min, dpu, axis_color)
 
         bars.each do |x, y| # Cycle drawing bars
-          l_up_x = padding + ((x + min_x.abs) * dpu_x).floor
-          l_up_y = @image.height - padding - (([y, 0].max + min_y.abs) * dpu_y).ceil + (y.negative? ? 1 : 0)
+          l_up_x = @padding + ((x + min.x.abs) * dpu.x).floor
+          l_up_y = if y.negative?
+                     @image.height - @padding - (min.y.abs * dpu.y).ceil + 1
+                   else
+                     @image.height - @padding - ((y + min.y.abs) * dpu.y).ceil
+                   end
           rectangle(Point.new(l_up_x, l_up_y),
-                    bar_width, (y.abs * dpu_y).ceil,
+                    bar_width, (y.abs * dpu.y).ceil,
                     bars_color)
         end
       end
