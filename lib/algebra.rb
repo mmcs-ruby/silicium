@@ -23,12 +23,21 @@ module Silicium
       @letter_var = nil
       parsed = str.split(/[-+]/)
       parsed.each do |term|
-        correct, cur_var = extract_variable(term)
-        return false unless correct
-        @letter_var ||= cur_var
-        return false if another_variable?(@letter_var, cur_var) || !letter_controller(term)
+        return false unless valid_term?(term)
       end
       true
+    end
+
+    ##
+    # Parses single polynomial term and returns false if
+    # term is incorrect on has different independent variable
+    # It updated current independent variable if it wasn't set before
+    def valid_term?(term)
+      correct, cur_var = extract_variable(term)
+      return false unless correct
+
+      @letter_var ||= cur_var
+      !(another_variable?(@letter_var, cur_var) || !letter_controller(term))
     end
 
     ##

@@ -31,7 +31,7 @@ module Silicium
         s_p1p3 = distance_point_to_point2d(p1, p3)
         s_p2p3 = distance_point_to_point2d(p2, p3)
         if s_p1p2 + s_p2p3 <= s_p1p3 || s_p1p2 + s_p1p3 <= s_p2p3 || s_p2p3 + s_p1p3 <= s_p1p2
-          raise ArgumentError, "Triangle does not exist"
+          raise ArgumentError, 'Triangle does not exist'
         else
           @side_p1p2 = s_p1p2
           @side_p1p3 = s_p1p3
@@ -49,25 +49,34 @@ module Silicium
       end
     end
 
+
+    ##
+    # TODO: Add a description
     class Rectangle < Figure
 
       def initialize(p1, p2, p3, p4)
-        if distance_point_to_point2d(p1, p3) != distance_point_to_point2d(p2, p4)
-          raise ArgumentError, "This is not a rectangle."
-        else
-          @side1 = distance_point_to_point2d(p1, p2)
-          @side2 = distance_point_to_point2d(p2, p3)
-          @side3 = distance_point_to_point2d(p3, p4)
-          @side4 = distance_point_to_point2d(p4, p1)
+        unless valid?(p1, p2, p3, p4)
+          raise ArgumentError, 'This is not a rectangle.'
         end
 
-        def perimeter
-          @side1 + @side2 + @side3 + @side4
-        end
+        @side1 = distance_point_to_point2d(p1, p2)
+        @side2 = distance_point_to_point2d(p2, p3)
+        @side3 = distance_point_to_point2d(p3, p4)
+        @side4 = distance_point_to_point2d(p4, p1)
+      end
 
-        def area
-          @side1 * @side2
-        end
+      ##
+      # Checks if input points form rectangle
+      def valid?(p1, p2, p3, p4)
+        distance_point_to_point2d(p1, p3) == distance_point_to_point2d(p2, p4)
+      end
+
+      def perimeter
+        @side1 + @side2 + @side3 + @side4
+      end
+
+      def area
+        @side1 * @side2
       end
     end
 
@@ -89,7 +98,7 @@ module Silicium
       # Initializes with two objects of type Point
       def initialize(point1, point2)
         if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)
-          raise ArgumentError, "You need 2 different points"
+          raise ArgumentError, 'You need 2 different points'
         end
 
         if point1.x.equal?(point2.x)
@@ -210,13 +219,13 @@ module Silicium
       ##
       # Returns scalar multiplication of 2 vectors
       def scalar_multiplication(other_vector)
-        self.x*other_vector.x + self.y*other_vector.y + self.z*other_vector.z
+        x*other_vector.x + y*other_vector.y + z*other_vector.z
       end
 
       ##
       # Returns cos between two vectors
       def cos_between_vectors(other_vector)
-        (self.scalar_multiplication(other_vector))/(self.length*other_vector.length).to_f
+        scalar_multiplication(other_vector)/(length*other_vector.length).to_f
       end
 
       ##
@@ -353,7 +362,7 @@ module Silicium
           throw VariablesOrderException
         end
 
-        line_equation.slice(before..after).gsub('/', '').to_f * (-1)
+        line_equation.slice(before..after).gsub('/', '').to_f * -1
       else
         0.0
       end
