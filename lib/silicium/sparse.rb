@@ -1,4 +1,5 @@
 module Silicium
+  require_relative 'sugar'
   require_relative 'conversions'
   require_relative 'trans'
   require_relative 'adding'
