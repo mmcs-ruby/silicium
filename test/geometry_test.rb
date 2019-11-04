@@ -92,6 +92,50 @@ class GeometryTest < Minitest::Test
     assert_in_delta(8.043152845265821, distance_point_line_equation2d(3, 2, 8, Point.new(5, 3)), 0.0001)
   end
 
+  def test_distance_point_line_normalized_normal
+    assert_in_delta(3.078689325833263, distance_point_line_normalized2d(0.6666666666666667, -0.7453559924999299, 1, Point.new(-2, 1)), 0.0001)
+  end
+
+  def test_distance_point_line_normalized_normal2
+    assert_in_delta(2.496150883013531, distance_point_line_normalized2d(-0.8320502943378437, -0.5547001962252291, 0.8320502943378437, Point.new(-2, -3)), 0.0001)
+  end
+
+  def test_rectangle_not_exist
+    assert_raises ArgumentError do
+      Rectangle.new(Point.new(0, 0), Point.new(0, 5), Point.new(6, 7), Point.new(5, 0))
+    end
+  end
+
+  def test_rectangle_perimeter_r
+    assert_equal(34, Rectangle.new(Point.new(0, 0), Point.new(0, 7), Point.new(10, 7), Point.new(10, 0)).perimeter)
+  end
+
+  def test_rectangle_perimeter_s
+    assert_equal(20, Rectangle.new(Point.new(0, 0), Point.new(0, 5), Point.new(5, 5), Point.new(5, 0)).perimeter)
+  end
+
+  def test_rectangle_area_s
+    assert_equal(25, Rectangle.new(Point.new(0, 0), Point.new(0, 5), Point.new(5, 5), Point.new(5, 0)).area)
+  end
+
+  def test_rectangle_area_r
+    assert_equal(70, Rectangle.new(Point.new(0, 0), Point.new(0, 7), Point.new(10, 7), Point.new(10, 0)).area)
+  end
+
+  def test_triangle_not_exist
+    assert_raises ArgumentError do
+      Triangle.new(Point.new(0, 0), Point.new(0, 0), Point.new(0, 0))
+    end
+  end
+
+  def test_triangle_area
+    assert_in_delta(8, Triangle.new(Point.new(0, 0), Point.new(0, 4), Point.new(4, 0)).area, 0.0001)
+  end
+
+  def test_triangle_perimeter
+    assert_in_delta(13.656854249492381, Triangle.new(Point.new(0, 0), Point.new(0, 4), Point.new(4, 0)).perimeter, 0.0001)
+  end
+
   def test_init_line2d_same_points
     assert_raises ArgumentError  do
       Line2dCanon.new(Point.new(0,0),Point.new(0,0))

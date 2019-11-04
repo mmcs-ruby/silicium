@@ -20,6 +20,57 @@ module Silicium
       Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2)
     end
 
+    class Figure
+      include Geometry
+    end
+
+    class Triangle < Figure
+
+      def initialize(p1, p2, p3)
+        s_p1p2 = distance_point_to_point2d(p1, p2)
+        s_p1p3 = distance_point_to_point2d(p1, p3)
+        s_p2p3 = distance_point_to_point2d(p2, p3)
+        if s_p1p2 + s_p2p3 <= s_p1p3 || s_p1p2 + s_p1p3 <= s_p2p3 || s_p2p3 + s_p1p3 <= s_p1p2
+          raise ArgumentError, "Triangle does not exist"
+        else
+          @side_p1p2 = s_p1p2
+          @side_p1p3 = s_p1p3
+          @side_p2p3 = s_p2p3
+        end
+      end
+
+      def perimeter
+        @side_p1p2 + @side_p1p3 + @side_p2p3
+      end
+
+      def area
+        half_perimeter = perimeter / 2.0
+        Math.sqrt(half_perimeter * (half_perimeter - @side_p1p2) * (half_perimeter - @side_p2p3) * (half_perimeter - @side_p1p3))
+      end
+    end
+
+    class Rectangle < Figure
+
+      def initialize(p1, p2, p3, p4)
+        if distance_point_to_point2d(p1, p3) != distance_point_to_point2d(p2, p4)
+          raise ArgumentError, "This is not a rectangle."
+        else
+          @side1 = distance_point_to_point2d(p1, p2)
+          @side2 = distance_point_to_point2d(p2, p3)
+          @side3 = distance_point_to_point2d(p3, p4)
+          @side4 = distance_point_to_point2d(p4, p1)
+        end
+
+        def perimeter
+          @side1 + @side2 + @side3 + @side4
+        end
+
+        def area
+          @side1 * @side2
+        end
+      end
+    end
+
     ##
     # Class represents a line as equation Ax + By + C = 0
     # in two-dimensional space
@@ -118,6 +169,13 @@ module Silicium
         return 0
       end
       (a * p.x + b * p.y + c).abs / Math.sqrt(a**2 + b**2)
+    end
+
+    ##
+    # The distance from a point to a line on a plane
+    # Normalized equation of the line
+    def distance_point_line_normalized2d(a, b, c, p)
+      (p.x * a + p.y * b - c).abs
     end
 
     def oriented_area(a, b, c)
