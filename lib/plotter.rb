@@ -95,49 +95,118 @@ module Silicium
       end
     end
 
-    @CENTER_X = (get :width) / 2
-    @CENTER_Y = (get :height) / 2
-    @MUL = (get :height)  / 15
+    CENTER_X = (get :width) / 2
+    CENTER_Y = (get :height) / 2
+    MUL = 70/1
 
     def fn(x)
       #Math::asin(Math::sqrt(x))
-      Math::cos(0.5*x)
-      #x**2
+      #Math::cos(x * 3)
+      x**2
       #14/x
     end
 
     def draw_axes
-      (-(get :width)..(get :width)).each do |i|
-        draw_point(i, 0, 1, 'white')
+      Line.new(
+          x1: 0, y1: CENTER_Y,
+          x2: (get :width), y2: CENTER_Y,
+          width: 1,
+          color: 'white',
+          z: 20
+      )
+      Line.new(
+          x1: CENTER_X, y1: 0,
+          x2: CENTER_X, y2: (get :height),
+          width: 1,
+          color: 'white',
+          z: 20
+      )
+
+      x = CENTER_X
+      while x < (get :width) * 1.1 do
+        Line.new(
+            x1: x, y1: CENTER_Y - 4,
+            x2: x, y2: CENTER_Y + 3,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        x += MUL
       end
-      (-(get :height)..(get :height)).each do |i|
-        draw_point(0, i, 1, 'white')
+
+      x = CENTER_X
+      while x > (get :width) * -1.1 do
+        Line.new(
+            x1: x, y1: CENTER_Y - 4,
+            x2: x, y2: CENTER_Y + 3,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        x -= MUL
       end
+
+      y = CENTER_Y
+      while y < (get :height) * 1.1 do
+        Line.new(
+            x1: CENTER_X - 3, y1: y,
+            x2: CENTER_X + 3, y2: y,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        y += MUL
+      end
+
+      y = CENTER_Y
+      while y > (get :height) * -1.1 do
+        Line.new(
+            x1: CENTER_X - 3, y1: y,
+            x2: CENTER_X + 3, y2: y,
+            width: 1,
+            color: 'white',
+            z: 20
+        )
+        y -= MUL
+      end
+
+
+
     end
 
     def reset_step(x, st, &f)
       y1 = f.call(x)
       y2 = f.call(x + st)
 
-      if (y1 - y2).abs > 1.0
-        [st / (y1 - y2).abs, 0.001].max
+      if (y1 - y2).abs / MUL > 1.0
+        [st / (y1 - y2).abs / MUL, 0.001].max
       else
-        st
+        st / MUL * 2
       end
     end
 
     def draw_point(x, y, mul, col)
       Line.new(
-          x1: @CENTER_X + x * mul, y1: @CENTER_Y - y * mul,
-          x2: @CENTER_X + 1 + x * mul, y2: @CENTER_Y + 2 - y * mul,
+          x1: CENTER_X + x * mul, y1: CENTER_Y - y * mul,
+          x2: CENTER_X + 1 + x * mul, y2: CENTER_Y + 2 - y * mul,
           width: 1,
           color: col,
           z: 20
       )
     end
 
+    def reduce_interval(a, b)
+      a *= MUL
+      b *= MUL
+
+      return [a, -(get :width) * 1.1].max / MUL, [b, (get :width) * 1.1].min / MUL
+    end
+
     def draw_fn(a, b, &func)
-      step = 0.12
+
+      a, b = reduce_interval(a, b)
+
+      step = 0.38
       c_step = step
       arg = a
 
@@ -148,7 +217,7 @@ module Silicium
         rescue Math::DomainError
           arg += c_step * 0.1
         else
-          draw_point(arg, func.call(arg), @MUL, 'lime')
+          draw_point(arg, func.call(arg), MUL, 'lime')
         ensure
           arg += c_step
         end
