@@ -20,8 +20,24 @@ class SparseTest < Minitest::Test
     m.add(0, 0, 1)
 
     assert_equal [[0, 0, 1]], m.triplets
-
   end
+
+  def test_add_not_adding_zeros
+    m = SparseMatrix.new(3, 3)
+    m.add(1, 1, 0)
+
+    assert_equal [], m.triplets
+  end
+
+  def test_add_zero_removes_triplet
+    m = SparseMatrix.new(3, 3)
+    m.add(1, 1, 2)
+    assert_equal [[1, 1, 2]], m.triplets
+
+    m.add(1, 1, 0)
+    assert_equal [], m.triplets
+  end
+
 
   def test_matrices_are_cloning
     m = SparseMatrix.new(3, 3)

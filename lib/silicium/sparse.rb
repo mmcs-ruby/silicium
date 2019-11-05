@@ -46,15 +46,58 @@ module Silicium
           raise 'out of range'
         end
 
-        f = false
-        @triplets.each do |item|
-          if item[0] == i_pos && item[1] == j_pos
-            item = [i_pos, j_pos, elem]
-            f =  true
-            break
-          end
+        if elem == 0
+          set_to_zero(i_pos, j_pos)
+          return []
         end
-        @triplets.push([i_pos, j_pos, elem]) unless f
+
+        new_triplet = [i_pos, j_pos, elem]
+        triplet_ind = 0
+
+        @triplets.each do |triplet|
+          if i_pos < triplet[0]
+            @triplets.insert(triplet_ind, new_triplet)
+            return
+          elsif i_pos == triplet[0]
+            if j_pos == triplet[1]
+              triplet = new_triplet
+              return new_triplet
+            elsif j_pos < triplet[1]
+              @triplets.insert(triplet_ind, new_triplet)
+              return new_triplet
+            end
+          end
+          triplet_ind += 1
+        end
+        @triplets.push([i_pos, j_pos, elem])
+      end
+
+      ##
+      # @param [Integer] i_pos - The i position of an element
+      # @param [Integer] j_pos - The j position of an element
+      # @return [Boolean] true - triplet was found and deleted, false - otherwise
+      #
+      # Sets an element to zero by its position (removes triplet)
+      def set_to_zero(i_pos, j_pos)
+        if i_pos > @n || j_pos > @m || i_pos.negative? || j_pos.negative?
+          raise 'out of range'
+        end
+
+        triplet_ind = 0
+        @triplets.each do |triplet|
+          return false if triplet[0] > i_pos
+
+          if triplet[0] == i_pos
+            if triplet[1] == j_pos
+              @triplets.delete_at(triplet_ind)
+              return true
+            elsif triplet[1] > j_pos
+              return false
+            end
+          end
+          triplet_ind += 1
+        end
+        return false
       end
 
       ##
@@ -65,11 +108,18 @@ module Silicium
       # Returns an element by its position
       def get(i_pos, j_pos)
         triplets.each do |triplet|
-          if triplet[0] == i_pos && triplet[1] == j_pos
-            return triplet[2]
+          next if i_pos > triplet[0]
+          if i_pos == triplet[0]
+            if j_pos == triplet[1]
+              return triplet[2]
+            elsif j_pos < triplet[1]
+              return 0
+            end
+          else
+            return 0
           end
         end
-        0
+        return 0
       end
     end
   end

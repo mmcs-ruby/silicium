@@ -2,6 +2,13 @@ module Silicium
   module Sparse
     # addition for SparseMatrix class
     class SparseMatrix
+
+      def help_func(array_dest, array_src, start)
+        (start..array_src.length - 1).each do |i|
+          array_dest.push(array_src[i])
+        end
+      end
+
       ##
       # @param [SparseMatrix] matrix - second matrix for adding
       # @raise [ArgumentError] If the size of the first matrix doesn't
@@ -13,25 +20,52 @@ module Silicium
         raise 'wrong argument' if @n != matrix.m
 
         res = SparseMatrix.new(@n, @m)
-        (0..@n).each { |i|
-          help_row1 = get_row(i)
-          help_row2 = matrix.get_row(i)
-          res_row = Array.new(@m, 0)
-          j = 0
-          help_row1.each do |elem|
-            res_row[j] = elem + help_row2[j]
-            j = j + 1
+        triplets_1 = self.triplets
+        triplets_2 = matrix.triplets
+
+        tr_ind_1 = 0 # triplet index for first matrix (self)
+        tr_ind_2 = 0 # triplet index for second matrix (matrix)
+
+        while true
+          if    tr_ind_1 == triplets_1.length
+            help_func(res.triplets, triplets_2, tr_ind_2)
+            return res
+          elsif tr_ind_2 == triplets_2.length
+            help_func(res.triplets, triplets_1, tr_ind_1)
+            return res
           end
-          k = 0
-          res_row.each do |elem|
-            if (elem != 0)
-              res.add(i, k, elem)
+
+          r_1 = triplets_1[tr_ind_1][0]
+          r_2 = triplets_2[tr_ind_2][0]
+
+          c_1 = triplets_1[tr_ind_1][1]
+          c_2 = triplets_2[tr_ind_2][1]
+
+          v_1 = triplets_1[tr_ind_1][2]
+          v_2 = triplets_2[tr_ind_2][2]
+
+          if    r_1 < r_2
+            res.triplets.push(triplets_1[tr_ind_1])
+            tr_ind_1 += 1
+          elsif r_1 == r_2
+            if    c_1 < c_2
+              res.triplets.push(triplets_1[tr_ind_1])
+              tr_ind_1 += 1
+            elsif c_1 > c_2
+              res.triplets.push(triplets_2[tr_ind_2])
+              tr_ind_2 += 1
+            else
+              res.triplets.push([r_1, c_1, v_1 + v_2]) unless v_1 + v_2 == 0
+              tr_ind_1 += 1
+              tr_ind_2 += 1
             end
-            k = k+1
+          else
+            res.triplets.push(triplets_2[tr_ind_2])
+            tr_ind_2 += 1
           end
-        }
-        res
+        end
       end
+
     end
   end
 end
