@@ -125,12 +125,12 @@ class GeometryTest < Minitest::Test
 
   # Closest pair of points_______________________________
 
-  def test_find_min_dist_simple
-    assert_equal(1, find_min_dist([Point.new(1,1), Point.new(2,1), Point.new(3,2)]))
+  def test_divide_min_simple
+    assert_equal(1, divide_min([Point.new(1,1), Point.new(2,1), Point.new(3,2)]))
   end
 
-  def test_find_min_dist_simple
-    assert_in_delta(241.00095342953614, find_min_dist([Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)]), 0.0001)
+  def test_divide_min_simple
+    assert_in_delta(241.00095342953614, divide_min([Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)]), 0.0001)
   end
 end
 
