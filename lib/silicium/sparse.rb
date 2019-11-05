@@ -3,6 +3,7 @@ module Silicium
   require_relative 'trans'
   require_relative 'adding'
   require_relative 'multi'
+  require_relative 'visualization'
 
   # here goes the sparse module
   module Sparse
