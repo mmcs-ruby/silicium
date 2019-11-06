@@ -183,7 +183,7 @@ module Silicium
       a *= MUL
       b *= MUL
 
-      [a, -Window.width * 1.1].max / MUL, [b, Window.width * 1.1].min / MUL
+      [[a, -Window.width * 1.1].max / MUL, [b, Window.width * 1.1].min / MUL]
     end
 
     def draw_fn(a, b, &func)
