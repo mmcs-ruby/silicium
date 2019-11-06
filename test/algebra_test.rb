@@ -3,6 +3,10 @@ require 'algebra'
 
 class AlgebraTest < Minitest::Test
   include Silicium::Algebra
+  include Silicium::Division
+
+  @@polynom_div = Polynom_division.new
+
 
   def test_that_normal_polynomial
     assert(polycop('x^2 + 2 * x + 7'), 'Fail')
@@ -62,5 +66,40 @@ class AlgebraTest < Minitest::Test
 
   def test_polycop_exceptions
     assert_raises(NameError){ polycop(4 * x) }
+  end
+
+  def test_that_work_polynom_division
+    rez_division = @@polynom_div.polynom_division("3*x**3+0*x**2+2*x**1+6*x**0",'2*x**1-5*x**0')
+    assert_equal_as_sets(['1.5*x**2+3.75*x**1+10.375*x**0', '57.875*x**0'], rez_division)
+  end
+
+  def test_that_work_polynom_dividion_2
+    rez_division = @@polynom_div.polynom_division("-5*x**4+0*x**3-2*x**2+0*x**1+4*x**0",'2*x**2+0*x**1-1')
+    assert_equal_as_sets(['-2.5*x**2+0.0*x**1-2.25*x**0', '0.0*x**1+1.75*x**0'], rez_division)
+  end
+
+  def test_that_work_polynom_dividion_3
+    rez_division = @@polynom_div.polynom_division("1",'1')
+    assert_equal_as_sets(['1.0*x**0', ''], rez_division)
+  end
+
+  def test_that_work_polynom_dividion_4
+    rez_division = @@polynom_div.polynom_division("x**5+0*x**4-6*x**3+0*x**2+0*x**1+21*x**0",'-1*x**2+0*x**1+1*x**0')
+    assert_equal_as_sets(['-1.0*x**3+-0.0*x**2+5.0*x**1+-0.0*x**0', '-5.0*x**1+21.0*x**0'], rez_division)
+  end
+
+  def test_that_work_polynom_dividion_5
+    rez_division = @@polynom_div.polynom_division("2*x**6+4*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0",'1*x**3-1**x**2+0*x**1+0*x**0')
+    assert_equal_as_sets(['2.0*x**3+6.0*x**2+6.0*x**1+6.0*x**0', '5.0*x**2+0.0*x**1+1.0*x**0'], rez_division)
+  end
+
+  def test_that_work_polynom_dividion_6
+    rez_division = @@polynom_div.polynom_division("-3*x**3-2*x**2-x**1-1",'1*x**2+0*x**1-1')
+    assert_equal_as_sets(['-3.0*x**1-2.0*x**0', '-4.0*x**1-3.0*x**0'], rez_division)
+  end
+
+  def test_that_work_polynom_dividion_7
+    rez_division = @@polynom_div.polynom_division("2*x**7+4*x**6+0*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0",'1*x**7+0*x**6+0*x**5+0*x**4-1*x**3+0*x**2+0*x**1+0*x**0')
+    assert_equal_as_sets(['2.0*x**0', '4.0*x**6+0.0*x**5+0.0*x**4+2.0*x**3-1.0*x**2+0.0*x**1+1.0*x**0'], rez_division)
   end
 end
