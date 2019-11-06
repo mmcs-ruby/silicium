@@ -2,11 +2,14 @@ sudo: false
 language: ruby
 cache: bundler
 rvm:
-- 2.6.3
+  - 2.6.3
 env:
   global:
     - CC_TEST_REPORTER_ID=$TEST_ID
-before_install: gem install bundler -v 2.0.2
+before_install:
+  - gem install bundler -v 2.0.2
+  - sudo apt-get update
+  - sudo apt-get -y install libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
@@ -22,3 +25,4 @@ deploy:
   on:
     tags: true
     repo: mmcs-ruby/silicium
+    branch: master

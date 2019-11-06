@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Silicium
 
   ##
@@ -19,25 +20,47 @@ module Silicium
     ## polycop('x^2 + 2 * x + 7')		# => True
     ## polycop('x^2 +2nbbbbb * x + 7')		# => False
     def polycop(str)
-      str_var = ''
+      @letter_var = nil
       parsed = str.split(/[-+]/)
       parsed.each do |term|
-        return false if term[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/].nil?
-        cur_var = $2
-        str_var = cur_var if str_var == ''
-        return false if !cur_var.nil? && str_var != cur_var
-        return false unless letter_controller(term)
+        return false unless valid_term?(term)
       end
-      # save variable letter in
-      @letter_var = str_var # sorry for that
-      return true
+      true
+    end
+
+    ##
+    # Parses single polynomial term and returns false if
+    # term is incorrect on has different independent variable
+    # It updated current independent variable if it wasn't set before
+    def valid_term?(term)
+      correct, cur_var = extract_variable(term)
+      return false unless correct
+
+      @letter_var ||= cur_var
+      !(another_variable?(@letter_var, cur_var) || !letter_controller(term))
+    end
+
+    ##
+    # @param [String] expr - part of analytical function that has one independent variable
+    # @return [Array]
+    # retuns pair, the first value indicates if parsing succeeded, the second is variable
+    #
+    def extract_variable(expr)
+      expr[/(\s?\d*\s?\*\s?)?([a-z])(\^\d*)?|\s?\d+$/]
+      [!Regexp.last_match.nil?, Regexp.last_match(2)]
+    end
+
+    ##
+    # Checks if new variable is present and is not the same as last known variable
+    def another_variable?(old_variable, new_variable)
+      !new_variable.nil? && old_variable != new_variable
     end
     # check for extra letters in term
     def letter_controller(term)
-      allowed_w = ['ln','lg','log','cos','sin']
+      allowed_w = %w[ln lg log cos sin]
       letters = term.scan(/[a-z]{2,}/)
       letters = letters.join
-      return letters.empty? || allowed_w.include?(letters)
+      letters.empty? || allowed_w.include?(letters)
     end
     ##
     # +to_ruby_s(val)+ transforms @str into a correct ruby str
@@ -49,7 +72,7 @@ module Silicium
       temp_str.gsub!('^','**')
       temp_str.gsub!(/lg|log|ln/,'Math::\1')
       temp_str.gsub!(@letter_var, val)
-      return temp_str
+      temp_str
     end
 
     # +evaluate(val)+ counts the result using a given value
@@ -73,8 +96,8 @@ module Silicium
         deg = 0
         tokens.each do |term|
           term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
-          par_cf = $1
-          par_deg = $2
+          par_cf = Regexp.last_match(1)
+          par_deg = Regexp.last_match(2)
           cur_cf, cur_deg = initialize_cf_deg(term, par_cf, par_deg)
           # initialize deg for the first time
           deg = cur_deg if deg == 0
@@ -84,7 +107,7 @@ module Silicium
           deg = cur_deg
         end
         insert_zeroes(cf, deg) unless deg.zero?
-        return cf.reverse
+        cf.reverse
       end
       # intialize cur_cf and cur_deg depend on current term
       def initialize_cf_deg(term,par_cf,par_deg)
@@ -96,7 +119,7 @@ module Silicium
           cur_cf = par_cf.nil? ? 1 : par_cf.to_f
           cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
         end
-        return [cur_cf,cur_deg]
+        [cur_cf,cur_deg]
       end
       ##
       # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
@@ -118,7 +141,7 @@ module Silicium
           i -= 1
           break if i.zero?
         end
-        return s
+        s
       end
 
       ##
@@ -148,9 +171,13 @@ module Silicium
         (0..cur_root_count[level-1]).each do |i|
           edge_left,left_val,sign_left = form_left([i,major,level,root_dif,kf_dif ])
           # if we hit in root(unlikely)
-          continue if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
+          if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
+            continue
+          end
           edge_right,right_val,sigh_right = form_right([i,major,level,root_dif,kf_dif])
-          continue if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
+          if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
+            continue
+          end
           continue if sigh_right == sign_left
           if sign_left.negative?
             edge_neg = edge_left
@@ -174,7 +201,7 @@ module Silicium
           i += 1
           break if i == level
         end
-        return major + 1.0
+        major + 1.0
       end
       # check if we suddenly found root
       def hit_root(arr_pack)
@@ -184,7 +211,7 @@ module Silicium
           cur_roots_count[level] += 1
           return true
         end
-        return false
+        false
       end
     end
     # forming left edge for root search
@@ -193,7 +220,7 @@ module Silicium
       edge_left = i.zero? ? -major : root_dif[level-1][i-1]
       left_val = eval_by_kf(level,edge_left,kf_dif[level])
       sign_left = left_val.positive? ? 1 : -1
-      return [edge_left,left_val,sign_left]
+      [edge_left,left_val,sign_left]
     end
     # forming right edge fro root search
     def form_right(args_pack)
@@ -201,7 +228,7 @@ module Silicium
       edge_right = i == cur_root_count[level] ? major : root_dif[level - 1][i]
       right_val = eval_by_kf(level,edge_right,kf_dif[level])
       sigh_right = right_val.positive? ? 1 : -1
-      return [edge_right,right_val,sigh_right]
+      [edge_right,right_val,sigh_right]
     end
     # evaluate real roots of polynom with order = deg
     def polinom_real_roots(deg,coef)
@@ -211,9 +238,9 @@ module Silicium
       coef_diff[deg] = rationing_polynom(deg, coef)
       form_coef_diff(deg,coef_diff,cur_root_count,root_diff)
       (2..deg).each {|i| step_up(i,coef_diff,root_diff,cur_root_count)}
-      roots_arr = Array.new
+      roots_arr = []
       root_diff[deg].each { |root| roots_arr << root }
-      return roots_arr
+      roots_arr
     end
     # rationing polynom
     def rationing_polynom(deg, coef)
@@ -238,13 +265,13 @@ module Silicium
       n = coef.length
       (0..n).each do |i|
         continue if coef[i] == 0
-        if i.zero?
-          s += "#{coef[i]}"
+        s += if i.zero?
+          (coef[i]).to_s
         else
-          s += "#{coef[i]} * x**#{i}"
-        end
+          "#{coef[i]} * x**#{i}"
+             end
       end
-      return s
+      s
     end
   end
 end
