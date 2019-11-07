@@ -29,6 +29,7 @@ module Silicium
         res_exp += (coeff_res[i].ceil(3).to_s + '*x**' + (res_size - i - 1).to_s)
         res_exp += sgn_array[i + 1] if sgn_array[i + 1] != '-'
       end
+      end
 
 # String implementation of remained part
       def str_rem_impl(coeff_1)
@@ -66,7 +67,7 @@ module Silicium
         rem_exp = str_rem_impl(coeff_1[coeff_result.size..coeff_1.size-1])
         [res_exp, rem_exp]
       end
-    end
+
 
     private
 
