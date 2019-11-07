@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 module Silicium
+  require_relative 'algebra_diff'
+  require_relative 'polynomial_division'
 
   ##
   # +Algebra+ module helps to perform calculations with polynoms
