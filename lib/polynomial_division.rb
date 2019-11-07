@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Silicium
+  module Division
   class PolynomialDivision
     # This function returns an array of coefficients obtained by parsing input string in format: "<coeff>*x**<degree>+..."
     # Even if in your expression don't exist x with some degree, you should to write it with 0 coefficient
@@ -85,5 +86,5 @@ module Silicium
       char == '-' || char == '+'
     end
   end
-
+end
 end
