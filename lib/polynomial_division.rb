@@ -19,6 +19,7 @@ module Silicium
         coeff[i] = degree[0].to_f
         coeff[i] *= -1 if sgn_array[i] == '-'
       end
+      end
 
     # String implementation of result (optimization part)
     def str_res_impl(coeff_res, sgn_array)
