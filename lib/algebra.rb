@@ -278,4 +278,3 @@ end
 
 class PolynomError < StandardError
 end
-
