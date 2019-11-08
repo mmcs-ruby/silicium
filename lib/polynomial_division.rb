@@ -1,4 +1,3 @@
-module Silicium
   module Algebra
   ##
   # TODO: class docs

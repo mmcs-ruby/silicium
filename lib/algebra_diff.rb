@@ -25,18 +25,27 @@ module Silicium
       def find_closing_bracket(str, ind)
         i = ind
         kind_of_a_stack = 0
-        while i != str.length
-          if str[i] == '('
-            kind_of_a_stack += 1
-          elsif str[i] ==  ')'
-            kind_of_a_stack -= 1
-            if kind_of_a_stack == 0
-              return i
-            end
+        stop = true
+        while i != str.length && stop
+          stop, kind_of_a_stack = find_closing_bracket_inner(str,i,kind_of_a_stack)
+          if !stop
+            return i
           end
           i+=1
         end
         return i
+      end
+
+      def find_closing_bracket_inner(str,i,kind_of_a_stack)
+        if str[i] == '('
+          kind_of_a_stack += 1
+        elsif str[i] ==  ')'
+          kind_of_a_stack -= 1
+          if kind_of_a_stack == 0
+            return [false, kind_of_a_stack]
+          end
+        end
+        return [true, kind_of_a_stack]
       end
 
       ##

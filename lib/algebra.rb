@@ -105,6 +105,15 @@ module Silicium
         cf.reverse
       end
 
+
+      def get_coef_inner(cur_deg, deg)
+        if deg == 0
+          return cur_deg
+        else
+          return deg
+        end
+      end
+
       def process_term(term, cf, deg)
         term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
         par_cf = Regexp.last_match(1)
@@ -118,9 +127,9 @@ module Silicium
         deg = cur_deg
       end
 
+
       # intialize cur_cf and cur_deg depend on current term
       def initialize_cf_deg(term, par_cf, par_deg)
-        # check that term is free
         return [term.to_f, 0] if free_term? term
 
         [par_cf.nil? ? 1 : par_cf.to_f, par_deg.nil? ? 1 : par_deg.delete('^').to_i]
@@ -129,6 +138,7 @@ module Silicium
       def free_term?(term)
         term.scan(/[a-z]/).empty?
       end
+
 
       ##
       # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
@@ -167,6 +177,7 @@ module Silicium
             edge_neg = x
           end
         end
+        return [edge_pos, edge_neg]
       end
 
       ##
@@ -179,12 +190,12 @@ module Silicium
         cur_root_count[level] = 0
         # main loop
         (0..cur_root_count[level - 1]).each do |i|
-          edge_left, left_val, sign_left = form_left([i, major, level, root_dif, kf_dif])
+          edge_left, left_val, sign_left = form_left([i, major, level, root_dif, cf_dif])
 
           if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
             continue
           end
-          edge_right, right_val, sigh_right = form_right([i, major, level, root_dif, kf_dif])
+          edge_right, right_val, sigh_right = form_right([i, major, level, root_dif, cf_dif])
 
           if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
             continue
@@ -192,7 +203,33 @@ module Silicium
           continue if sigh_right == sign_left
           edge_neg, edge_pos = sign_left.negative? ? [edge_left, edge_right] : [edge_right, edge_left]
           root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, cf_dif[level])
+
         end
+      end
+      def step_up_inner(sign_left,edge_left,edge_right)
+        if sign_left.negative?
+          edge_neg = edge_left
+          edge_pos = edge_right
+        else
+          edge_neg = edge_right
+          edge_pos = edge_left
+        end
+        return edge_neg, edge_pos
+      end
+      def step_up_loop(arr)
+        level,cf_dif,root_dif,cur_root_count,major,cur_root_count = arr
+        edge_left,left_val,sign_left = form_left([i,major,level,root_dif,kf_dif ])
+        # if we hit in root(unlikely)
+        if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
+          return root_dif
+        end
+        edge_right,right_val,sigh_right = form_right([i,major,level,root_dif,kf_dif])
+        if hit_root([level, edge_right, right_val, root_dif, cur_root_count]) || sigh_right == sign_left
+          return root_dif
+        end
+        edge_neg,edge_pos = step_up_inner(sign_left,edge_left,edge_right)
+        root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, cf_dif[level])
+        return root_dif
       end
 
       ##
@@ -272,15 +309,19 @@ module Silicium
     end
 
     # transform array of coefficient to string
-    def coef_to_str(coefficients)
-      n = coefficients.length
-      result = coefficients[0].to_s
-      (1..n).each do |i|
-        result << "#{coefficients[i]} * x**#{i}" unless coefficients[i].zero?
+
+    def coef_to_str(coef)
+      n = coef.length
+      (0..n).each do |i|
+        continue if coef[i] == 0
+        s = coef_to_str_inner(coef, i,s)
       end
       result
     end
 
+    def coef_to_str_inner(coef,i,s)
+      s += i.zero? ? coef[i].to_s : "#{coef[i]} * x**#{i}"       
+    end
   end
 end
 
