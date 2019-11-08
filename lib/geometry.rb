@@ -400,23 +400,21 @@ module Silicium
     # Closest pair of points_________________________
     # find minimum distance between two points in set
     def brute_min(points, current = Float::INFINITY)
-      if points.length < 2
-        return current
-      elsif
+      return current  if points.length < 2
+
       head = points[0]
-        points.delete_at[0]
-        newMin = min([points.each { |x| distance_point_to_point2d(head, x)}])
-        newCurrent = min([newMin, current])
-        return brute_min(points, newCurrent)
-      end
+      points.delete_at(0)
+      new_min = points.map { |x| distance_point_to_point2d(head, x)}.min
+      new_сurrent = [new_min, current].min
+      brute_min(points, new_сurrent)
     end
 
     def divide_min(points)
-      half = (points.sort).length/2
+      half = points.length/2
       points.sort_by! { |p| [p.x, p.y] }
       minimum = [brute_min(points[0..half]), brute_min(points[half..points.length])].min
-      nearLine = filter(lambda x: x[0] > half - minimum and x[0] < half + minimum, points)
-      return min([brute_min(nearLine), minimum])
+      near_line = points.select{|x| x > half - minimum and x < half + minimum}
+      min([brute_min(near_line), minimum])
     end
 
 
