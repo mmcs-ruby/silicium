@@ -396,8 +396,34 @@ module Silicium
       vector_length(height_on_dir) / vector_length(dir_vector)
     end
 
+
+    # Closest pair of points_________________________
+    # find minimum distance between two points in set
+    def brute_min(points, current = Float::INFINITY)
+      if points.length < 2
+        return current
+      elsif
+      head = points[0]
+        points.delete_at[0]
+        newMin = min([points.each { |x| distance_point_to_point2d(head, x)}])
+        newCurrent = min([newMin, current])
+        return brute_min(points, newCurrent)
+      end
+    end
+
+    def divide_min(points)
+      half = (points.sort).length/2
+      points.sort_by! { |p| [p.x, p.y] }
+      minimum = [brute_min(points[0..half]), brute_min(points[half..points.length])].min
+      nearLine = filter(lambda x: x[0] > half - minimum and x[0] < half + minimum, points)
+      return min([brute_min(nearLine), minimum])
+    end
+
+
     def insert_eq(line_equation)
       line_equation.gsub(' ', '').insert(line_equation.length, '=')
     end
+
   end
 end
+
