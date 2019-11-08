@@ -95,7 +95,7 @@ module Silicium
       # arr[0] = a0 * x^0 ; arr[1] = a1 * x^1 ; ... arr[n] = an * x^(n-1)
       ## get_coef('')    # =>
       def get_coef(str)
-        tokens = str.split(/[-+]/)
+        tokens = split_by_op(str)
         cf = Array.new(0.0)
         deg = 0
         tokens.each do |term|
@@ -104,7 +104,17 @@ module Silicium
         insert_zeroes(cf, deg) unless deg.zero?
         cf.reverse
       end
+      def split_by_op(str)
+        space_clear_str = str.gsub(/\s/,'')
+        pos_tokens = space_clear_str.split('+')
+        keep_split(pos_tokens,'-')
+      end
 
+      def keep_split(str,delim)
+        res = str.split(delim)
+        return [] if res.length == 0
+        [res.first + delim] + res[1,res.length - 2].map {|x| x = delim + x + delim } + [delim + res.last]
+      end
 
       def get_coef_inner(cur_deg, deg)
         if deg == 0
@@ -115,7 +125,7 @@ module Silicium
       end
 
       def process_term(term, cf, deg)
-        term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
+        term[/(-?\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
         par_cf = Regexp.last_match(1)
         par_deg = Regexp.last_match(2)
         cur_cf, cur_deg = initialize_cf_deg(term, par_cf, par_deg)
@@ -286,6 +296,10 @@ module Silicium
       roots_arr = []
       root_diff[deg].each { |root| roots_arr << root }
       roots_arr
+    end
+
+    def polynom_real_roots_by_str(deg,str)
+      polynom_real_roots(deg,get_coef(str))
     end
 
     # rationing polynom
