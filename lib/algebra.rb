@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 module Silicium
+  require_relative 'algebra_diff'
+  require_relative 'polynomial_division'
 
   ##
   # +Algebra+ module helps to perform calculations with polynoms
@@ -55,6 +57,7 @@ module Silicium
     def another_variable?(old_variable, new_variable)
       !new_variable.nil? && old_variable != new_variable
     end
+
     # check for extra letters in term
     def letter_controller(term)
       allowed_w = %w[ln lg log cos sin]
@@ -62,6 +65,7 @@ module Silicium
       letters = letters.join
       letters.empty? || allowed_w.include?(letters)
     end
+
     ##
     # +to_ruby_s(val)+ transforms @str into a correct ruby str
     # works for logarithms, trigonometry and misspelled power
@@ -69,8 +73,8 @@ module Silicium
     ## to_ruby_s('')    # =>
     def to_ruby_s(val)
       temp_str = @str
-      temp_str.gsub!('^','**')
-      temp_str.gsub!(/lg|log|ln/,'Math::\1')
+      temp_str.gsub!('^', '**')
+      temp_str.gsub!(/lg|log|ln/, 'Math::\1')
       temp_str.gsub!(@letter_var, val)
       temp_str
     end
@@ -95,20 +99,12 @@ module Silicium
         cf = Array.new(0.0)
         deg = 0
         tokens.each do |term|
-          term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
-          par_cf = Regexp.last_match(1)
-          par_deg = Regexp.last_match(2)
-          cur_cf, cur_deg = initialize_cf_deg(term, par_cf, par_deg)
-          # initialize deg for the first time
-          deg = get_coef_inner(cur_deg,deg)
-          # add 0 coefficient to missing degrees
-          insert_zeroes(cf, deg - cur_deg - 1) if deg - cur_deg > 1
-          cf << cur_cf
-          deg = cur_deg
+          process_term(term, cf, deg)
         end
         insert_zeroes(cf, deg) unless deg.zero?
         cf.reverse
       end
+
 
       def get_coef_inner(cur_deg, deg)
         if deg == 0
@@ -117,22 +113,33 @@ module Silicium
           return deg
         end
       end
+
+      def process_term(term, cf, deg)
+        term[/(\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
+        par_cf = Regexp.last_match(1)
+        par_deg = Regexp.last_match(2)
+        cur_cf, cur_deg = initialize_cf_deg(term, par_cf, par_deg)
+        # initialize deg for the first time
+        deg = cur_deg if deg.zero?
+        # add 0 coefficient to missing degrees
+        insert_zeroes(cf, deg - cur_deg - 1) if deg - cur_deg > 1
+        cf << cur_cf
+        deg = cur_deg
+      end
+
+
       # intialize cur_cf and cur_deg depend on current term
-      def initialize_cf_deg(term,par_cf,par_deg)
-        # check that term is free
-        if term.scan(/[a-z]/).empty?
-          cur_cf = term.to_f
-          cur_deg = 0
-        else
-          cur_cf, cur_deg = initialize_cf_deg_inner(par_cf,par_deg)
-        end
-        [cur_cf,cur_deg]
+      def initialize_cf_deg(term, par_cf, par_deg)
+        return [term.to_f, 0] if free_term? term
+
+        [par_cf.nil? ? 1 : par_cf.to_f, par_deg.nil? ? 1 : par_deg.delete('^').to_i]
       end
-      def initialize_cf_deg_inner(par_cf,par_deg)
-        cur_cf = par_cf.nil? ? 1 : par_cf.to_f
-        cur_deg = par_deg.nil? ? 1 : par_deg.delete('^').to_i
-        return [cur_cf, cur_deg]
+
+      def free_term?(term)
+        term.scan(/[a-z]/).empty?
       end
+
+
       ##
       # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
       def insert_zeroes(arr, count)
@@ -159,19 +166,16 @@ module Silicium
       ##
       # +binary_root_finder(deg,edge_neg,edge_pos,cf)+ finds result of polynom using binary search
       # +edge_neg+ and +edge_pos+ define the interval used for binary search
-      def binary_root_finder(deg,edge_neg,edge_pos,cf)
+      def binary_root_finder(deg, edge_neg, edge_pos, cf)
         loop do
           x = 0.5 * (edge_neg + edge_pos)
-          return x if x == edge_pos || x == edge_neg
-          edge_pos, edge_neg = binary_root_finder_inner([deg,x,cf,edge_pos,edge_neg])
-        end
-      end
-      def binary_root_finder_inner(arr)
-        deg,x,cf,edge_pos,edge_neg = arr
-        if eval_by_cf(deg, x, cf) > 0
-          edge_pos = x
-        else
-          edge_neg = x
+          return x if [edge_pos, edge_neg].include? x
+
+          if eval_by_cf(deg, x, cf).positive?
+            edge_pos = x
+          else
+            edge_neg = x
+          end
         end
         return [edge_pos, edge_neg]
       end
@@ -181,12 +185,25 @@ module Silicium
       # roots located in interval, which has different sign in edges
       # if we've found such interval then we begin binary_search on that interval to find root
       # major is value, which we use to modulate +-infinite
-      def step_up(level,cf_dif,root_dif,cur_root_count)
+      def step_up(level, cf_dif, root_dif, cur_root_count)
         major = find_major(level, cf_dif[level])
         cur_root_count[level] = 0
         # main loop
-        (0..cur_root_count[level-1]).each do |i|
-          root_dif = step_up_loop([level,cf_dif,root_dif,cur_root_count,major,cur_root_count])
+        (0..cur_root_count[level - 1]).each do |i|
+          edge_left, left_val, sign_left = form_left([i, major, level, root_dif, cf_dif])
+
+          if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
+            continue
+          end
+          edge_right, right_val, sigh_right = form_right([i, major, level, root_dif, cf_dif])
+
+          if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
+            continue
+          end
+          continue if sigh_right == sign_left
+          edge_neg, edge_pos = sign_left.negative? ? [edge_left, edge_right] : [edge_right, edge_left]
+          root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, cf_dif[level])
+
         end
       end
       def step_up_inner(sign_left,edge_left,edge_right)
@@ -217,7 +234,7 @@ module Silicium
 
       ##
       # +find_major(level,cf_dif)+ finds value, which we will use as infinity
-      def find_major(level,cf_dif)
+      def find_major(level, cf_dif)
         major = 0.0
         i = 0
         loop do
@@ -228,9 +245,10 @@ module Silicium
         end
         major + 1.0
       end
+
       # check if we suddenly found root
       def hit_root(arr_pack)
-        level,edge,val,root_dif,cur_roots_count = arr_pack
+        level, edge, val, root_dif, cur_roots_count = arr_pack
         if val == 0
           root_dif[level][cur_roots_count[level]] = edge
           cur_roots_count[level] += 1
@@ -241,32 +259,35 @@ module Silicium
     end
     # forming left edge for root search
     def form_left(args_pack)
-      i,major,level,root_dif,kf_dif = args_pack
-      edge_left = i.zero? ? -major : root_dif[level-1][i-1]
-      left_val = eval_by_kf(level,edge_left,kf_dif[level])
+      i, major, level, root_dif, kf_dif = args_pack
+      edge_left = i.zero? ? -major : root_dif[level - 1][i - 1]
+      left_val = eval_by_cf(level, edge_left, kf_dif[level])
       sign_left = left_val.positive? ? 1 : -1
-      [edge_left,left_val,sign_left]
+      [edge_left, left_val, sign_left]
     end
+
     # forming right edge fro root search
     def form_right(args_pack)
-      i,major,level,root_dif,kf_dif = args_pack
+      i, major, level, root_dif, kf_dif = args_pack
       edge_right = i == cur_root_count[level] ? major : root_dif[level - 1][i]
-      right_val = eval_by_kf(level,edge_right,kf_dif[level])
+      right_val = eval_by_cf(level, edge_right, kf_dif[level])
       sigh_right = right_val.positive? ? 1 : -1
-      [edge_right,right_val,sigh_right]
+      [edge_right, right_val, sigh_right]
     end
+
     # evaluate real roots of polynom with order = deg
-    def polinom_real_roots(deg,coef)
+    def polinom_real_roots(deg, coef)
       coef_diff = Array.new(deg + 1)
       root_diff = Array.new(deg + 1)
       cur_root_count = Array.new(deg + 1)
       coef_diff[deg] = rationing_polynom(deg, coef)
-      form_coef_diff(deg,coef_diff,cur_root_count,root_diff)
-      (2..deg).each {|i| step_up(i,coef_diff,root_diff,cur_root_count)}
+      form_coef_diff(deg, coef_diff, cur_root_count, root_diff)
+      (2..deg).each { |i| step_up(i, coef_diff, root_diff, cur_root_count) }
       roots_arr = []
       root_diff[deg].each { |root| roots_arr << root }
       roots_arr
     end
+
     # rationing polynom
     def rationing_polynom(deg, coef)
       i = 0
@@ -276,34 +297,31 @@ module Silicium
         break if i > deg
       end
     end
+
     # forming array of differentiated polynoms, starting from source one
-    def form_coef_diff(deg, coef_diff,cur_root_count,root_dif)
+    def form_coef_diff(deg, coef_diff, cur_root_count, root_dif)
       (deg..2).each do |i|
         str_diff = Algebra::Differentiation.differentiate(coef_to_str(coef_diff[i]))
-        coef_diff[i-1] = get_coef(str_diff)
+        coef_diff[i - 1] = get_coef(str_diff)
       end
       cur_root_count[1] = 1
       root_diff[1][0] = -coef_diff[1][0]
     end
+
     # transform array of coefficient to string
+
     def coef_to_str(coef)
       n = coef.length
       (0..n).each do |i|
         continue if coef[i] == 0
         s = coef_to_str_inner(coef, i,s)
       end
-      s
+      result
     end
+
     def coef_to_str_inner(coef,i,s)
-      s += if i.zero?
-             (coef[i]).to_s
-           else
-             "#{coef[i]} * x**#{i}"
-           end
-      return s
+      s += i.zero? ? coef[i].to_s : "#{coef[i]} * x**#{i}"       
     end
   end
 end
 
-class PolynomError < StandardError
-end
