@@ -2,7 +2,7 @@ module Silicium
   module Algebra
     ##
     # differentiating methods
-    class Differentiation
+    module Differentiation
 
       ##
       # +differentiate(str)+ differentiates given string

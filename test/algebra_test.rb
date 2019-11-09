@@ -3,6 +3,7 @@ require 'algebra'
 
 class AlgebraTest < Minitest::Test
   include Silicium::Algebra
+  include Silicium::Algebra::PolynomRootsReal
 
   def setup
     @polynom_div = PolynomialDivision.new
@@ -71,23 +72,23 @@ class AlgebraTest < Minitest::Test
     assert_raises(NameError){ polycop(4 * x) }
   end
   def test_polynom_real_roots_first_deg
-    res = polinom_real_roots_by_str(1,'x - 1')
+    res = polynom_real_roots_by_str(1,'x - 1')
     assert(compare_double(res.first,1))
   end
   def test_polynom_real_roots_no_roots
     assert_equal([],polynom_real_roots_by_str(2,'x^2 + 1'))
   end
   def test_polynom_real_roots_sec_deg_power_first
-    res = polinom_real_roots_by_str(2,'x^2 - 2 * x + 1')
+    res = polynom_real_roots_by_str(2,'x^2 - 2 * x + 1')
     assert(compare_double(res.first,1))
   end
   def test_polynom_real_roots_arbitrary_sec_deg
-    res = polinom_real_roots_by_str(2,'x^2 - 4 * x + 3')
+    res = polynom_real_roots_by_str(2,'x^2 - 4 * x + 3')
     assert(res.all? { |root| compare_double(root,1) ||
                               compare_double(root,3)})
   end
   def test_polynom_real_roots_third_deg
-    res = polinom_real_roots_by_str(2,'x^3 - 3*x^2 - x + 3')
+    res = polynom_real_roots_by_str(2,'x^3 - 3*x^2 - x + 3')
     assert(res.all? { |root| compare_double(root,-1) ||
                               compare_double(root,3) ||
                               compare_double(root,1)})

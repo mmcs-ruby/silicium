@@ -99,21 +99,30 @@ module Silicium
         cf = Array.new(0.0)
         deg = 0
         tokens.each do |term|
-          process_term(term, cf, deg)
+          deg = process_term(term, cf, deg)
         end
         insert_zeroes(cf, deg) unless deg.zero?
         cf.reverse
       end
+
       def split_by_op(str)
         space_clear_str = str.gsub(/\s/,'')
         pos_tokens = space_clear_str.split('+')
-        keep_split(pos_tokens,'-')
+        split_by_neg(pos_tokens)
       end
 
       def keep_split(str,delim)
         res = str.split(delim)
         return [] if res.length == 0
-        [res.first + delim] + res[1,res.length - 2].map {|x| x = delim + x + delim } + [delim + res.last]
+        [res.first] + res[1,res.length - 1].map {|x| x = delim + x }
+      end
+
+      def split_by_neg(pos_tokens)
+        res = []
+        pos_tokens.each do |token|
+          res.concat(keep_split(token,'-'))
+        end
+        res
       end
 
       def get_coef_inner(cur_deg, deg)
@@ -125,7 +134,7 @@ module Silicium
       end
 
       def process_term(term, cf, deg)
-        term[/(-?\s?\d*[.|,]?\d*\s?)\*?\s?[a-z](\^\d*)?/]
+        term[/(-?\d*[.|,]?\d*)\*?[a-z](\^\d*)?/]
         par_cf = Regexp.last_match(1)
         par_deg = Regexp.last_match(2)
         cur_cf, cur_deg = initialize_cf_deg(term, par_cf, par_deg)
@@ -141,8 +150,12 @@ module Silicium
       # intialize cur_cf and cur_deg depend on current term
       def initialize_cf_deg(term, par_cf, par_deg)
         return [term.to_f, 0] if free_term? term
-
-        [par_cf.nil? ? 1 : par_cf.to_f, par_deg.nil? ? 1 : par_deg.delete('^').to_i]
+        cf = if par_cf.empty?
+              term.include?('-') ? -1 : 1
+             else
+               par_cf.to_f
+             end
+        [cf, par_deg.nil? ? 1 : par_deg.delete('^').to_i]
       end
 
       def free_term?(term)
@@ -286,7 +299,7 @@ module Silicium
     end
 
     # evaluate real roots of polynom with order = deg
-    def polinom_real_roots(deg, coef)
+    def polynom_real_roots(deg, coef)
       coef_diff = Array.new(deg + 1)
       root_diff = Array.new(deg + 1)
       cur_root_count = Array.new(deg + 1)
@@ -299,43 +312,47 @@ module Silicium
     end
 
     def polynom_real_roots_by_str(deg,str)
-      polynom_real_roots(deg,get_coef(str))
+      cf = get_coef(str)
+      polynom_real_roots(deg,cf)
     end
 
     # rationing polynom
     def rationing_polynom(deg, coef)
+      res = []
       i = 0
       loop do
         res[i] = coef[i] / coef[deg].to_f
         i += 1
         break if i > deg
       end
+      res
     end
 
     # forming array of differentiated polynoms, starting from source one
     def form_coef_diff(deg, coef_diff, cur_root_count, root_dif)
       (deg..2).each do |i|
-        str_diff = Algebra::Differentiation.differentiate(coef_to_str(coef_diff[i]))
+        str = coef_to_str(coef_diff[i])
+        str_diff = Differentiation.differentiate(str)
         coef_diff[i - 1] = get_coef(str_diff)
       end
       cur_root_count[1] = 1
-      root_diff[1][0] = -coef_diff[1][0]
+      root_dif[1][0] = -coef_diff[1][0]
     end
 
     # transform array of coefficient to string
-
     def coef_to_str(coef)
-      n = coef.length
+      n = coef.length - 1
+      s = ''
       (0..n).each do |i|
-        continue if coef[i] == 0
-        s = coef_to_str_inner(coef, i,s)
+        s += coef_to_str_inner(coef, i,s) unless coef[i].zero?
       end
-      result
+      s
     end
 
     def coef_to_str_inner(coef,i,s)
-      s += i.zero? ? coef[i].to_s : "#{coef[i]} * x**#{i}"       
+      i.zero? ? coef[i].to_s : "#{coef[i]} * x**#{i}"
     end
   end
 end
+
 
