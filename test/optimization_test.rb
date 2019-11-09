@@ -203,14 +203,8 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_determinant_Sarryus_standart
-    m = FastMatrix::Matrix.build(3, 3){|i, j| (i + 1) * (j + 1)}
-    m[0, 0] = 3
-    assert_equal determinant_Sarryus(m), -6
-  end
-
-  def test_determinant_Sarryus_standart
     m = FastMatrix::Matrix.build(4, 4){|i, j| i + j}
-    exception = assert_raises(ArgumentError) do
+    assert_raises(ArgumentError) do
       determinant_Sarryus(m)
     end
   end

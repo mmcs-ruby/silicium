@@ -60,6 +60,7 @@ module Silicium
           @side3 = distance_point_to_point2d(p3, p4)
           @side4 = distance_point_to_point2d(p4, p1)
         end
+      end
 
         def perimeter
           @side1 + @side2 + @side3 + @side4
@@ -68,7 +69,7 @@ module Silicium
         def area
           @side1 * @side2
         end
-      end
+
     end
 
     ##
