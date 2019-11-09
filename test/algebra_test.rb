@@ -7,6 +7,9 @@ class AlgebraTest < Minitest::Test
   def setup
     @polynom_div = PolynomialDivision.new
   end
+  def compare_double(val1,val2,eps = 0.001)
+    abs(val1 - val2) <= eps
+  end
 
   def test_that_normal_polynomial
     assert(polycop('x^2 + 2 * x + 7'), 'Fail')
@@ -67,7 +70,28 @@ class AlgebraTest < Minitest::Test
   def test_polycop_exceptions
     assert_raises(NameError){ polycop(4 * x) }
   end
-
+  def test_polynom_real_roots_first_deg
+    res = polinom_real_roots_by_str(1,'x - 1')
+    assert(compare_double(res.first,1))
+  end
+  def test_polynom_real_roots_no_roots
+    assert_equal([],polynom_real_roots_by_str(2,'x^2 + 1'))
+  end
+  def test_polynom_real_roots_sec_deg_power_first
+    res = polinom_real_roots_by_str(2,'x^2 - 2 * x + 1')
+    assert(compare_double(res.first,1))
+  end
+  def test_polynom_real_roots_arbitrary_sec_deg
+    res = polinom_real_roots_by_str(2,'x^2 - 4 * x + 3')
+    assert(res.all? { |root| compare_double(root,1) ||
+                              compare_double(root,3)})
+  end
+  def test_polynom_real_roots_third_deg
+    res = polinom_real_roots_by_str(2,'x^3 - 3*x^2 - x + 3')
+    assert(res.all? { |root| compare_double(root,-1) ||
+                              compare_double(root,3) ||
+                              compare_double(root,1)})
+  end
   def test_that_work_polynom_division
     rez_division = @polynom_div.polynom_division("3*x**3+0*x**2+2*x**1+6*x**0",'2*x**1-5*x**0')
     assert_equal_as_sets(['1.5*x**2+3.75*x**1+10.375*x**0', '57.875*x**0'], rez_division)
