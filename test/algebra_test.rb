@@ -1,11 +1,11 @@
 require 'test_helper'
 require 'algebra'
-
+require 'polynomial_division'
 class AlgebraTest < Minitest::Test
   include Silicium::Algebra
   include Silicium::Division
 
-  @@polynom_div = Polynom_division.new
+  @@polynom_div = PolynomialDivision.new
 
 
   def test_that_normal_polynomial
