@@ -143,7 +143,6 @@ module Silicium
         insert_zeroes(cf, deg - cur_deg - 1) if deg - cur_deg > 1
         cf << cur_cf
         deg = cur_deg
-<<<<<<< HEAD
       end
 
 
@@ -162,8 +161,6 @@ module Silicium
         term.scan(/[a-z]/).empty?
       end
 
-=======
-      end
 
 
 # intialize cur_cf and cur_deg depend on current term
@@ -181,7 +178,6 @@ module Silicium
         term.scan(/[a-z]/).empty?
       end
 
->>>>>>> upstream/master
 
 ##
 # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
@@ -390,14 +386,6 @@ module Silicium
         end
       end
 
-<<<<<<< HEAD
-    end
-  end
-end
-=======
   end
   end
 end
-
-
->>>>>>> upstream/master
