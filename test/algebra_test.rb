@@ -9,7 +9,7 @@ class AlgebraTest < Minitest::Test
     @polynom_div = PolynomialDivision.new
   end
   def compare_double(val1,val2,eps = 0.001)
-    abs(val1 - val2) <= eps
+    (val1 - val2).abs <= eps
   end
 
   def test_that_normal_polynomial
