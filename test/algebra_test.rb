@@ -8,6 +8,7 @@ class AlgebraTest < Minitest::Test
   def setup
     @polynom_div = PolynomialDivision.new
   end
+
   def compare_double(val1,val2,eps = 0.001)
     (val1 - val2).abs <= eps
   end
@@ -71,28 +72,34 @@ class AlgebraTest < Minitest::Test
   def test_polycop_exceptions
     assert_raises(NameError){ polycop(4 * x) }
   end
+
   def test_polynom_real_roots_first_deg
     res = polynom_real_roots_by_str(1,'x - 1')
     assert(compare_double(res.first,1))
   end
+
   def test_polynom_real_roots_no_roots
     assert_equal([],polynom_real_roots_by_str(2,'x^2 + 1'))
   end
+
   def test_polynom_real_roots_sec_deg_power_first
     res = polynom_real_roots_by_str(2,'x^2 - 2 * x + 1')
     assert(compare_double(res.first,1))
   end
+
   def test_polynom_real_roots_arbitrary_sec_deg
     res = polynom_real_roots_by_str(2,'x^2 - 4 * x + 3')
     assert(res.all? { |root| compare_double(root,1) ||
         compare_double(root,3)})
   end
+
   def test_polynom_real_roots_third_deg
     res = polynom_real_roots_by_str(2,'x^3 - 3*x^2 - x + 3')
     assert(res.all? { |root| compare_double(root,-1) ||
         compare_double(root,3) ||
         compare_double(root,1)})
   end
+
   def test_that_work_polynom_division
     rez_division = @polynom_div.polynom_division("3*x**3+0*x**2+2*x**1+6*x**0",'2*x**1-5*x**0')
     assert_equal_as_sets(['1.5*x**2+3.75*x**1+10.375*x**0', '57.875*x**0'], rez_division)
@@ -127,4 +134,29 @@ class AlgebraTest < Minitest::Test
     rez_division = @polynom_div.polynom_division("2*x**7+4*x**6+0*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0",'1*x**7+0*x**6+0*x**5+0*x**4-1*x**3+0*x**2+0*x**1+0*x**0')
     assert_equal_as_sets(['2.0*x**0', '4.0*x**6+0.0*x**5+0.0*x**4+2.0*x**3-1.0*x**2+0.0*x**1+1.0*x**0'], rez_division)
   end
+
+  def test_how_work_polynom_parser_1
+    rez_parsing = @polynom_div.polynom_parser('2*x**6+4*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0')
+    assert_equal_as_sets([2.0, 4.0, 0.0, 0.0, 1.0, 0.0, 1.0], rez_parsing)
+  end
+
+  def test_how_work_polynom_parser_2
+    rez_parsing = @polynom_div.polynom_parser('1')
+    assert_equal_as_sets([1.0], rez_parsing)
+  end
+
+  def test_how_work_polynom_parser_wth_neg_1
+    rez_parsing = @polynom_div.polynom_parser('-3*x**3-2*x**2-x**1-1')
+    assert_equal_as_sets([-3.0, -2.0, -1.0, -1.0], rez_parsing)
+  end
+
+  def test_how_work_polynom_parser_wth_neg_2
+    rez_parsing = @polynom_div.polynom_parser('-5*x**2-2*x**2')
+    assert_equal_as_sets([-5.0, -2.0], rez_parsing)
+  end
+
+  def test_polynom_parser_exception
+    assert_raises(NameError){ polynom_parser(-3*x**3-2*x**2-x**1-1) }
+  end
+
 end
