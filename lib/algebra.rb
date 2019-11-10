@@ -162,6 +162,23 @@ module Silicium
       end
 
 
+
+# intialize cur_cf and cur_deg depend on current term
+      def initialize_cf_deg(term, par_cf, par_deg)
+        return [term.to_f, 0] if free_term? term
+        cf = if par_cf.empty?
+               term.include?('-') ? -1 : 1
+             else
+               par_cf.to_f
+             end
+        [cf, par_deg.nil? ? 1 : par_deg.delete('^').to_i]
+      end
+
+      def free_term?(term)
+        term.scan(/[a-z]/).empty?
+      end
+
+
 ##
 # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
       def insert_zeroes(arr, count)
@@ -372,5 +389,3 @@ module Silicium
   end
   end
 end
-
-

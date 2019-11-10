@@ -267,7 +267,3 @@ module Silicium
     end
   end
 end
-
-
-
-
