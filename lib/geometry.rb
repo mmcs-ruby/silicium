@@ -58,7 +58,6 @@ module Silicium
         unless valid?(p1, p2, p3, p4)
           raise ArgumentError, 'This is not a rectangle.'
         end
-
         @side1 = distance_point_to_point2d(p1, p2)
         @side2 = distance_point_to_point2d(p2, p3)
         @side3 = distance_point_to_point2d(p3, p4)
@@ -405,8 +404,32 @@ module Silicium
       vector_length(height_on_dir) / vector_length(dir_vector)
     end
 
+
+    # Closest pair of points_________________________
+    # find minimum distance between two points in set
+    def brute_min(points, current = Float::INFINITY)
+      return current  if points.length < 2
+
+      head = points[0]
+      points.delete_at(0)
+      new_min = points.map { |x| distance_point_to_point2d(head, x)}.min
+      new_сurrent = [new_min, current].min
+      brute_min(points, new_сurrent)
+    end
+
+    def divide_min(points)
+      half = points.length/2
+      points.sort_by! { |p| [p.x, p.y] }
+      minimum = [brute_min(points[0..half]), brute_min(points[half..points.length])].min
+      near_line = points.select{|x| x > half - minimum and x < half + minimum}
+      min([brute_min(near_line), minimum])
+    end
+
+
     def insert_eq(line_equation)
       line_equation.gsub(' ', '').insert(line_equation.length, '=')
     end
+
   end
 end
+

@@ -358,180 +358,180 @@ class GeometryTest < Minitest::Test
     assert_equal(false, Line2dCanon.new(Point.new(0, 0), Point.new(1, 0)).point_is_on_line?(Point.new(1, 1)))
   end
 
-    def test_process_cf_1
-      assert_equal(3, process_cf('x/3', 'x'))
-    end
+  def test_process_cf_1
+    assert_equal(3, process_cf('x/3', 'x'))
+  end
 
-    def test_process_cf_2
-      assert_equal(3, process_cf('y-3/3', 'y'))
-    end
+  def test_process_cf_2
+    assert_equal(3, process_cf('y-3/3', 'y'))
+  end
 
-    def test_process_cf_3
-      assert_equal(3, process_cf('(z-500)/3', 'z'))
-    end
+  def test_process_cf_3
+    assert_equal(3, process_cf('(z-500)/3', 'z'))
+  end
 
-    def test_process_cf_zero
-      assert_equal(0, process_cf('y/3', 'x'))
-    end
+  def test_process_cf_zero
+    assert_equal(0, process_cf('y/3', 'x'))
+  end
 
-    def test_cut_by_eq
-      assert_equal('123hello', cut_by_eq('qqqqq=123hello'))
-    end
-
-
-    def test_directing_vector3d_exception
-      directing_vector3d('z/34=(y-5)/2')
-    rescue Exception => ex
-      assert_equal(VariablesOrderException, ex.class)
-    end
+  def test_cut_by_eq
+    assert_equal('123hello', cut_by_eq('qqqqq=123hello'))
+  end
 
 
-    def test_needed_variables_order_1?
-      assert_equal(true, needed_variables_order?(3, 6))
-    end
-
-    def test_needed_variables_order_2?
-      assert_equal(false, needed_variables_order?(6, 6))
-    end
-    def test_needed_variables_order_3?
-      assert_equal(false, needed_variables_order?(10, 6))
-    end
-
-    def test_process_free_member_1
-      assert_equal(3, process_free_member('(x-3)/32', 'x'))
-    end
-
-    def test_process_free_member_2
-      assert_equal(4, process_free_member('(y-4)/12', 'y'))
-    end
-
-    def test_process_free_member_3
-      assert_equal(-4, process_free_member('(z+4)/3', 'z'))
-    end
-
-    def test_process_free_member_4
-      assert_equal(0.0, process_free_member('y/3', 'z'))
-    end
+  def test_directing_vector3d_exception
+    directing_vector3d('z/34=(y-5)/2')
+  rescue Exception => ex
+    assert_equal(VariablesOrderException, ex.class)
+  end
 
 
-    def test_height_point_3d_1
-      assert_equal([3, 1, -1], height_point_3d('(x-3)/2=(y-1)/1=(z+1)/2'))
-    end
+  def test_needed_variables_order_1?
+    assert_equal(true, needed_variables_order?(3, 6))
+  end
 
-    def test_height_point_3d_2
-      assert_equal([3, 1, 0], height_point_3d('(x-3)/2=(y-1)/1'))
-    end
+  def test_needed_variables_order_2?
+    assert_equal(false, needed_variables_order?(6, 6))
+  end
+  def test_needed_variables_order_3?
+    assert_equal(false, needed_variables_order?(10, 6))
+  end
 
+  def test_process_free_member_1
+    assert_equal(3, process_free_member('(x-3)/32', 'x'))
+  end
 
-    def test_height_point_3d_exception
-      height_point_3d('z/34=(y-5)/2')
-    rescue Exception => ex
-      assert_equal(VariablesOrderException, ex.class)
-    end
+  def test_process_free_member_2
+    assert_equal(4, process_free_member('(y-4)/12', 'y'))
+  end
 
+  def test_process_free_member_3
+    assert_equal(-4, process_free_member('(z+4)/3', 'z'))
+  end
 
-    def test_vectors_product
-      assert_equal([2, -14, 5], vectors_product([3, -1, -4], [2, 1, 2]))
-    end
-
-    def test_vector_length
-      assert_in_delta(5.385164807, vector_length([2, 3, -4]), 0.00001)
-    end
-
-
-    def test_distance_point_to_line3d_exception
-      point_to_line_distance_3d(Point3d.new(0, 2, 3), 'z/34=(y-5)/2')
-    rescue Exception => ex
-      assert_equal(VariablesOrderException, ex.class)
-    end
-
-    def test_vector3d_init_1
-      v= Vector3d.new(Point3d.new(0,0,0))
-      assert_equal(true,v.x.eql?(0) && v.y.eql?(0) && v.z.eql?(0))
-    end
-
-    def test_vector3d_init_2
-      v= Vector3d.new(Point3d.new(1,1,1))
-      assert_equal(true,v.x.eql?(1) && v.y.eql?(1) && v.z.eql?(1))
-    end
-
-    def test_vector3d_init_3
-      v= Vector3d.new(Point3d.new(1,2,3))
-      assert_equal(true,v.x.eql?(1) && v.y.eql?(2) && v.z.eql?(3))
-    end
-    def test_vector3d_init_4
-      v= Vector3d.new(Point3d.new(1.0,2.0,3.0))
-      assert_equal(true,v.x.eql?(1.0) && v.y.eql?(2.0) && v.z.eql?(3.0))
-    end
-
-    def test_zero_vector_1
-      v= Vector3d.new(Point3d.new(0,0,0))
-      assert_equal(true,v.zero_vector?)
-    end
-
-    def test_zero_vector_2
-      v= Vector3d.new(Point3d.new(1,0,0))
-      assert_equal(false,v.zero_vector?)
-    end
-
-    def test_zero_vector_3
-      v= Vector3d.new(Point3d.new(0,1,0))
-      assert_equal(false,v.zero_vector?)
-    end
-
-    def test_zero_vector_4
-      v= Vector3d.new(Point3d.new(0,0,1))
-      assert_equal(false,v.zero_vector?)
-    end
-
-    def test_length_vector_1
-      v= Vector3d.new(Point3d.new(0,0,0))
-      assert_equal(0,v.length)
-    end
-
-    def test_length_vector_2
-      v= Vector3d.new(Point3d.new(1,1,1))
-      assert_in_delta(1.7320508075688772,v.length,0.00001)
-    end
-
-    def test_length_vector_3
-      v= Vector3d.new(Point3d.new(3,0,4))
-      assert_equal(5,v.length)
-    end
-
-    def test_length_vector_4
-      v= Vector3d.new(Point3d.new(-3,0,-4))
-      assert_equal(5,v.length)
-    end
+  def test_process_free_member_4
+    assert_equal(0.0, process_free_member('y/3', 'z'))
+  end
 
 
-    def test_addition_vector_1
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(0,0,0))
-      v1.addition!(v2)
-      assert_equal(true,v1.x.eql?(1) && v1.y.eql?(1) && v1.z.eql?(1))
-    end
+  def test_height_point_3d_1
+    assert_equal([3, 1, -1], height_point_3d('(x-3)/2=(y-1)/1=(z+1)/2'))
+  end
 
-    def test_addition_vector_2
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(1,1,1))
-      v1.addition!(v2)
-      assert_equal(true,v1.x.eql?(2) && v1.y.eql?(2) && v1.z.eql?(2))
-    end
+  def test_height_point_3d_2
+    assert_equal([3, 1, 0], height_point_3d('(x-3)/2=(y-1)/1'))
+  end
 
-    def test_addition_vector_3
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(0.5,0.5,0.5))
-      v1.addition!(v2)
-      assert_equal(true,v1.x.eql?(1.5) && v1.y.eql?(1.5) && v1.z.eql?(1.5))
-    end
 
-    def test_addition_vector_4
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(-1,-1,-1))
-      v1.addition!(v2)
-      assert_equal(true,v1.zero_vector?)
-    end
+  def test_height_point_3d_exception
+    height_point_3d('z/34=(y-5)/2')
+  rescue Exception => ex
+    assert_equal(VariablesOrderException, ex.class)
+  end
+
+
+  def test_vectors_product
+    assert_equal([2, -14, 5], vectors_product([3, -1, -4], [2, 1, 2]))
+  end
+
+  def test_vector_length
+    assert_in_delta(5.385164807, vector_length([2, 3, -4]), 0.00001)
+  end
+
+
+  def test_distance_point_to_line3d_exception
+    point_to_line_distance_3d(Point3d.new(0, 2, 3), 'z/34=(y-5)/2')
+  rescue Exception => ex
+    assert_equal(VariablesOrderException, ex.class)
+  end
+
+  def test_vector3d_init_1
+    v= Vector3d.new(Point3d.new(0,0,0))
+    assert_equal(true,v.x.eql?(0) && v.y.eql?(0) && v.z.eql?(0))
+  end
+
+  def test_vector3d_init_2
+    v= Vector3d.new(Point3d.new(1,1,1))
+    assert_equal(true,v.x.eql?(1) && v.y.eql?(1) && v.z.eql?(1))
+  end
+
+  def test_vector3d_init_3
+    v= Vector3d.new(Point3d.new(1,2,3))
+    assert_equal(true,v.x.eql?(1) && v.y.eql?(2) && v.z.eql?(3))
+  end
+  def test_vector3d_init_4
+    v= Vector3d.new(Point3d.new(1.0,2.0,3.0))
+    assert_equal(true,v.x.eql?(1.0) && v.y.eql?(2.0) && v.z.eql?(3.0))
+  end
+
+  def test_zero_vector_1
+    v= Vector3d.new(Point3d.new(0,0,0))
+    assert_equal(true,v.zero_vector?)
+  end
+
+  def test_zero_vector_2
+    v= Vector3d.new(Point3d.new(1,0,0))
+    assert_equal(false,v.zero_vector?)
+  end
+
+  def test_zero_vector_3
+    v= Vector3d.new(Point3d.new(0,1,0))
+    assert_equal(false,v.zero_vector?)
+  end
+
+  def test_zero_vector_4
+    v= Vector3d.new(Point3d.new(0,0,1))
+    assert_equal(false,v.zero_vector?)
+  end
+
+  def test_length_vector_1
+    v= Vector3d.new(Point3d.new(0,0,0))
+    assert_equal(0,v.length)
+  end
+
+  def test_length_vector_2
+    v= Vector3d.new(Point3d.new(1,1,1))
+    assert_in_delta(1.7320508075688772,v.length,0.00001)
+  end
+
+  def test_length_vector_3
+    v= Vector3d.new(Point3d.new(3,0,4))
+    assert_equal(5,v.length)
+  end
+
+  def test_length_vector_4
+    v= Vector3d.new(Point3d.new(-3,0,-4))
+    assert_equal(5,v.length)
+  end
+
+
+  def test_addition_vector_1
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(0,0,0))
+    v1.addition!(v2)
+    assert_equal(true,v1.x.eql?(1) && v1.y.eql?(1) && v1.z.eql?(1))
+  end
+
+  def test_addition_vector_2
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(1,1,1))
+    v1.addition!(v2)
+    assert_equal(true,v1.x.eql?(2) && v1.y.eql?(2) && v1.z.eql?(2))
+  end
+
+  def test_addition_vector_3
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(0.5,0.5,0.5))
+    v1.addition!(v2)
+    assert_equal(true,v1.x.eql?(1.5) && v1.y.eql?(1.5) && v1.z.eql?(1.5))
+  end
+
+  def test_addition_vector_4
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(-1,-1,-1))
+    v1.addition!(v2)
+    assert_equal(true,v1.zero_vector?)
+  end
 
   def test_addition_vector_5
     v1= Vector3d.new(Point3d.new(1,1,1))
@@ -540,125 +540,134 @@ class GeometryTest < Minitest::Test
     assert_equal(true,v1.x.eql?(0.5) && v1.y.eql?(0.5) && v1.z.eql?(0.5))
   end
 
-    def test_substraction_1
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(0,0,0))
-      v1.subtraction!(v2)
-      assert_equal(true,v1.x.eql?(1) && v1.y.eql?(1) && v1.z.eql?(1))
-    end
+  def test_substraction_1
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(0,0,0))
+    v1.subtraction!(v2)
+    assert_equal(true,v1.x.eql?(1) && v1.y.eql?(1) && v1.z.eql?(1))
+  end
 
-    def test_substraction_2
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(1,1,1))
-      v1.subtraction!(v2)
-      assert_equal(true,v1.zero_vector?)
-    end
+  def test_substraction_2
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(1,1,1))
+    v1.subtraction!(v2)
+    assert_equal(true,v1.zero_vector?)
+  end
 
-    def test_substraction_3
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(0.5,0.5,0.5))
-      v1.subtraction!(v2)
-      assert_equal(true,v1.x.eql?(0.5) && v1.y.eql?(0.5) && v1.z.eql?(0.5))
-    end
+  def test_substraction_3
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(0.5,0.5,0.5))
+    v1.subtraction!(v2)
+    assert_equal(true,v1.x.eql?(0.5) && v1.y.eql?(0.5) && v1.z.eql?(0.5))
+  end
 
-    def test_substraction_4
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(-1,-1,-1))
-      v1.subtraction!(v2)
-      assert_equal(true,v1.x.eql?(2) && v1.y.eql?(2) && v1.z.eql?(2))
-    end
+  def test_substraction_4
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(-1,-1,-1))
+    v1.subtraction!(v2)
+    assert_equal(true,v1.x.eql?(2) && v1.y.eql?(2) && v1.z.eql?(2))
+  end
 
-    def test_substraction_5
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(-0.5,-0.5,-0.5))
-      v1.subtraction!(v2)
-      assert_equal(true,v1.x.eql?(1.5) && v1.y.eql?(1.5) && v1.z.eql?(1.5))
-    end
+  def test_substraction_5
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(-0.5,-0.5,-0.5))
+    v1.subtraction!(v2)
+    assert_equal(true,v1.x.eql?(1.5) && v1.y.eql?(1.5) && v1.z.eql?(1.5))
+  end
 
-    def test_multiplication_by_number_vector_1
-      v= Vector3d.new(Point3d.new(0,0,0))
-      v.multiplication_by_number!(0)
-      assert_equal(true,v.zero_vector?)
-    end
+  def test_multiplication_by_number_vector_1
+    v= Vector3d.new(Point3d.new(0,0,0))
+    v.multiplication_by_number!(0)
+    assert_equal(true,v.zero_vector?)
+  end
 
-    def test_multiplication_by_number_vector_2
-      v= Vector3d.new(Point3d.new(0,0,0))
-      v.multiplication_by_number!(10)
-      assert_equal(true,v.zero_vector?)
-    end
+  def test_multiplication_by_number_vector_2
+    v= Vector3d.new(Point3d.new(0,0,0))
+    v.multiplication_by_number!(10)
+    assert_equal(true,v.zero_vector?)
+  end
 
-    def test_multiplication_by_number_vector_3
-      v= Vector3d.new(Point3d.new(1,1,1))
-      v.multiplication_by_number!(10)
-      assert_equal(true,v.x.eql?(10) && v.y.eql?(10) && v.z.eql?(10))
-    end
+  def test_multiplication_by_number_vector_3
+    v= Vector3d.new(Point3d.new(1,1,1))
+    v.multiplication_by_number!(10)
+    assert_equal(true,v.x.eql?(10) && v.y.eql?(10) && v.z.eql?(10))
+  end
 
-    def test_multiplication_by_number_vector_4
-      v= Vector3d.new(Point3d.new(1,1,1))
-      v.multiplication_by_number!(-1)
-      assert_equal(true,v.x.eql?(-1) && v.y.eql?(-1) && v.z.eql?(-1))
-    end
+  def test_multiplication_by_number_vector_4
+    v= Vector3d.new(Point3d.new(1,1,1))
+    v.multiplication_by_number!(-1)
+    assert_equal(true,v.x.eql?(-1) && v.y.eql?(-1) && v.z.eql?(-1))
+  end
 
-    def test_multiplication_by_number_vector_5
-      v= Vector3d.new(Point3d.new(1,4,5))
-      v.multiplication_by_number!(2.3)
-      assert_equal(true,v.x.eql?(2.3) && v.y.eql?(9.2) && v.z.eql?(11.5))
-    end
+  def test_multiplication_by_number_vector_5
+    v= Vector3d.new(Point3d.new(1,4,5))
+    v.multiplication_by_number!(2.3)
+    assert_equal(true,v.x.eql?(2.3) && v.y.eql?(9.2) && v.z.eql?(11.5))
+  end
 
-    def test_scalar_multiplication_1
-      v1= Vector3d.new(Point3d.new(0,0,0))
-      v2= Vector3d.new(Point3d.new(1,1,1))
-      assert_equal(0,v1.scalar_multiplication(v2))
-    end
+  def test_scalar_multiplication_1
+    v1= Vector3d.new(Point3d.new(0,0,0))
+    v2= Vector3d.new(Point3d.new(1,1,1))
+    assert_equal(0,v1.scalar_multiplication(v2))
+  end
 
-    def test_scalar_multiplication_2
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(1,1,1))
-      assert_equal(3,v1.scalar_multiplication(v2))
-    end
+  def test_scalar_multiplication_2
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(1,1,1))
+    assert_equal(3,v1.scalar_multiplication(v2))
+  end
 
-    def test_scalar_multiplication_3
-      v1= Vector3d.new(Point3d.new(-5,0.5,3))
-      v2= Vector3d.new(Point3d.new(1,10,5))
-      assert_equal(15,v1.scalar_multiplication(v2))
-    end
+  def test_scalar_multiplication_3
+    v1= Vector3d.new(Point3d.new(-5,0.5,3))
+    v2= Vector3d.new(Point3d.new(1,10,5))
+    assert_equal(15,v1.scalar_multiplication(v2))
+  end
 
-    def test_1_cos_between_vectors
-      v1= Vector3d.new(Point3d.new(1,1,1))
-      v2= Vector3d.new(Point3d.new(2,2,2))
-      assert_in_delta(1,v1.cos_between_vectors(v2),0.00001)
-    end
+  def test_1_cos_between_vectors
+    v1= Vector3d.new(Point3d.new(1,1,1))
+    v2= Vector3d.new(Point3d.new(2,2,2))
+    assert_in_delta(1,v1.cos_between_vectors(v2),0.00001)
+  end
 
-    def test_2_cos_between_vectors
-      v1= Vector3d.new(Point3d.new(0,1,2))
-      v2= Vector3d.new(Point3d.new(7,6,5))
-      assert_in_delta(0.6822422923379534,v1.cos_between_vectors(v2),0.00001)
-    end
+  def test_2_cos_between_vectors
+    v1= Vector3d.new(Point3d.new(0,1,2))
+    v2= Vector3d.new(Point3d.new(7,6,5))
+    assert_in_delta(0.6822422923379534,v1.cos_between_vectors(v2),0.00001)
+  end
 
-    def test_3_cos_between_vectors
-      v1= Vector3d.new(Point3d.new(-5,0,3))
-      v2= Vector3d.new(Point3d.new(2,2,8))
-      assert_in_delta(0.2829582292090551,v1.cos_between_vectors(v2),0.00001)
-    end
+  def test_3_cos_between_vectors
+    v1= Vector3d.new(Point3d.new(-5,0,3))
+    v2= Vector3d.new(Point3d.new(2,2,8))
+    assert_in_delta(0.2829582292090551,v1.cos_between_vectors(v2),0.00001)
+  end
 
-    def test_vector_multiplication_1
-      v1= Vector3d.new(Point3d.new(0,0,0))
-      v2= Vector3d.new(Point3d.new(2,1,-2))
-      vr=v1.vector_multiplication(v2)
-      assert_equal(true,vr.zero_vector?)
-    end
+  def test_vector_multiplication_1
+    v1= Vector3d.new(Point3d.new(0,0,0))
+    v2= Vector3d.new(Point3d.new(2,1,-2))
+    vr=v1.vector_multiplication(v2)
+    assert_equal(true,vr.zero_vector?)
+  end
 
-    def test_vector_multiplication_2
-      v1= Vector3d.new(Point3d.new(1,2,3))
-      v2= Vector3d.new(Point3d.new(2,1,-2))
-      vr=v1.vector_multiplication(v2)
-      assert_equal(true,vr.x.eql?(-7) && vr.y.eql?(8) && vr.z.eql?(-3))
-    end
+  def test_vector_multiplication_2
+    v1= Vector3d.new(Point3d.new(1,2,3))
+    v2= Vector3d.new(Point3d.new(2,1,-2))
+    vr=v1.vector_multiplication(v2)
+    assert_equal(true,vr.x.eql?(-7) && vr.y.eql?(8) && vr.z.eql?(-3))
+  end
 
-    def test_vector_multiplication_3
-      v1= Vector3d.new(Point3d.new(-1,2,-2))
-      v2= Vector3d.new(Point3d.new(2,1,-1))
-      vr=v1.vector_multiplication(v2)
-      assert_equal(true,vr.x.eql?(0) && vr.y.eql?(-5) && vr.z.eql?(-5))
-    end
+  def test_vector_multiplication_3
+    v1= Vector3d.new(Point3d.new(-1,2,-2))
+    v2= Vector3d.new(Point3d.new(2,1,-1))
+    vr=v1.vector_multiplication(v2)
+    assert_equal(true,vr.x.eql?(0) && vr.y.eql?(-5) && vr.z.eql?(-5))
+  end
+  
+  def test_divide_min_simple
+    #assert_equal(1, divide_min([Point.new(1,1), Point.new(2,1), Point.new(3,2)]))
+  end
+
+  def test_divide_min_simple1
+    #assert_in_delta(241.00095342953614, divide_min([Point.new(127, 591), Point.new(-503, -202), Point.new(5, 50)]), 0.0001)
+  end
 end
+
