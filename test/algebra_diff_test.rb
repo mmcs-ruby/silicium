@@ -89,5 +89,4 @@ class AlgebraDiffTest < Minitest::Test
   def test_diff_exceptions
     assert_raises(NameError) { @diff.differentiate(4 * x) }
   end
-
 end

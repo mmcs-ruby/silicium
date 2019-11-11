@@ -105,15 +105,16 @@ module Silicium
       end
 
       def split_by_op(str)
-        space_clear_str = str.gsub(/\s/, '')
+        space_clear_str = str.gsub(/\s/,'')
         pos_tokens = space_clear_str.split('+')
         split_by_neg(pos_tokens)
       end
 
-      def keep_split(str, delim)
+
+      def keep_split(str,delim)
         res = str.split(delim)
         return [] if res.length == 0
-        [res.first] + res[1, res.length - 1].map { |x| x = delim + x }
+        [res.first] + res[1,res.length - 1].map {|x| x = delim + x }
       end
 
       def split_by_neg(pos_tokens)
@@ -125,11 +126,7 @@ module Silicium
       end
 
       def get_coef_inner(cur_deg, deg)
-        if deg == 0
-          return cur_deg
-        else
-          return deg
-        end
+        deg.zero? ? cur_deg : deg
       end
 
       def process_term(term, cf, deg)
@@ -145,7 +142,6 @@ module Silicium
         deg = cur_deg
       end
 
-
 # intialize cur_cf and cur_deg depend on current term
       def initialize_cf_deg(term, par_cf, par_deg)
         return [term.to_f, 0] if free_term? term
@@ -160,7 +156,6 @@ module Silicium
       def free_term?(term)
         term.scan(/[a-z]/).empty?
       end
-
 ##
 # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
       def insert_zeroes(arr, count)
@@ -270,6 +265,7 @@ module Silicium
       def form_right(args_pack)
         i, major, level, root_dif, kf_dif, cur_root_count = args_pack
         edge_right = i == cur_root_count[level] ? major : root_dif[level - 1][i - 1]
+
         right_val = eval_by_cf(level, edge_right, kf_dif[level])
         sigh_right = right_val.positive? ? 1 : -1
         [edge_right, right_val, sigh_right]
@@ -333,11 +329,13 @@ module Silicium
         root_dif[1][0] = -coef_diff[1][0] / coef_diff[1][1]
       end
 
+
       def real_differentiration(deg, coef_diff)
         loop do
           j = deg
           loop do
             coef_diff[deg - 1][j - 1] = coef_diff[deg][j] * j
+
             j -= 1
             break if j.zero?
           end
@@ -367,7 +365,6 @@ module Silicium
           ''
         end
       end
-
     end
   end
 end
