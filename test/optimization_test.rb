@@ -192,20 +192,20 @@ class SiliciumTest < Minitest::Test
     assert_equal switch_step(2, 3, [10], 0), 10
   end
 
-  def test_determinant_Sarryus
+  def test_determinant_sarryus
     m = FastMatrix::Matrix.build(3, 3){|i, j| i + j}
-    assert_equal determinant_Sarryus(m), 0
+    assert_equal determinant_sarryus(m), 0
   end
 
-  def test_determinant_Sarryus_zero
+  def test_determinant_sarryus_zero
     m = FastMatrix::Matrix.build(3, 3){|i, j| i + j}
-    assert_equal determinant_Sarryus(m), 0
+    assert_equal determinant_sarryus(m), 0
   end
 
-  def test_determinant_Sarryus_standart
+  def test_determinant_sarryus_standard_2
     m = FastMatrix::Matrix.build(4, 4){|i, j| i + j}
     assert_raises(ArgumentError) do
-      determinant_Sarryus(m)
+      determinant_sarryus(m)
     end
   end
 
