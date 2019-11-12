@@ -7,18 +7,7 @@ include Silicium::Plotter
 module Combinatorics
 
   def factorial(n)
-    res = (1..n).inject(:*) || 1
-    res
-  end
-
-  ##
-  #Factorial for counting 3 parameters in one run
-  def fact(n, k)
-    res = [1,1,1]
-    if n > 1
-      fact_n_greater_1(n, k, res)
-    end
-    res
+    (1..n).inject(:*) || 1
   end
 
   ##
@@ -45,6 +34,14 @@ module Combinatorics
 
   private
 
+  def fact(n, k)
+    res = [1,1,1]
+    if n > 1
+      fact_n_greater_1(n, k, res)
+    end
+    res
+  end
+
   def fact_n_greater_1(n,k, res)
     c = 1
     for i in 2..n
@@ -65,7 +62,7 @@ module Combinatorics
   
 end
 
-module Cubes
+module Dice
 
   ##
   # Class represents a polyhedron
@@ -111,7 +108,6 @@ module Cubes
 
   ##
   # Class represents a PolyhedronsSet
-  # percentage - hash with chances of getting definite score
   class PolyhedronSet
 
     def initialize(arr)
@@ -119,6 +115,7 @@ module Cubes
       @percentage = count_chance_sum
     end
 
+    # hash with chances of getting definite score
     def percentage
       @percentage
     end
@@ -126,18 +123,17 @@ module Cubes
     ##
     # returns array of polyhedrons
     def to_s
-      res = @pons.map {|item| item.to_s}
-      res
+      @pons.map {|item| item.to_s}
     end
 
     ##
-    # ability to throw a polyhedron's set using hash of chances
+    # ability to throw a polyhedron set using hash of chances
     def throw
       sum = 0
       r = rand
       @percentage.each do |item|
         sum += item[1]
-        if sum > r
+        if sum >= r
           item[0]
           break
         end
@@ -159,7 +155,11 @@ module Cubes
     def parse_pons(arr)
       res = []
       arr.each do |item|
-        res << Polyhedron.new(item)
+        if item.is_a?(Integer) or item.is_a?(Array)
+          res << Polyhedron.new(item)
+        elsif item.is_a?(Polyhedron)
+          res << item
+        end
       end
       res
     end
@@ -213,7 +213,6 @@ module Cubes
         arr2 = @pons[i].sides
         h1 = count_chance_sum_chances_step(arr1, arr2, arr3, h)
         h = h1
-        h1 = Hash.new
       end
       res = Hash.new
       fchance = @pons.inject(1) { |mult, item| mult * item.csides }

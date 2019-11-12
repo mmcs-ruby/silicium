@@ -7,7 +7,7 @@ class Test < Minitest::Test
 
 	include Combinatorics
 	include Silicium::Plotter
-	include Cubes
+	include Dice
 
 	def test_factorial
 		assert_equal factorial(10), 3628800
