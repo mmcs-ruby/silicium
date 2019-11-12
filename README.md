@@ -26,16 +26,16 @@ Or install it yourself as:
 
 ## Usage
 
-###Theory of probability
+### Theory of probability
 
-####Combinatorics
+#### Combinatorics
 Module with usual combinatorics formulas
 ```
     factorial(5) # 5! = 120
     combination(n, k) # C(n, k) = n! / (k! * (n-k)!)
     arrangement(n, k) # A(n, k) = n! / (n - k)!
 ```
-####Module Dice
+#### Module Dice
 
 Module describing both ordinary and unique dices 
 
@@ -65,7 +65,7 @@ d1.sides # [1,3,5,6]
 d1.throw # getting random side (from 1 or 3 or 5 or 8)
 ```
 
-####Class PolyhedronSet
+#### Class PolyhedronSet
 
 You can initialize PolyhedronSet by array of:
 
