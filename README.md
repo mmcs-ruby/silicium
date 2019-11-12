@@ -27,6 +27,7 @@ Or install it yourself as:
 ## Usage
 
 ###Theory of probability
+
 ####Combinatorics
 Module with usual combinatorics formulas
 ```
@@ -35,6 +36,7 @@ Module with usual combinatorics formulas
     arrangement(n, k) # A(n, k) = n! / (n - k)!
 ```
 ####Module Dice
+
 Module describing both ordinary and unique dices 
 
 You can initialize a Polyhedron by two ways
@@ -48,7 +50,9 @@ class Polyhedron
     sides  # array of sides
     throw # method of random getting on of the Polyhedron's sides
 ```
+
 Example
+
 ```
 d = Polyhedron.new(8)
 d.csides # 8
@@ -60,7 +64,9 @@ d1.csides # 4
 d1.sides # [1,3,5,6]
 d1.throw # getting random side (from 1 or 3 or 5 or 8)
 ```
+
 ####Class PolyhedronSet
+
 You can initialize PolyhedronSet by array of:
 
 Polyhedrons
@@ -74,7 +80,9 @@ class PolyhedronSet
     throw   # method of getting points from throwing polyhedrons
     make_graph_by_plotter # creating graph introducing chances of getting score
 ```
+
 Example
+
 ```
 s = PolyhedronSet.new([6, [1,2,3,4,5,6], Polyhedron.new(6)]) 
 
