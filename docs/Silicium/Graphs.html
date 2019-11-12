@@ -68,7 +68,17 @@
 
   <ul class="link-list" role="directory">
     
+    <li ><a href="#method-i-add_to_queue">#add_to_queue</a>
+    
+    <li ><a href="#method-i-breadth_first_search-3F">#breadth_first_search?</a>
+    
+    <li ><a href="#method-i-connected-3F">#connected?</a>
+    
+    <li ><a href="#method-i-dfu">#dfu</a>
+    
     <li ><a href="#method-i-dijkstra_algorythm">#dijkstra_algorythm</a>
+    
+    <li ><a href="#method-i-number_of_connected">#number_of_connected</a>
     
   </ul>
 </div>
@@ -116,6 +126,165 @@
        </header>
 
     
+      <div id="method-i-add_to_queue" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">add_to_queue</span><span
+            class="method-args">(graph, queue, node, visited)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="add_to_queue-source">
+            <pre><span class="ruby-comment"># File lib/graph.rb, line 196</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">add_to_queue</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">queue</span>, <span class="ruby-identifier">node</span>, <span class="ruby-identifier">visited</span>)
+<span class="ruby-identifier">graph</span>.<span class="ruby-identifier">vertices</span>[<span class="ruby-identifier">node</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">child</span><span class="ruby-operator">|</span>
+  <span class="ruby-keyword">unless</span> <span class="ruby-identifier">visited</span>[<span class="ruby-identifier">child</span>]
+    <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">child</span>)
+    <span class="ruby-identifier">visited</span>[<span class="ruby-identifier">child</span>] = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-breadth_first_search-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">breadth_first_search?</span><span
+            class="method-args">(graph, start, goal)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="breadth_first_search-3F-source">
+            <pre><span class="ruby-comment"># File lib/graph.rb, line 181</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">breadth_first_search?</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">goal</span>)
+  <span class="ruby-identifier">visited</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">queue</span> = <span class="ruby-constant">Queue</span>.<span class="ruby-identifier">new</span>
+  <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">push</span>(<span class="ruby-identifier">start</span>)
+  <span class="ruby-identifier">visited</span>[<span class="ruby-identifier">start</span>] = <span class="ruby-keyword">true</span>
+  <span class="ruby-keyword">until</span> <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">empty?</span> <span class="ruby-keyword">do</span>
+    <span class="ruby-identifier">node</span> = <span class="ruby-identifier">queue</span>.<span class="ruby-identifier">pop</span>
+    <span class="ruby-keyword">if</span> <span class="ruby-identifier">node</span> <span class="ruby-operator">==</span> <span class="ruby-identifier">goal</span>
+      <span class="ruby-keyword">return</span> <span class="ruby-keyword">true</span>
+    <span class="ruby-keyword">end</span>
+    <span class="ruby-identifier">add_to_queue</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">queue</span>, <span class="ruby-identifier">node</span>, <span class="ruby-identifier">visited</span>)
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">false</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-connected-3F" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">connected?</span><span
+            class="method-args">(graph)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="connected-3F-source">
+            <pre><span class="ruby-comment"># File lib/graph.rb, line 205</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">connected?</span>(<span class="ruby-identifier">graph</span>)
+  <span class="ruby-identifier">start</span> = <span class="ruby-identifier">graph</span>.<span class="ruby-identifier">vertices</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-value">0</span>]
+  <span class="ruby-identifier">goal</span> = <span class="ruby-identifier">graph</span>.<span class="ruby-identifier">vertices</span>.<span class="ruby-identifier">keys</span>[<span class="ruby-identifier">graph</span>.<span class="ruby-identifier">vertex_number</span> <span class="ruby-operator">-</span> <span class="ruby-value">1</span>]
+  <span class="ruby-identifier">pred</span> = <span class="ruby-identifier">breadth_first_search?</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">start</span>, <span class="ruby-identifier">goal</span>)
+  <span class="ruby-identifier">graph</span>.<span class="ruby-identifier">reverse!</span>
+  <span class="ruby-identifier">pred</span> = <span class="ruby-identifier">pred</span> <span class="ruby-keyword">and</span> <span class="ruby-identifier">breadth_first_search?</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">goal</span>, <span class="ruby-identifier">start</span>)
+  <span class="ruby-identifier">graph</span>.<span class="ruby-identifier">reverse!</span>
+  <span class="ruby-identifier">pred</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-dfu" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">dfu</span><span
+            class="method-args">(graph, vertice, visited)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="dfu-source">
+            <pre><span class="ruby-comment"># File lib/graph.rb, line 227</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">dfu</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">vertice</span>, <span class="ruby-identifier">visited</span>)
+  <span class="ruby-identifier">visited</span>[<span class="ruby-identifier">vertice</span>] = <span class="ruby-keyword">true</span>
+  <span class="ruby-identifier">graph</span>.<span class="ruby-identifier">vertices</span>[<span class="ruby-identifier">vertice</span>].<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">item</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">visited</span>[<span class="ruby-identifier">item</span>]
+      <span class="ruby-identifier">dfu</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">item</span>, <span class="ruby-identifier">visited</span>)
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
       <div id="method-i-dijkstra_algorythm" class="method-detail ">
         
         <div class="method-heading">
@@ -135,9 +304,50 @@
 
           
           <div class="method-source-code" id="dijkstra_algorythm-source">
-            <pre><span class="ruby-comment"># File lib/graph.rb, line 159</span>
+            <pre><span class="ruby-comment"># File lib/graph.rb, line 236</span>
 <span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">dijkstra_algorythm</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">starting_vertex</span>)
   <span class="ruby-comment">#</span>
+<span class="ruby-keyword">end</span></pre>
+          </div>
+          
+        </div>
+
+        
+
+        
+      </div>
+
+    
+      <div id="method-i-number_of_connected" class="method-detail ">
+        
+        <div class="method-heading">
+          <span class="method-name">number_of_connected</span><span
+            class="method-args">(graph)</span>
+          
+          <span class="method-click-advice">click to toggle source</span>
+          
+        </div>
+        
+
+        <div class="method-description">
+          
+          
+          
+          
+
+          
+          <div class="method-source-code" id="number_of_connected-source">
+            <pre><span class="ruby-comment"># File lib/graph.rb, line 215</span>
+<span class="ruby-keyword">def</span> <span class="ruby-identifier ruby-title">number_of_connected</span>(<span class="ruby-identifier">graph</span>)
+  <span class="ruby-identifier">visited</span> = <span class="ruby-constant">Hash</span>.<span class="ruby-identifier">new</span>(<span class="ruby-keyword">false</span>)
+  <span class="ruby-identifier">res</span> = <span class="ruby-value">0</span>
+  <span class="ruby-identifier">graph</span>.<span class="ruby-identifier">vertices</span>.<span class="ruby-identifier">keys</span>.<span class="ruby-identifier">each</span> <span class="ruby-keyword">do</span> <span class="ruby-operator">|</span><span class="ruby-identifier">v</span><span class="ruby-operator">|</span>
+    <span class="ruby-keyword">unless</span> <span class="ruby-identifier">visited</span>[<span class="ruby-identifier">v</span>]
+      <span class="ruby-identifier">dfu</span>(<span class="ruby-identifier">graph</span>, <span class="ruby-identifier">v</span>, <span class="ruby-identifier">visited</span>)
+      <span class="ruby-identifier">res</span> <span class="ruby-operator">+=</span> <span class="ruby-value">1</span>
+    <span class="ruby-keyword">end</span>
+  <span class="ruby-keyword">end</span>
+  <span class="ruby-identifier">res</span>
 <span class="ruby-keyword">end</span></pre>
           </div>
           

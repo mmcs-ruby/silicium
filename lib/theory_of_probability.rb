@@ -59,7 +59,7 @@ module Combinatorics
       res[2] = arr[3]
     end
   end
-  
+
 end
 
 module Dice
