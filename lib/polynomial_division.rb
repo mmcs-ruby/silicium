@@ -39,7 +39,6 @@ module Silicium
       def str_res_impl(coeff_res, sgn_array)
         res_size = coeff_res.size
         res_exp = ""
-        puts coeff_res
         (0..res_size-1).each do |i|
           res_exp += ((coeff_res[i].ceil(3)).to_s+"*x**"+(res_size - i - 1).to_s)
           if sgn_array[i+1] != '-'
