@@ -153,15 +153,6 @@ module Silicium
     CENTER_Y = Window.height / 2
     MUL = 70/1
 
-
-
-    def fn(x)
-      #Math::asin(Math::sqrt(x))
-      Math::cos(x * 3)
-      #x**2
-      #14/x
-    end
-
     def draw_axes
       Line.new( x1: 0, y1: CENTER_Y, x2: Window.width, y2: CENTER_Y,  width: 1,  color: 'white',  z: 20)
       Line.new( x1: CENTER_X, y1: 0, x2: CENTER_X, y2: Window.height, width: 1,  color: 'white',  z: 20)
@@ -192,7 +183,7 @@ module Silicium
       a *= MUL
       b *= MUL
 
-      return [a, -Window.width * 1.1].max / MUL, [b, Window.width * 1.1].min / MUL
+      [[a, -Window.width * 1.1].max / MUL, [b, Window.width * 1.1].min / MUL]
     end
 
     def draw_fn(a, b, &func)
