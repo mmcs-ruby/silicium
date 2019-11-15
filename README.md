@@ -26,6 +26,8 @@ Or install it yourself as:
 
 ## Usage
 
+### Numerical integration
+
 Library `Numerical integration` 
 includes methods for numerical integration of functions, such as 3/8 method, Simpson method, left, right and middle rectangle methods and trapezoid method.
 
@@ -49,6 +51,78 @@ using the middle rectangle method:
 
 using the trapezoid method: 
 `NumericalIntegration.trapezoid(4, 5) {  |x| 1 / x  }`
+
+### Theory of probability
+
+#### Combinatorics
+Module with usual combinatorics formulas
+```
+    factorial(5) # 5! = 120
+    combination(n, k) # C(n, k) = n! / (k! * (n-k)!)
+    arrangement(n, k) # A(n, k) = n! / (n - k)!
+```
+#### Module Dice
+
+Module describing both ordinary and unique dices 
+
+You can initialize a Polyhedron by two ways
+
+first: by number - Polyhedron.new(6) - creates polyhedron with 6 sides [1,2,3,4,5,6]
+
+second: by array - Polyhedron.new([1,3,5]) - creates polyhedron with 3 sides [1,3,5]
+```
+class Polyhedron
+    csides # sides number
+    sides  # array of sides
+    throw # method of random getting on of the Polyhedron's sides
+```
+
+Example
+
+```
+d = Polyhedron.new(8)
+d.csides # 8
+d.sides # [1,2,3,4,5,6,7,8]
+d.throw # getting random side (from 1 to 8)
+
+d1 = Polyhedron.new([1,3,5,6])
+d1.csides # 4
+d1.sides # [1,3,5,6]
+d1.throw # getting random side (from 1 or 3 or 5 or 8)
+```
+
+#### Class PolyhedronSet
+
+You can initialize PolyhedronSet by array of:
+
+Polyhedrons
+
+Number of Polyhedron's sides
+
+Array of sides
+```
+class PolyhedronSet
+    percentage # hash with chances of getting definite score
+    throw   # method of getting points from throwing polyhedrons
+    make_graph_by_plotter # creating graph introducing chances of getting score
+```
+
+Example
+
+```
+s = PolyhedronSet.new([6, [1,2,3,4,5,6], Polyhedron.new(6)]) 
+
+s.percentage # {3=>0.004629629629629629, 4=>0.013888888888888888, 5=>0.027777777777777776, 6=>0.046296296296296294, 
+              # 7=>0.06944444444444445, 8=>0.09722222222222222, 9=>0.11574074074074074, 
+              # 10=>0.125, 11=>0.125, 12=>0.11574074074074074, 13=>0.09722222222222222, 14=>0.06944444444444445, 
+              # 15=>0.046296296296296294, 16=>0.027777777777777776, 17=>0.013888888888888888, 18=>0.004629629629629629}    
+
+s.throw   # getting random score (from 3 to 18)
+
+s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
+```
+
+TODO: Write usage instructions here
 
 ## Development
 

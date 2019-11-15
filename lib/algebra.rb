@@ -110,6 +110,7 @@ module Silicium
         split_by_neg(pos_tokens)
       end
 
+
       def keep_split(str,delim)
         res = str.split(delim)
         return [] if res.length == 0
@@ -119,17 +120,13 @@ module Silicium
       def split_by_neg(pos_tokens)
         res = []
         pos_tokens.each do |token|
-          res.concat(keep_split(token,'-'))
+          res.concat(keep_split(token, '-'))
         end
         res
       end
 
       def get_coef_inner(cur_deg, deg)
-        if deg == 0
-          return cur_deg
-        else
-          return deg
-        end
+        deg.zero? ? cur_deg : deg
       end
 
       def process_term(term, cf, deg)
@@ -145,7 +142,6 @@ module Silicium
         deg = cur_deg
       end
 
-
 # intialize cur_cf and cur_deg depend on current term
       def initialize_cf_deg(term, par_cf, par_deg)
         return [term.to_f, 0] if free_term? term
@@ -160,25 +156,6 @@ module Silicium
       def free_term?(term)
         term.scan(/[a-z]/).empty?
       end
-
-
-
-# intialize cur_cf and cur_deg depend on current term
-      def initialize_cf_deg(term, par_cf, par_deg)
-        return [term.to_f, 0] if free_term? term
-        cf = if par_cf.empty?
-               term.include?('-') ? -1 : 1
-             else
-               par_cf.to_f
-             end
-        [cf, par_deg.nil? ? 1 : par_deg.delete('^').to_i]
-      end
-
-      def free_term?(term)
-        term.scan(/[a-z]/).empty?
-      end
-
-
 ##
 # +insert_zeroes(arr,count)+ fills empty spaces in the coefficient array
       def insert_zeroes(arr, count)
@@ -229,18 +206,18 @@ module Silicium
         cur_root_count[level] = 0
         # main loop
         (0..cur_root_count[level - 1]).each do |i|
-          step_up_loop([i,major,level,root_dif,cf_dif,cur_root_count])
+          step_up_loop([i, major, level, root_dif, cf_dif, cur_root_count])
         end
       end
 
       def step_up_loop(arr_pack)
-        i,major,level,root_dif,cf_dif,cur_root_count = arr_pack
+        i, major, level, root_dif, cf_dif, cur_root_count = arr_pack
         edge_left, left_val, sign_left = form_left([i, major, level, root_dif, cf_dif])
 
         if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
           return
         end
-        edge_right, right_val, sigh_right = form_right([i, major, level, root_dif, cf_dif,cur_root_count])
+        edge_right, right_val, sigh_right = form_right([i, major, level, root_dif, cf_dif, cur_root_count])
 
         if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
           return
@@ -286,8 +263,9 @@ module Silicium
 
 # forming right edge fro root search
       def form_right(args_pack)
-        i, major, level, root_dif, kf_dif,cur_root_count = args_pack
-        edge_right = i == cur_root_count[level] ? major : root_dif[level - 1][i-1]
+        i, major, level, root_dif, kf_dif, cur_root_count = args_pack
+        edge_right = i == cur_root_count[level] ? major : root_dif[level - 1][i - 1]
+
         right_val = eval_by_cf(level, edge_right, kf_dif[level])
         sigh_right = right_val.positive? ? 1 : -1
         [edge_right, right_val, sigh_right]
@@ -307,9 +285,9 @@ module Silicium
       end
 
 
-      def polynom_real_roots_by_str(deg,str)
+      def polynom_real_roots_by_str(deg, str)
         cf = get_coef(str)
-        polynom_real_roots(deg,cf)
+        polynom_real_roots(deg, cf)
       end
 
 # rationing polynom
@@ -345,17 +323,19 @@ module Silicium
 # forming array of differentiated polynoms, starting from source one
       def form_coef_diff(deg, coef_diff, cur_root_count, root_dif)
         init_coef_diff(coef_diff)
-        real_differentiration(deg,coef_diff)
+        real_differentiration(deg, coef_diff)
         cur_root_count[1] = 1
         init_root_diff(root_dif)
         root_dif[1][0] = -coef_diff[1][0] / coef_diff[1][1]
       end
 
-      def real_differentiration(deg,coef_diff)
+
+      def real_differentiration(deg, coef_diff)
         loop do
           j = deg
           loop do
-            coef_diff[deg-1][j-1] = coef_diff[deg][j] * j
+            coef_diff[deg - 1][j - 1] = coef_diff[deg][j] * j
+
             j -= 1
             break if j.zero?
           end
@@ -369,12 +349,12 @@ module Silicium
         n = coef.length - 1
         s = ''
         (0..n).each do |i|
-          s += coef_to_str_inner(coef, i,s) unless coef[i].zero?
+          s += coef_to_str_inner(coef, i, s) unless coef[i].zero?
         end
         s
       end
 
-      def coef_to_str_inner(coef,i,s)
+      def coef_to_str_inner(coef, i, s)
         i.zero? ? coef[i].to_s : "#{sign(coef[i])}#{coef[i]}*x**#{i}"
       end
 
@@ -385,7 +365,6 @@ module Silicium
           ''
         end
       end
-
-  end
+    end
   end
 end
