@@ -26,6 +26,32 @@ Or install it yourself as:
 
 ## Usage
 
+### Numerical integration
+
+Library `Numerical integration` 
+includes methods for numerical integration of functions, such as 3/8 method, Simpson method, left, right and middle rectangle methods and trapezoid method.
+
+Each function accepts 4 parameters, such as left and right integration boundaries, default accuracy of 0.0001 and the function itself.
+Example: `three_eights_integration(4, 5, 0.01) { |x| 1 / x }` or `three_eights_integration(4, 5) { |x| 1 / x }`
+
+For example, to integrate 1 / x  in between [4, 5] using the 3/8 method, you need to use: 
+`NumericalIntegration.three_eights_integration(4, 5) { |x| 1 / x }`
+
+using the Simpson's method: 
+`NumericalIntegration.simpson_integration(4, 5) {  |x| 1 / x  }`
+
+using the left rectangle method: 
+`NumericalIntegration.left_rect_integration(4, 5) {  |x| 1 / x  }`
+
+using the right rectangle method: 
+`NumericalIntegration.right_rect_integration(4, 5) {  |x| 1 / x  }`
+
+using the middle rectangle method:
+`NumericalIntegration.middle_rectangles(4, 5) {  |x| 1 / x  }`
+
+using the trapezoid method: 
+`NumericalIntegration.trapezoid(4, 5) {  |x| 1 / x  }`
+
 ### Theory of probability
 
 #### Combinatorics
