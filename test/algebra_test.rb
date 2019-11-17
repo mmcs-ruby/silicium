@@ -7,6 +7,7 @@ class AlgebraTest < Minitest::Test
 
   def setup
     @polynom_div = PolynomialDivision.new
+    @polynom = Polynom.new 'x'
   end
 
   def compare_double(val1,val2,eps = 0.001)
@@ -14,63 +15,63 @@ class AlgebraTest < Minitest::Test
   end
 
   def test_that_normal_polynomial
-    assert(polycop('x^2 + 2 * x + 7'), 'Fail')
+    assert(@polynom.send(:polycop, 'x^2 + 2 * x + 7'), 'Fail')
   end
 
   def test_that_normal_polynomial_2
-    assert(polycop('2 * x^5 - x + 2 * x'), 'Fail')
+    assert(@polynom.send(:polycop, '2 * x^5 - x + 2 * x'), 'Fail')
   end
 
   def test_that_normal_polynomial_3
-    assert(polycop(''), 'Fail')
+    assert(@polynom.send(:polycop, ''), 'Fail')
   end
 
   def test_polynomial_with_ln
-    assert(polycop('2 * ln x'), 'Fail')
+    assert(@polynom.send(:polycop, '2 * ln x'), 'Fail')
   end
 
   def test_polynomial_with_log
-    assert(polycop('log x + 2 * 4'), 'Fail')
+    assert(@polynom.send(:polycop, 'log x + 2 * 4'), 'Fail')
   end
 
   def test_polynomial_with_lg
-    assert(polycop('4 * x^3 * lg x'), 'Fail')
+    assert(@polynom.send(:polycop, '4 * x^3 * lg x'), 'Fail')
   end
 
   def test_polynomial_with_log_ln_lg
-    assert(polycop('log x + ln y - lg z'), 'Fail')
+    assert(@polynom.send(:polycop, 'log x + ln y - lg z'), 'Fail')
   end
 
   def test_that_work_exit
-    assert(!polycop('eval(exit)'), 'Fail')
+    assert(!@polynom.send(:polycop, 'eval(exit)'), 'Fail')
   end
 
   def test_that_work_exit_2
-    assert(!polycop('x^2 +2nbbbbb * x + 7'), 'Fail')
+    assert(!@polynom.send(:polycop, 'x^2 +2nbbbbb * x + 7'), 'Fail')
   end
 
   def test_that_work_exit_3
-    assert(polycop('x*b4 + 1'), 'Fail')
+    assert(@polynom.send(:polycop, 'x*b4 + 1'), 'Fail')
   end
 
   def test_degrees
-    assert(polycop('x**4 + 1'), 'Fail')
+    assert(@polynom.send(:polycop, 'x**4 + 1'), 'Fail')
   end
 
   def test_degrees_2
-    assert(polycop('(3*x)x***4 + 1'), 'Fail')
+    assert(@polynom.send(:polycop, '(3*x)x***4 + 1'), 'Fail')
   end
 
   def test_that_work_degrees_2
-    assert(!polycop('3*x^4 - 2*x^3 + 7y - 1'), 'Fail')
+    assert(!@polynom.send(:polycop, '3*x^4 - 2*x^3 + 7y - 1'), 'Fail')
   end
 
   def test_that_work_degrees_3
-    assert(polycop('x**4 + 1'), 'Fail')
+    assert(@polynom.send(:polycop, 'x**4 + 1'), 'Fail')
   end
 
   def test_polycop_exceptions
-    assert_raises(NameError){ polycop(4 * x) }
+    assert_raises(NameError){ @polynom.send(:polynom, 4 * x) }
   end
 
   def test_polynom_real_roots_first_deg
@@ -89,15 +90,13 @@ class AlgebraTest < Minitest::Test
 
   def test_polynom_real_roots_arbitrary_sec_deg
     res = polynom_real_roots_by_str(2,'x^2 - 4 * x + 3')
-    assert(res.all? { |root| compare_double(root,1) ||
-        compare_double(root,3)})
+    assert(res.sort == [1,3])
   end
 
   def test_polynom_real_roots_third_deg
-    res = polynom_real_roots_by_str(2,'x^3 - 3*x^2 - x + 3')
-    assert(res.all? { |root| compare_double(root,-1) ||
-        compare_double(root,3) ||
-        compare_double(root,1)})
+    res = polynom_real_roots_by_str(3,'x^3 - 3*x^2 - x + 3')
+    assert(res.sort == [-1,1,3])
+
   end
 
   def test_that_work_polynom_division
