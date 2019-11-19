@@ -26,9 +26,9 @@ Or install it yourself as:
 
 ## Usage
 
-###Sparse matrix
+### Sparse matrix
 
-####Class SparseMatrix
+#### Class SparseMatrix
 
 Matrix is stored as array of triplets. 
 Triplet = [i , j , elem], where i - row index, j - col index , elem - element value.
