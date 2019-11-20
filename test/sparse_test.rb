@@ -20,8 +20,24 @@ class SparseTest < Minitest::Test
     m.add(0, 0, 1)
 
     assert_equal [[0, 0, 1]], m.triplets
-
   end
+
+  def test_add_not_adding_zeros
+    m = SparseMatrix.new(3, 3)
+    m.add(1, 1, 0)
+
+    assert_equal [], m.triplets
+  end
+
+  def test_add_zero_removes_triplet
+    m = SparseMatrix.new(3, 3)
+    m.add(1, 1, 2)
+    assert_equal [[1, 1, 2]], m.triplets
+
+    m.add(1, 1, 0)
+    assert_equal [], m.triplets
+  end
+
 
   def test_matrices_are_cloning
     m = SparseMatrix.new(3, 3)
@@ -172,6 +188,74 @@ class SparseTest < Minitest::Test
     assert_equal test_s3, m3.show
 
   end
+
+  def test_sugar_adding
+    m = SparseMatrix.new(2, 2)
+    m.add(0, 0, -1)
+    m.add(0, 1, 3)
+    m.add(1, 0, -2)
+    m.add(1, 1, 1)
+
+    m1 = SparseMatrix.new(2, 2)
+    m1.add(0, 0, 1)
+    m1.add(0, 1, 4)
+    m1.add(1, 0, 2)
+    m1.add(1, 1, 9)
+
+    assert_equal [[0, 1, 7], [1, 1, 10]], (m + m1).triplets
+  end
+
+  def test_mult_by_num
+    m = SparseMatrix.new(3, 3)
+    m.add(0, 0, 1)
+    m.add(1, 2, 2)
+    m.add(2, 0, 4)
+    m1 = m.mult_by_num(-2)
+
+    assert_equal [[0, 0, -2], [1, 2, -4], [2, 0, -8]], m1.triplets
+
+  end
+
+  def test_mult_by_num_zero
+    m = SparseMatrix.new(3, 3)
+    m.add(0, 0, 1)
+    m.add(1, 2, 2)
+    m.add(2, 0, 4)
+    m1 = m.mult_by_num(0)
+
+    assert_equal [], m1.triplets
+
+  end
+
+  def test_sugar_multiply
+    m1 = SparseMatrix.new(2, 2)
+    m1.add(0, 1, 1)
+    m1.add(1, 0, 1)
+
+    m2 = SparseMatrix.new(2, 2)
+    m2.add(0, 0, 1)
+    m2.add(1, 1, 1)
+
+    arr = m1 * m2
+    assert_equal [[0, 1], [1, 0]], arr
+  end
+
+  def test_sugar_subtraction
+    m = SparseMatrix.new(2, 2)
+    m.add(0, 0, -1)
+    m.add(0, 1, 3)
+    m.add(1, 0, 2)
+    m.add(1, 1, 1)
+
+    m1 = SparseMatrix.new(2, 2)
+    m1.add(0, 0, 4)
+    m1.add(0, 1, 4)
+    m1.add(1, 0, 2)
+    m1.add(1, 1, 9)
+
+    assert_equal [[0, 0, -5], [0, 1, -1], [1, 1, -8]], (m - m1).triplets
+  end
+
 end
 
 

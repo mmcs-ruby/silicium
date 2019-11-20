@@ -12,7 +12,7 @@ module Silicium
         raise 'wrong argument' if pos.negative? || pos > @m
 
         row = Array.new(@m, 0)
-        @triplets.select { |x| x[0] == pos }.each do |x|
+        @triplets.drop_while {|t| t[0] < pos }.take_while {|t| t[0] == pos}.each do |x|
           row[x[1]] = x[2]
         end
         row
@@ -77,6 +77,20 @@ module Silicium
           i += 1
         end
         temp
+      end
+
+      ##
+      # @param [Integer] num - A number to multiply to
+      #
+      # Multiplies matrix by a number
+      def mult_by_num(num)
+        return SparseMatrix.new(@n, @m) if num.zero?
+
+        res = copy
+        res.triplets.each do |triplet|
+          triplet[2] *= num
+        end
+        res
       end
     end
   end
