@@ -163,6 +163,32 @@ class SparseTest < Minitest::Test
     assert_equal [[2, 0], [0, 2]], arr
   end
 
+  def test_visualization_works
+    m1 = SparseMatrix.new(2, 3)
+    m1.add(0, 0, 1)
+    m1.add(1, 2, 2)
+
+    m2 = SparseMatrix.new(3, 2)
+    m2.add(0, 0, 2)
+    m2.add(1, 1, 1)
+    m2.add(2, 1, 1)
+
+    m3 = SparseMatrix.new(2, 2)
+    m3.add(0, 0, -1)
+    m3.add(0, 1, 4)
+    m3.add(1, 0, -2)
+    m3.add(1, 1, 11)
+
+    test_s1 = "╔═══════════════╗\n║   \e[#{32}m#{1}\e[0m   0   0   ║\n║   0   0   \e[#{32}m#{2}\e[0m   ║\n╚═══════════════╝\n"
+    test_s2 = "╔═══════════╗\n║   \e[#{32}m#{2}\e[0m   0   ║\n║   0   \e[#{32}m#{1}\e[0m   ║\n║   0   \e[#{32}m#{1}\e[0m   ║\n╚═══════════╝\n"
+    test_s3 = "╔═════════════╗\n║   \e[#{32}m#{-1}\e[0m   \e[#{32}m#{4}\e[0m    ║\n║   \e[#{32}m#{-2}\e[0m   \e[#{32}m#{11}\e[0m   ║\n╚═════════════╝\n"
+
+    assert_equal test_s1, m1.show
+    assert_equal test_s2, m2.show
+    assert_equal test_s3, m3.show
+
+  end
+
   def test_sugar_adding
     m = SparseMatrix.new(2, 2)
     m.add(0, 0, -1)

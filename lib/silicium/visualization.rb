@@ -26,6 +26,7 @@ module Silicium
       def green(text); colorize(text, 32); end
 
       ##
+      ## @return [String] string containing visualized matrix
       # vizualization of sparse matrix
       def show
         s = ""
@@ -46,8 +47,8 @@ module Silicium
         end
         c = 3*(@m+1) + chlength*@m
         s = 0x2554.chr('UTF-8') + (0x2550.chr('UTF-8') * c)+ 0x2557.chr('UTF-8') +"\n" + s
-        s += 0x255A.chr('UTF-8') + (0x2550.chr('UTF-8') * c) + 0x255D.chr('UTF-8')
-        puts s
+        s += 0x255A.chr('UTF-8') + (0x2550.chr('UTF-8') * c) + 0x255D.chr('UTF-8') + "\n"
+        s
       end
     end
   end
