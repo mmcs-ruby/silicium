@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-
+require_relative 'geometry/figure'
 module Silicium
 
   module Geometry
@@ -21,6 +21,12 @@ module Silicium
     end
 
     ##
+    # Calculates the distance from given points in three-dimensional space
+    def distance_point_to_point3d(a, b)
+      Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2 + (b.z - a.z)**2)
+    end
+
+    ##
     # Class represents a line as equation Ax + By + C = 0
     # in two-dimensional space
     class Line2dCanon
@@ -28,12 +34,14 @@ module Silicium
       attr_reader :y_coefficient
       attr_reader :free_coefficient
 
+      ##
+      # Initializes with two objects of type Point
       def initialize(point1, point2)
-        if (point1.x == point2.x) && (point1.y == point2.y)
-          raise ArgumentError, "You need 2 different points"
+        if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)
+          raise ArgumentError, 'You need 2 different points'
         end
 
-        if point1.x == point2.x
+        if point1.x.equal?(point2.x)
           @x_coefficient = 1
           @y_coefficient = 0
           @free_coefficient = - point1.x
@@ -53,51 +61,121 @@ module Silicium
 
       ##
       # Checks if two lines are parallel
-      def is_parallel?(another_line)
-        @x_coefficient.equal?(another_line.x_coefficient) && @y_coefficient.equal?(another_line.y_coefficient)
+      def parallel?(other_line)
+        @x_coefficient.equal?(other_line.x_coefficient) && @y_coefficient.equal?(other_line.y_coefficient)
       end
 
       ##
       # Checks if two lines are intersecting
-      def is_intersecting?(another_line)
-        @x_coefficient != another_line.x_coefficient || @y_coefficient != another_line.y_coefficient
+      def intersecting?(other_line)
+        @x_coefficient != other_line.x_coefficient || @y_coefficient != other_line.y_coefficient
       end
 
       ##
       # Checks if two lines are perpendicular
-      def is_perpendicular?(another_line)
-        (@x_coefficient * another_line.x_coefficient).equal?(- @y_coefficient * another_line.y_coefficient)
+      def perpendicular?(other_line)
+        (@x_coefficient * other_line.x_coefficient).equal?(- @y_coefficient * other_line.y_coefficient)
       end
 
       ##
       # Returns a point of intersection of two lines
       # If not intersecting returns nil
-      def intersection_point(another_line)
-        unless is_intersecting?(another_line)
-          return nil
-        end
-        divisor = @x_coefficient * another_line.y_coefficient - another_line.x_coefficient * @y_coefficient
-        x = (@y_coefficient * another_line.free_coefficient - another_line.y_coefficient * @free_coefficient) / divisor
-        y = (@free_coefficient * another_line.x_coefficient - another_line.free_coefficient * @x_coefficient) / divisor
+      def intersection_point(other_line)
+        return nil unless intersecting?(other_line)
+        divisor = @x_coefficient * other_line.y_coefficient - other_line.x_coefficient * @y_coefficient
+        x = (@y_coefficient * other_line.free_coefficient - other_line.y_coefficient * @free_coefficient) / divisor
+        y = (@free_coefficient * other_line.x_coefficient - other_line.free_coefficient * @x_coefficient) / divisor
         Point.new(x, y)
       end
 
       ##
       # Returns distance between lines
-      def distance_to_line(another_line)
-        if is_intersecting?(another_line)
-          return 0
-        end
-
-        (@free_coefficient - another_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
+      def distance_to_line(other_line)
+        return 0 if intersecting?(other_line)
+        (@free_coefficient - other_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
       end
+
+      ##
+      # The distance from a point to a line on a plane
+      # return 0 if the equation does not define a line.
+      def distance_point_to_line(point)
+        return 0 if @x_coefficient.eql?(0) && @y_coefficient.eql?(0)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
+      end
+
     end
 
-
     ##
-    # Calculates the distance from given points in three-dimensional space
-    def distance_point_to_point3d(a, b)
-      Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2 + (b.z - a.z)**2)
+    # Class represents vector
+    # in three-dimensional space
+    class Vector3d
+      attr_reader :x
+      attr_reader :y
+      attr_reader :z
+      ##
+      # Initializes with one objects of type Point3d
+      # 2nd point is (0,0,0)
+      def initialize(point)
+        @x = point.x
+        @y = point.y
+        @z = point.z
+      end
+      ##
+      # Checks if vector is zero vector
+      def zero_vector?
+        (@x.eql?(0) && @y.eql?(0) && @z.eql?(0)).eql?(true)? true : false
+      end
+
+      ##
+      # Returns length of the vector
+      def length
+        Math.sqrt(@x**2 + @y**2 + @z**2)
+      end
+
+      ##
+      # Add one vector to another
+      def addition!(other_vector)
+        @x+=other_vector.x
+        @y+=other_vector.y
+        @z+=other_vector.z
+      end
+
+      ##
+      # Sub one vector from another
+      def subtraction!(other_vector)
+        @x-=other_vector.x
+        @y-=other_vector.y
+        @z-=other_vector.z
+      end
+
+      ##
+      # Mult vector by number
+      def multiplication_by_number!(r)
+        @x*=r
+        @y*=r
+        @z*=r
+      end
+
+      ##
+      # Returns scalar multiplication of 2 vectors
+      def scalar_multiplication(other_vector)
+        x*other_vector.x + y*other_vector.y + z*other_vector.z
+      end
+
+      ##
+      # Returns cos between two vectors
+      def cos_between_vectors(other_vector)
+        scalar_multiplication(other_vector)/(length*other_vector.length).to_f
+      end
+
+      ##
+      # Returns vector multiplication of 2 vectors
+      def vector_multiplication(other_vector)
+        x=@y*other_vector.z - @z*other_vector.y
+        y=@z*other_vector.x - @x*other_vector.z
+        z=@x*other_vector.y - @y*other_vector.x
+        Vector3d.new(Point3d.new(x, y, z))
+      end
     end
 
     ##
@@ -108,16 +186,12 @@ module Silicium
       line_segment_length = distance_point_to_point2d(p1, p2)
       ((p2.y - p1.y) * a.x - (p2.x - p1.x) * a.y + p2.x * p1.y - p2.y * p1.x).abs / (line_segment_length * 1.0)
     end
-    
+
     ##
     # The distance from a point to a line on a plane
-    # Line defined by an equation
-    # return 0 if the equation does not define a line.
-    def distance_point_line_equation2d(a, b, c, p)
-      if a == 0 and b == 0
-        return 0
-      end
-      (a * p.x + b * p.y + c).abs / Math.sqrt(a**2 + b**2)
+    # Normalized equation of the line
+    def distance_point_line_normalized2d(a, b, c, p)
+      (p.x * a + p.y * b - c).abs
     end
 
     def oriented_area(a, b, c)
@@ -228,7 +302,7 @@ module Silicium
           throw VariablesOrderException
         end
 
-        line_equation.slice(before..after).gsub('/', '').to_f * (-1)
+        line_equation.slice(before..after).gsub('/', '').to_f * -1
       else
         0.0
       end
@@ -271,8 +345,32 @@ module Silicium
       vector_length(height_on_dir) / vector_length(dir_vector)
     end
 
+
+    # Closest pair of points_________________________
+    # find minimum distance between two points in set
+    def brute_min(points, current = Float::INFINITY)
+      return current  if points.length < 2
+
+      head = points[0]
+      points.delete_at(0)
+      new_min = points.map { |x| distance_point_to_point2d(head, x)}.min
+      new_сurrent = [new_min, current].min
+      brute_min(points, new_сurrent)
+    end
+
+    def divide_min(points)
+      half = points.length/2
+      points.sort_by! { |p| [p.x, p.y] }
+      minimum = [brute_min(points[0..half]), brute_min(points[half..points.length])].min
+      near_line = points.select{|x| x > half - minimum and x < half + minimum}
+      min([brute_min(near_line), minimum])
+    end
+
+
     def insert_eq(line_equation)
       line_equation.gsub(' ', '').insert(line_equation.length, '=')
     end
+
   end
 end
+

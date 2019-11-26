@@ -5,9 +5,9 @@ require 'chunky_png'
 
 class Test < Minitest::Test
 
-	include Silicium::Combinatorics
+	include Combinatorics
 	include Silicium::Plotter
-	include Silicium::Dice
+	include Dice
 
 	def test_factorial
 		assert_equal factorial(10), 3628800
