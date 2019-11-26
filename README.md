@@ -26,30 +26,38 @@ Or install it yourself as:
 
 ## Usage
 
-###Plotter
+### Plotter
 
-####Determine your function
+#### Determine your function
+
 ```ruby
 def fn(x)
   x**2
 end
 ```
 
-####Set scale
+#### Set scale
+
 ```ruby
 # 1 unit is equal 40 pixels
 set_scale(40)
 ```
 
-####Draw you function
+#### Draw you function
+
 ```ruby
 draw_fn(-20, 20) {|args| fn(args)}
 ```
 
-####Show your plot
+#### Show your plot
+
 ```ruby
 show_window
 ```
+
+#### Result
+
+![Alt-текст](./plot.png "Result")
 
 ## Development
 
