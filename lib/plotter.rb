@@ -102,20 +102,8 @@ module Silicium
     ##
     # draws axes
     def draw_axes
-      Line.new(
-          x1: 0, y1: CENTER_Y,
-          x2: (get :width), y2: CENTER_Y,
-          width: 1,
-          color: 'white',
-          z: 20
-      )
-      Line.new(
-          x1: CENTER_X, y1: 0,
-          x2: CENTER_X, y2: (get :height),
-          width: 1,
-          color: 'white',
-          z: 20
-      )
+      Line.new(x1: 0, y1: CENTER_Y, x2: (get :width), y2: CENTER_Y, width: 1, color: 'white', z: 20)
+      Line.new(x1: CENTER_X, y1: 0, x2: CENTER_X, y2: (get :height), width: 1, color: 'white', z: 20)
 
       x1 = CENTER_X
       x2 = CENTER_X
