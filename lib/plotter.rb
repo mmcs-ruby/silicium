@@ -151,24 +151,51 @@ module Silicium
 
     CENTER_X = Window.width / 2
     CENTER_Y = Window.height / 2
-    MUL = 70/1
+        
+    mul = 100/1
 
+    ##
+    # draws axes
     def draw_axes
-      Line.new( x1: 0, y1: CENTER_Y, x2: Window.width, y2: CENTER_Y,  width: 1,  color: 'white',  z: 20)
-      Line.new( x1: CENTER_X, y1: 0, x2: CENTER_X, y2: Window.height, width: 1,  color: 'white',  z: 20)
+      Line.new(x1: 0, y1: CENTER_Y, x2: (get :width), y2: CENTER_Y, width: 1, color: 'white', z: 20)
+      Line.new(x1: CENTER_X, y1: 0, x2: CENTER_X, y2: (get :height), width: 1, color: 'white', z: 20)
+
+      x1 = CENTER_X
+      x2 = CENTER_X
+      while (x1 < Window.width * 1.1) and (x2 > Window.width * -1.1) do
+        Line.new(x1: x1, y1: CENTER_Y - 4, x2: x1, y2: CENTER_Y + 3, width: 1, color: 'white', z: 20)
+        Line.new(x1: x2, y1: CENTER_Y - 4, x2: x2, y2: CENTER_Y + 3, width: 1, color: 'white', z: 20)
+        x1 += mul
+        x2 -= mul
+      end
+
+      y1 = CENTER_Y
+      y2 = CENTER_Y
+      while (y1 < Window.height * 1.1) and (y2 > Window.height * -1.1) do
+        Line.new(x1: CENTER_X - 3, y1: y1, x2: CENTER_X + 3, y2: y1, width: 1, color: 'white', z: 20)
+        Line.new(x1: CENTER_X - 3, y1: y2, x2: CENTER_X + 3, y2: y2, width: 1, color: 'white', z: 20)
+        y1 += mul
+        y2 -= mul
+      end
     end
 
+    ##
+    # Changes the coordinates to draw the next pixel for the +f+ function
+    # +x+ - current argument. +st+ - step to next point
     def reset_step(x, st, &f)
       y1 = f.call(x)
       y2 = f.call(x + st)
 
-      if (y1 - y2).abs / MUL > 1.0
-        [st / (y1 - y2).abs / MUL, 0.001].max
+      if (y1 - y2).abs / mul > 1.0
+        [st / (y1 - y2).abs / mul, 0.001].max
       else
-        st / MUL * 2
+        st / mul * 2
       end
     end
 
+    ##
+    # Draws a point on coordinates +x+ and +y+
+    # with the scale +mul+ and color +col+
     def draw_point(x, y, mul, col)
       Line.new(
           x1: CENTER_X + x * mul, y1: CENTER_Y - y * mul,
@@ -179,14 +206,19 @@ module Silicium
       )
     end
 
+    ##
+    # Reduces the interval to the window range. +a+ and +b+ that determine interval
     def reduce_interval(a, b)
-      a *= MUL
-      b *= MUL
+      a *= mul
+      b *= mul
+      return [a, -(get :width) * 1.1].max / mul, [b, (get :width) * 1.1].min / mul
 
-      [[a, -Window.width * 1.1].max / MUL, [b, Window.width * 1.1].min / MUL]
     end
 
+    ##
+    # Draws the function +func+ at the interval from +a+ to +b+
     def draw_fn(a, b, &func)
+      draw_axes
 
       a, b = reduce_interval(a, b)
 
@@ -201,15 +233,26 @@ module Silicium
         rescue Math::DomainError
           arg += c_step * 0.1
         else
-          draw_point(arg, func.call(arg), MUL, 'lime')
+          draw_point(arg, func.call(arg), mul, 'lime')
         ensure
           arg += c_step
         end
       end
     end
 
+    ##
+    # show plot
     def show_window
       show
     end
+
+    # @param [Integer] sc
+    def set_scale(sc)
+      mul = sc
+    end
+
   end
 end
+
+
+

@@ -26,6 +26,39 @@ Or install it yourself as:
 
 ## Usage
 
+### Plotter
+
+#### Determine your function
+
+```ruby
+def fn(x)
+  x**2
+end
+```
+
+#### Set scale
+
+```ruby
+# 1 unit is equal 40 pixels
+set_scale(40)
+```
+
+#### Draw you function
+
+```ruby
+draw_fn(-20, 20) {|args| fn(args)}
+```
+
+#### Show your plot
+
+```ruby
+show_window
+```
+
+#### Result
+
+![Alt-текст](./plot.png "Result")
+=======
 ### Numerical integration
 
 Library `Numerical integration` 
@@ -121,8 +154,6 @@ s.throw   # getting random score (from 3 to 18)
 
 s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
 ```
-
-TODO: Write usage instructions here
 
 ## Development
 
