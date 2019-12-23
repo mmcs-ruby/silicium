@@ -25,7 +25,70 @@ Or install it yourself as:
     $ gem install silicium
 
 ## Usage
+*   Graph Section:
 
+    Oriented Graph Initialization example:
+
+    g = OrientedGraph.new([{v: 0,     i: [:one]},
+                          {v: :one,  i: [0, 'two']},
+                          {v: 'two', i: [0, 'two']}])
+
+    Unoriented Graph Initialization example:
+
+    g = UnorientedGraph.new([{v: 0,     i: [:one]},
+                           {v: :one,  i: [0, 'two']},
+                           {v: 'two', i: [0, 'two']}])
+
+
+    Graph Methods:
+
+    Add vertex: add_vertex!(Vertex)
+
+    Add edge: add_edge!(vertex_from, vertex_to)
+
+
+    Get vertices adjacted with vertex: adjacted_with(vertex)
+
+
+    Set label for edge: label_edge!(vertex_from, vertex_to, label)
+
+    Get label for edge: get_edge_label(vertex_from, vertex_to)
+
+    Set label for vertex: label_vertex!(vertex, label)
+
+    Get label for vertex: get_vertex_label(vertex)
+
+
+    Get number of vertices: vertex_number
+
+    Get number of edges: edge_number
+
+    Get number of vertex labels: vertex_label_number
+
+    Get number of vertex edges:edge_label_number
+
+
+    Check if graph contains vertex: has_vertex?(vertex)
+
+    Check if graph contains edge: has_edge?(vertex_from, vertex_to)
+
+
+    Delete vertex: delete_vertex!(vertex)
+
+    Delete edge: delete_edge!(vertex_from, vertex_to)
+
+
+    Get array of vertices: vertices
+
+
+    Algorithms for graphs:
+
+    Check if graph is connected: connected?(graph)
+
+    BFS: breadth_first_search?(graph, starting_vertex, searching_vertex)
+
+    Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
+    
 ### Plotter
 
 #### Determine your function
