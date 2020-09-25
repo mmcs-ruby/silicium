@@ -16,12 +16,12 @@ module Silicium
       # @return [SparseMatrix] Matrix as the sum of the other two matrices
       #
       # Makes the sum of two matrix
-      def adding(matrix)
-        raise 'wrong argument' if @n != matrix.m
+      def +(other)
+        raise 'wrong argument' if @n != other.m
 
         res = SparseMatrix.new(@n, @m)
         triplets_1 = self.triplets
-        triplets_2 = matrix.triplets
+        triplets_2 = other.triplets
 
         tr_ind_1 = 0 # triplet index for first matrix (self)
         tr_ind_2 = 0 # triplet index for second matrix (matrix)

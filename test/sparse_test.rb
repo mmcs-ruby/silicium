@@ -101,7 +101,7 @@ class SparseTest < Minitest::Test
     m1.add(2, 0, 1)
     m1.add(2, 2, 1)
 
-    assert_equal [[0,1,1],[0,2,1],[1,0,2],[1,1,1],[2,0,2],[2,2,1]],m.adding(m1).triplets
+    assert_equal [[0,1,1],[0,2,1],[1,0,2],[1,1,1],[2,0,2],[2,2,1]],(m+m1).triplets
   end
 
   def test_adding_matrix2
@@ -117,7 +117,7 @@ class SparseTest < Minitest::Test
     m1.add(1, 0, 2)
     m1.add(1, 1, 9)
 
-    assert_equal [[0,1,7],[1,1,10]],m.adding(m1).triplets
+    assert_equal [[0,1,7],[1,1,10]],(m+m1).triplets
   end
 
   def test_adding_matrix3
@@ -133,7 +133,7 @@ class SparseTest < Minitest::Test
     m1.add(1, 0, 2)
     m1.add(1, 1, -11)
 
-    assert_equal [],m.adding(m1).triplets
+    assert_equal [],(m+m1).triplets
   end
 
   def test_that_multiply_works_on_square_matrices
