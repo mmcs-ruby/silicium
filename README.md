@@ -27,6 +27,7 @@ Or install it yourself as:
 ## Usage
 *   Graph Section:
 
+
     Oriented Graph Initialization example:
 
     g = OrientedGraph.new([{v: 0,     i: [:one]},
@@ -216,6 +217,53 @@ s.percentage # {3=>0.004629629629629629, 4=>0.013888888888888888, 5=>0.027777777
 s.throw   # getting random score (from 3 to 18)
 
 s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
+```
+
+### Sparse matrix
+
+#### Class SparseMatrix
+
+Matrix is stored as array of triplets. 
+Triplet = [i , j , elem], where i - row index, j - col index , elem - element value.
+
+You can initialize sparse matrix by two ways :
+1) By its size - SparseMatrix.new(n,m)   // n - count of rows , m - count of cols.
+2) From a regular matrix - SparseMatrix.sparse(mat)   // mat - regular matrix
+
+Example :
+
+Initialize sparse matrix : 
+```ruby
+      sm = SparseMatrix.new(3, 4)
+      mat = [[1, 0, 0],
+             [2, 0, 0],
+             [0, 0, 3]]
+      sm1 = SparseMatrix.sparse(mat)  
+```
+
+Add , copy , get , transpose , show etc :
+```ruby
+      sm.add(0, 1, 2)
+      sm.add(1, 0, 1)
+      sm.add(2, 1, 3)
+
+      sm1 = sm.copy  # a copy of matrix object
+
+      x = sm.get(0, 1) # x = 2
+
+      smt = sm.transpose  # a transposed copy of matrix
+
+      s = sm.show # It looks like ╔═══════════════════╗
+                  #               ║   0   2   0   0   ║
+                  #               ║   1   0   0   0   ║
+                  #               ║   0   3   0   0   ║
+                  #               ╚═══════════════════╝
+                  # but actually s = "╔═══════════════════╗\n║   0   \e[#{32}m#{2}\e[0m   0   0   ║\n║   \e[#{32}m#{1}\e[0m   0   0   0   ║\n║   0   \e[#{32}m#{3}\e[0m   0   0   ║\n╚═══════════════════╝\n"
+                  # because not null elems colorized green 
+ 
+      sm = sm.adding(sm1)  # sum of two matrix
+
+      arr = sm.multiply(sm1)  # Returns a matrix in its regular view but multiplied by other matrix
 ```
 
 ## Development
