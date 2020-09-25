@@ -8,18 +8,8 @@ module Silicium
       # @return [SparseMatrix] Matrix as the sum of the other two matrices
       #
       # Makes the sum of two matrix
-      def +(other)
-        adding(other)
-      end
-
-      ##
-      # @param [SparseMatrix] other - second matrix for adding
-      # @raise [ArgumentError] If the size of the first matrix doesn't match the size of the second matrix
-      # @return [SparseMatrix] Matrix as the sum of the other two matrices
-      #
-      # Makes the sum of two matrix
       def -(other)
-        adding(other.mult_by_num(-1))
+        self + (other.mult_by_num(-1))
       end
 
       ##

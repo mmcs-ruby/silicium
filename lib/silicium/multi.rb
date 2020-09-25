@@ -12,7 +12,7 @@ module Silicium
         raise 'wrong argument' if pos.negative? || pos > @m
 
         row = Array.new(@m, 0)
-        @triplets.select { |x| x[0] == pos }.each do |x|
+        @triplets.drop_while {|t| t[0] < pos }.take_while {|t| t[0] == pos}.each do |x|
           row[x[1]] = x[2]
         end
         row
