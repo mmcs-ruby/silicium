@@ -9,13 +9,7 @@ module Silicium
       #
       # Returns a row of sparse matrix by its position
       def get_row(pos)
-        raise 'wrong argument' if pos.negative? || pos > @m
-
-        row = Array.new(@m, 0)
-        @triplets.select { |x| x[0] == pos }.each do |x|
-          row[x[1]] = x[2]
-        end
-        row
+        get_dimension({dimension: 0, position: 1}, pos)
       end
 
       ##
@@ -25,26 +19,14 @@ module Silicium
       #
       # Returns a column of sparse matrix by its position
       def get_col(pos)
-        raise 'wrong argument' if pos.negative? || pos > @m
-
-        row = Array.new(@n, 0)
-        @triplets.select { |x| x[1] == pos }.each do |x|
-          row[x[0]] = x[2]
-        end
-        row
+        get_dimension({dimension: 1, position: 0}, pos)
       end
 
       ##
       # @return [Array] The array that contains rows of matrix
       # Returns sparse matrix in its regular view
       def regular_view
-        i = 0
-        rows = Array.new(@n)
-        rows.count.times do
-          rows[i] = get_row(i)
-          i += 1
-        end
-        rows
+        Array.new(@n) { |i| get_row(i) }
       end
 
       ##
@@ -57,26 +39,16 @@ module Silicium
         raise 'wrong argument' if @n != matrix.m
 
         rows = regular_view
-        i = 0
-        temp = Array.new(@n).map { |x| x = [] }
-        while i < @n
-          jj = 0
-          while jj < matrix.m
-            ii = 0
-            mul = 0
-            col = matrix.get_col(jj)
-            while ii < col.count
-              unless rows[i][ii].zero? || col[ii].zero?
-                mul += rows[i][ii] * col[ii]
-              end
-              ii += 1
-            end
-            temp[i].push(mul)
-            jj += 1
-          end
-          i += 1
-        end
-        temp
+        result = Array.new(@n) { Array.new }
+        (0...@n).each { |i|
+          (0...matrix.m).each { |j|
+            result[i] << matrix
+                             .get_col(j)
+                             .zip(rows[i])
+                             .inject(0) { |acc, current| acc + current[0] * current[1] }
+          }
+        }
+        result
       end
 
       ##
@@ -92,6 +64,19 @@ module Silicium
         end
         res
       end
+
+      private
+
+      def get_dimension(selector, pos)
+        raise 'wrong argument' if pos.negative? || pos > @m
+
+        result = Array.new(@m, 0)
+        @triplets
+            .select { |triplet| triplet[selector[:dimension]] == pos }
+            .each { |triplet| result[triplet[selector[:position]]] = triplet[2] }
+        result
+      end
+
     end
   end
 end
