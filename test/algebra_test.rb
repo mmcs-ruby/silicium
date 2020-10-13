@@ -13,6 +13,25 @@ class AlgebraTest < Minitest::Test
     (val1 - val2).abs <= eps
   end
 
+  def test_primes_to_exceptions
+    assert_raises(ArgumentError){ primes_to(-15) }
+    assert_raises(ArgumentError){ primes_to(0) }
+    assert_raises(ArgumentError){ primes_to('13') }
+    assert_raises(ArgumentError){ primes_to(53.6) }
+  end
+
+  def test_primes_to_low_n
+    assert_equal([2, 3, 5, 7, 11, 13], primes_to(15))
+  end
+
+  def test_primes_to_high_n
+    assert_equal(99991, primes_to(100000).last)
+  end
+
+  def test_primes_to_normal_n
+    assert_equal([2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47], primes_to(50))
+  end
+
   def test_that_normal_polynomial
     assert(polycop('x^2 + 2 * x + 7'), 'Fail')
   end
