@@ -16,29 +16,28 @@ module Silicium
     end
 
     ##
-    # +eratosthen(n)+ finds all primes up to n
+    # +eratosthen_primes_to(n)+ finds all primes up to n
     # with the sieve of eratosthenes
     #
-    ## eratosthen(1)		# => []
-    ## eratosthen(15)		# => [2, 3, 5, 7, 11, 13]
-    ## eratosthen(50)		# => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
-    def eratosthen(n)
-      raise ArgumentError unless valid_n?(n)
+    ## eratosthen_primes_to(1)		# => []
+    ## eratosthen_primes_to(15)		# => [2, 3, 5, 7, 11, 13]
+    ## eratosthen_primes_to(50)		# => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+    def eratosthen_primes_to(n)
+      return unless valid_n?(n)
       arr = (0..n).to_a
       arr[0] = arr[1] = nil
-      arr.each do |p|
-        next unless p
+      arr.each { |p| next unless p
         break if p * p > n
         (p * p).step(n, p) { |m| arr[m] = nil }
-      end
+      }
       arr.compact
     end
 
     ##
     # Checks if the number n is correct
     def valid_n?(n)
-      return false if n <= 0
-      return false unless n.class == Integer
+      raise ArgumentError if n <= 0
+      raise ArgumentError unless n.class == Integer
       
       true
     end
