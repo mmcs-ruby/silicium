@@ -16,13 +16,13 @@ module Silicium
     end
 
     ##
-    # +primes(n)+ finds all primes up to n
+    # +eratosthen_primes_to(n)+ finds all primes up to n
     # with the sieve of eratosthenes
     #
-    ## primes(1)		# => []
-    ## primes(15)		# => [2, 3, 5, 7, 11, 13]
-    ## primes(50)		# => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
-    def primes(n)
+    ## eratosthen_primes_to(1)		# => []
+    ## eratosthen_primes_to(15)		# => [2, 3, 5, 7, 11, 13]
+    ## eratosthen_primes_to(50)		# => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+    def eratosthen_primes_to(n)
       raise ArgumentError unless valid_n?(n)
       arr = (0..n).to_a
       arr[0] = arr[1] = nil
