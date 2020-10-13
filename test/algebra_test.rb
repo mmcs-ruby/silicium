@@ -14,18 +14,18 @@ class AlgebraTest < Minitest::Test
   end
 
   def test_eratosthen_primes_exceptions
-    assert_raises(ArgumentError){ eratosthen_primes_to(-15) }
-    assert_raises(ArgumentError){ eratosthen_primes_to(0) }
-    assert_raises(ArgumentError){ eratosthen_primes_to('13') }
-    assert_raises(ArgumentError){ eratosthen_primes_to(53.6) }
+    assert_raises(ArgumentError){ eratosthen(-15) }
+    assert_raises(ArgumentError){ eratosthen(0) }
+    assert_raises(ArgumentError){ eratosthen('13') }
+    assert_raises(ArgumentError){ eratosthen(53.6) }
   end
 
   def test_eratosthen_primes_to_low_n
-    assert_equal([2, 3, 5, 7, 11, 13], eratosthen_primes_to(15))
+    assert_equal([2, 3, 5, 7, 11, 13], eratosthen(15))
   end
 
   def test_eratosthen_primes_to_high_n
-    assert_equal(99991, eratosthen_primes_to(100000).last)
+    assert_equal(99991, eratosthen(100000).last)
   end
 
   def test_eratosthen_primes_to_normal_n
