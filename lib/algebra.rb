@@ -23,21 +23,22 @@ module Silicium
     ## eratosthen_primes_to(15)		# => [2, 3, 5, 7, 11, 13]
     ## eratosthen_primes_to(50)		# => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
     def eratosthen_primes_to(n)
-      return unless valid_n?(n)
-      arr = (0..n).to_a
-      arr[0] = arr[1] = nil
-      arr.each { |p| next unless p
-        break if p * p > n
-        (p * p).step(n, p) { |m| arr[m] = nil }
-      }
-      arr.compact
+      raise ArgumentError unless valid_n?(n)
+      array = (0..n).to_a
+      array[0] = array[1] = nil
+      array.each do |prime|
+        next unless prime
+        break if prime ** 2 > n
+        (prime ** 2).step(n, prime) { |dummy| array[dummy] = nil }
+      end
+      array.compact
     end
 
     ##
     # Checks if the number n is correct
     def valid_n?(n)
-      raise ArgumentError if n <= 0
-      raise ArgumentError unless n.class == Integer
+      return false if n <= 0
+      return false unless n.class == Integer
       
       true
     end
