@@ -24,14 +24,15 @@ module Silicium
     ## eratosthen_primes_to(50)		# => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
     def eratosthen_primes_to(n)
       raise ArgumentError unless valid_n?(n)
-      array = (0..n).to_a
-      array[0] = array[1] = nil
+
+      array = (2..n).to_a
       array.each do |prime|
-        next unless prime
-        break if prime ** 2 > n
-        (prime ** 2).step(n, prime) { |dummy| array[dummy] = nil }
+        square = prime**2
+        break if square > n
+
+        array -= square.step(n, prime).to_a
       end
-      array.compact
+      array
     end
 
     ##
