@@ -888,4 +888,20 @@ class GraphTest < SiliciumTest
     pred = pred && !g.has_edge?('two', 'two') && (g.edge_number == 0) && !g.has_edge?('two', 0) && !g.has_edge?(0, 'two')
     assert(pred)
   end
+
+  def test_scc
+    g = OrientedGraph.new([{v: 1, i: [3, 4]},
+                             {v: 2, i: [1]},
+                             {v: 3, i: [2]},
+                             {v: 4, i: [3]},
+                             {v: 5, i: [3, 6, 8]},
+                             {v: 6, i: [7]},
+                             {v: 7, i: [5]},
+                             {v: 8, i: []},
+                             {v: 9, i: [8, 10]},
+                             {v: 10, i: [8]}])
+
+    assert_equal [[9],[10],[5,7,6],[8],[1,2,3,4]], g.find_strongly_connected_components
+  end
+
 end
