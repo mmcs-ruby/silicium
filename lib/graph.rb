@@ -222,6 +222,87 @@ module Silicium
 
     end
     ##
+    # Class represents computational graph
+    class ComputationalGraph
+      attr_accessor :graph,:size
+      def initialize(expr_s)
+        expr_proc = Polish_Parser(expr_s,[])
+        pre_graph = []
+        @graph = []
+        @size = 0
+        expr_proc.split.each do |elem|
+          case elem
+          when "+"
+            dot = Summ_Gate.new(elem)
+            dot.connect(pre_graph.pop,pre_graph.pop)
+            pre_graph.push(dot)
+            @graph.push(dot)
+            @size +=1
+          when "*"
+            dot = Mult_Gate.new(elem)
+            dot.connect(pre_graph.pop,pre_graph.pop)
+            pre_graph.push(dot)
+            @graph.push(dot)
+            @size +=1
+          when "/"
+            dot = Div_Gate.new(elem)
+            scnd = pre_graph.pop
+            frst = pre_graph.pop
+            dot.connect(frst,scnd)
+            pre_graph.push(dot)
+            @graph.push(dot)
+            @size +=1
+          else
+            dot = Comp_Gate.new(elem)
+            pre_graph.push(dot)
+            @graph.push(dot)
+            @size +=1
+          end
+        end
+      end
+      #Compute a value of expression
+      def ForwardPass(variables_val)
+        @graph.each do |elem|
+          if elem.class != Comp_Gate
+            elem.forward_pass
+          else
+            elem.frwrd = variables_val[elem.name]
+          end
+        end
+        return graph.last.frwrd
+      end
+      #Compute a gradient value for inputs
+      def BackwardPass(loss_value)
+        param_grad = Hash.new()
+        @graph.last.bckwrd = loss_value
+        @graph.reverse.each do |elem|
+          if elem.class != Comp_Gate
+            elem.backward_pass
+          else
+            param_grad[elem.name] = elem.bckwrd
+          end
+        end
+        return param_grad
+      end
+      #String preprocessing algorithm expression for computition
+      def self.Polish_Parser(iStr, stack)
+        priority = Hash["(" => 0, "+" => 1, "-" => 1, "*" => 2, "/" => 2, "^" => 3]
+        case iStr
+        when /^\s*([^\+\-\*\/\(\)\^\s]+)\s*(.*)/ then $1 + " " + Polish_Parser($2, stack)
+        when /^\s*([\+\-\*\/\^])\s*(.*)/
+          if (stack.empty? or priority[stack.last] < priority[$1]) then Polish_Parser($2, stack.push($1))
+          else stack.pop + " " + Polish_Parser(iStr, stack) end
+        when /^\s*\(\s*(.*)/ then Polish_Parser($1, stack.push("("))
+        when /^\s*\)\s*(.*)/
+          if stack.empty? then raise "Error: Excess of closing brackets."
+          elsif priority[head = stack.pop] > 0 then head + " " + Polish_Parser(iStr, stack)
+          else Polish_Parser($1, stack) end
+        else if stack.empty? then ""
+             elsif priority[stack.last] > 0 then stack.pop + " " + Polish_Parser(iStr, stack)
+             else raise "Error: Excess of opening brackets." end
+        end
+      end
+    end
     # Implements breadth-first search (BFS)
     def breadth_first_search?(graph, start, goal)
       visited = Hash.new(false)
