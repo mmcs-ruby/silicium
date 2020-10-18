@@ -2,13 +2,10 @@ require 'silicium'
 
 def depth_first_search?(graph, start, goal)
   visited = Hash.new(false)
-  stack = []
-  stack.push(start)
+  stack = [start]
   until stack.empty?
     node = stack.pop
-    if graph.vertices[node].nil?
-      raise ArgumentError
-    end
+    raise ArgumentError if graph.vertices[node].nil?
     return true if node == goal
 
     next if visited[node]
