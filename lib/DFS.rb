@@ -10,12 +10,16 @@ def depth_first_search?(graph, start, goal)
 
     next if visited[node]
 
-    visited[node] = true
-    graph.vertices[node].each do |child|
-      stack.push(child)
-    end
+    add_to_stack(graph, node, stack, visited)
   end
   false
+end
+
+def add_to_stack(graph, node, stack, visited)
+  visited[node] = true
+  graph.vertices[node].each do |child|
+    stack.push(child)
+  end
 end
 
 def dfs_traverse(graph, start)
