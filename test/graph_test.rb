@@ -903,9 +903,9 @@ class GraphTest < SiliciumTest
   end
 
   def test_computational_graph_forward_pass_normal
-    test_graph = ComputationalGraph.new("(x*W1+b1)*W2+b2")
-    variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0]
-    assert_equal(test_graph.ForwardPass(variables),3.0)
+    test_graph = ComputationalGraph.new("(x*W1+b1)/L2*W2+b2")
+    variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0,"L2",2.0]
+    assert_equal(test_graph.ForwardPass(variables),2.0)
   end
 
   def test_computational_graph_backward_pass_normal
