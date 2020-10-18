@@ -890,26 +890,26 @@ class GraphTest < SiliciumTest
   end
 
   def test_computational_graph_string_parse_norm
-    assert_equal(Comp_Graph.Polish_Parser("(x * W1 + b1) * W2 + b2",[]),'x W1 * b1 + W2 * b2 + ')
+    assert_equal(ComputationalGraph.Polish_Parser("(x * W1 + b1) * W2 + b2",[]),'x W1 * b1 + W2 * b2 + ')
   end
 
   def test_computational_graph_string_parse_empty
-    assert_equal(Comp_Graph.Polish_Parser("",[]),'')
+    assert_equal(ComputationalGraph.Polish_Parser("",[]),'')
   end
 
   def test_computational_graph_string_parse_wrong_brackets
-    assert_raise(ArgumentError){Comp_Graph.Polish_Parser("(x*W1+b1)*W2+)b2",[])}
-    assert_raise(ArgumentError){Comp_Graph.Polish_Parser("(x*(W1+b1)*W2+b2",[])}
+    assert_raises(ArgumentError){ComputationalGraph.Polish_Parser("(x*W1+b1)*W2+)b2",[])}
+    assert_raises(ArgumentError){ComputationalGraph.Polish_Parser("(x*(W1+b1)*W2+b2",[])}
   end
 
   def test_computational_graph_forward_pass_normal
-    test_graph = Comp_Graph.new("(x*W1+b1)*W2+b2")
+    test_graph = ComputationalGraph.new("(x*W1+b1)*W2+b2")
     variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0]
     assert_equal(test_graph.ForwardPass(variables),3.0)
   end
-  
+
   def test_computational_graph_backward_pass_normal
-    test_graph = Comp_Graph.new("(x*W1+b1)*W2+b2")
+    test_graph = ComputationalGraph.new("(x*W1+b1)*W2+b2")
     variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0]
     test_graph.ForwardPass(variables)
     trivial_loss = 1
@@ -921,7 +921,7 @@ class GraphTest < SiliciumTest
     learn_rate = 0.01
     variables = Hash["x",2.0,"W1",0.1,"b1",0.001,"W2",0.1,"b2",0.001]
     true_val = variables["x"] * 4
-    test_graph = Comp_Graph.new("(x*W1+b1)*W2+b2")
+    test_graph = ComputationalGraph.new("(x*W1+b1)*W2+b2")
     for i in 1..300
       dummy_loss = 0.5*(true_val - test_graph.ForwardPass(variables))
       grad = test_graph.BackwardPass(dummy_loss)
@@ -930,8 +930,8 @@ class GraphTest < SiliciumTest
       variables["b1"] += grad["b1"]*learn_rate
       variables["b2"] += grad["b2"]*learn_rate
     end
-    assert_block do
-      (test_graph.ForwardPass(variables)-true_val).abs< 0.0001
-    end
+
+    res = (test_graph.ForwardPass(variables)-true_val).abs< 0.0001
+    assert_equal(res,true)
   end
 end

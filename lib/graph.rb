@@ -226,7 +226,7 @@ module Silicium
     class ComputationalGraph
       attr_accessor :graph,:size
       def initialize(expr_s)
-        expr_proc = Polish_Parser(expr_s,[])
+        expr_proc = ComputationalGraph::Polish_Parser(expr_s,[])
         pre_graph = []
         @graph = []
         @size = 0
@@ -294,12 +294,12 @@ module Silicium
           else stack.pop + " " + Polish_Parser(iStr, stack) end
         when /^\s*\(\s*(.*)/ then Polish_Parser($1, stack.push("("))
         when /^\s*\)\s*(.*)/
-          if stack.empty? then raise "Error: Excess of closing brackets."
+          if stack.empty? then raise ArgumentError.new "Error: Excess of closing brackets."
           elsif priority[head = stack.pop] > 0 then head + " " + Polish_Parser(iStr, stack)
           else Polish_Parser($1, stack) end
         else if stack.empty? then ""
              elsif priority[stack.last] > 0 then stack.pop + " " + Polish_Parser(iStr, stack)
-             else raise "Error: Excess of opening brackets." end
+             else raise ArgumentError.new "Error: Excess of opening brackets." end
         end
       end
     end
