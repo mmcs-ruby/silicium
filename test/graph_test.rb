@@ -890,31 +890,30 @@ class GraphTest < SiliciumTest
   end
 
   def test_computational_graph_string_parse_norm
-    assert_equal(ComputationalGraph.Polish_Parser("(x * W1 + b1) * W2 + b2",[]),'x W1 * b1 + W2 * b2 + ')
+    assert_equal(ComputationalGraph.PolishParser("(x * W1 + b1) * W2 + b2", []), 'x W1 * b1 + W2 * b2 + ')
   end
 
   def test_computational_graph_string_parse_empty
-    assert_equal(ComputationalGraph.Polish_Parser("",[]),'')
+    assert_equal(ComputationalGraph.PolishParser("", []), '')
   end
 
   def test_computational_graph_string_parse_wrong_brackets
-    assert_raises(ArgumentError){ComputationalGraph.Polish_Parser("(x*W1+b1)*W2+)b2",[])}
-    assert_raises(ArgumentError){ComputationalGraph.Polish_Parser("(x*(W1+b1)*W2+b2",[])}
+    assert_raises(ArgumentError){ComputationalGraph.PolishParser("(x*W1+b1)*W2+)b2", [])}
+    assert_raises(ArgumentError){ComputationalGraph.PolishParser("(x*(W1+b1)*W2+b2", [])}
   end
 
-  def test_computational_graph_forward_pass_normal
+  def test_computational_graph_forward_pass_trivial
     test_graph = ComputationalGraph.new("(x*W1+b1)/L2*W2+b2")
     variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0,"L2",2.0]
     assert_equal(test_graph.ForwardPass(variables),2.0)
   end
 
-  def test_computational_graph_backward_pass_normal
-    test_graph = ComputationalGraph.new("(x*W1+b1)*W2+b2")
-    variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0]
+  def test_computational_graph_backward_pass_trivial
+    test_graph = ComputationalGraph.new("(x*W1+b1)/L2*W2+b2")
+    variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0,"L2",2.0]
     test_graph.ForwardPass(variables)
     trivial_loss = 1
-    puts test_graph.BackwardPass(trivial_loss)
-    assert_equal(test_graph.BackwardPass(trivial_loss),{"b2"=>1, "W2"=>2.0, "b1"=>1.0, "W1"=>1.0, "x"=>1.0})
+    assert_equal(test_graph.BackwardPass(trivial_loss),{"b2"=>1, "W2"=>1.0, "L2"=>-0.25, "b1"=>-0.25, "W1"=>-0.25, "x"=>-0.25})
   end
 
   def test_computational_graph_backward_pass_learning_quality
