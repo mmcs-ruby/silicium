@@ -286,5 +286,46 @@ module Silicium
     def dijkstra_algorythm(graph, starting_vertex)
       #
     end
+
+    # Implements algorithm of Kruskal
+    def kruskal_mst(graph)
+      mst = UnorientedGraph.new
+      uf = UnionFind.new(graph)
+      graph_to_sets(graph).each do |label, edge|
+        unless uf.connected?(edge[0], edge[1])
+          mst.add_edge!(edge[0], edge[1])
+          mst.label_edge!(edge[0], edge[1], label)
+          uf.union(edge[0], edge[1])
+        end
+      end
+      mst
+    end
+
+    class UnionFind
+      def initialize(graph)
+        @parents = graph.vertices.inject([]) { |parents, i| parents[i] = i; parents }
+      end
+
+      def connected?(vertex1, vertex2)
+        @parents[vertex1] == @parents[vertex2]
+      end
+
+      def union(vertex1, vertex2)
+        parent1, parent2 = @parents[vertex1], @parents[vertex2]
+        @parents.map! { |i| (i == parent1) ? parent2 : i }
+      end
+    end
+
+    ##
+    # "Split" graph into elements like :label = [from, to]
+    def graph_to_sets(graph)
+      labels = {}
+      graph.vertices.each do |from|
+        adjacted_with(from).each do |to|
+          labels[get_edge_label(from, to)] = Pair.new(from, to)
+        end
+      end
+      labels = labels.to_set.sort_by { |elem| elem[0] }.to_h
+    end
   end
 end
