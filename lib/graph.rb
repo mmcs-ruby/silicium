@@ -325,7 +325,7 @@ module Silicium
           labels[get_edge_label(from, to)] = Pair.new(from, to)
         end
       end
-      labels = labels.to_set.sort_by { |elem| elem[0] }.to_h
+      labels = labels.uniq.sort_by { |elem| elem[0] }.to_h
     end
   end
 end
