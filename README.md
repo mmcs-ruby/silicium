@@ -25,70 +25,115 @@ Or install it yourself as:
     $ gem install silicium
 
 ## Usage
-*   Graph Section:
+###   Graphs
 
-    Oriented Graph Initialization example:
-
+#### Graph initialization
+To create an empty graph just initialize an object:
+```ruby
+    g = OrientedGraph.new
+    g = UnorientedGraph.new
+````
+Of course, you can determine vertices (name them whatever you want!). To do that, write something like:
+```ruby
     g = OrientedGraph.new([{v: 0,     i: [:one]},
                           {v: :one,  i: [0, 'two']},
                           {v: 'two', i: [0, 'two']}])
+```
+You have to pass an `Array` of `Hashes`, each hash consists of pair of keys:
+* v: vertex name;
+* i: `Array` of adjacent vertices
 
-    Unoriented Graph Initialization example:
-
+Same goes for the case with unoriented graph (note that missing edges will be added automatically):
+```ruby
     g = UnorientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: [0, 'two']},
-                           {v: 'two', i: [0, 'two']}])
+                           {v: 'two', i: [0, 'two']}])``
+```
 
+#### Graph Methods:
+* Add vertex to your graph:
+```ruby
+    g.add_vertex!(Vertex)
+```
+* Add edge to your graph:
+```ruby
+    g.add_edge!(vertex_from, vertex_to)
+```
+* Get vertices adjacted with vertex: 
+```ruby
+    g.adjacted_with(vertex)
+```
+* Set label for the edge:
+ ```ruby
+     g.label_edge!(vertex_from, vertex_to, label)
+ ```
+* Get label for the edge:
+ ```ruby
+     g.get_edge_label(vertex_from, vertex_to)
+ ```
+* Set label for the vertex:
+ ```ruby
+     g.label_vertex!(vertex, label)
+ ```
+* Get label for the vertex:
+ ```ruby
+     g.get_vertex_label(vertex)
+ ```
+* Get number of vertices:
+ ```ruby
+     g.vertex_number
+ ```
+* Get number of edges:
+ ```ruby
+     g.edge_number
+ ```
+* Get number of vertex labels:
+ ```ruby
+     g.vertex_label_number
+ ```
+* Get number of vertex edges:
+ ```ruby
+     g.edge_label_number
+ ```
+* Check whether graph contains vertex:
+ ```ruby
+     g.has_vertex?(vertex)
+ ```
+* Check whether graph contains edge: 
+ ```ruby
+     g.has_edge?(vertex_from, vertex_to)
+ ```
+* Delete vertex:
+ ```ruby
+     g.delete_vertex!(vertex)
+ ```
+* Delete edge:
+ ```ruby
+     g.delete_edge!(vertex_from, vertex_to)
+ ```
+* Get array of vertices:
+ ```ruby
+     g.vertices
+ ```
 
-    Graph Methods:
+#### Graph algorithms:
 
-    Add vertex: add_vertex!(Vertex)
-
-    Add edge: add_edge!(vertex_from, vertex_to)
-
-
-    Get vertices adjacted with vertex: adjacted_with(vertex)
-
-
-    Set label for edge: label_edge!(vertex_from, vertex_to, label)
-
-    Get label for edge: get_edge_label(vertex_from, vertex_to)
-
-    Set label for vertex: label_vertex!(vertex, label)
-
-    Get label for vertex: get_vertex_label(vertex)
-
-
-    Get number of vertices: vertex_number
-
-    Get number of edges: edge_number
-
-    Get number of vertex labels: vertex_label_number
-
-    Get number of vertex edges:edge_label_number
-
-
-    Check if graph contains vertex: has_vertex?(vertex)
-
-    Check if graph contains edge: has_edge?(vertex_from, vertex_to)
-
-
-    Delete vertex: delete_vertex!(vertex)
-
-    Delete edge: delete_edge!(vertex_from, vertex_to)
-
-
-    Get array of vertices: vertices
-
-
-    Algorithms for graphs:
-
-    Check if graph is connected: connected?(graph)
-
-    BFS: breadth_first_search?(graph, starting_vertex, searching_vertex)
-
-    Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
-    
+* Check whether graph is connected:
+ ```ruby
+     g.connected?(graph)
+ ```
+* Breadth-First Search:
+ ```ruby
+     g.breadth_first_search?(graph, starting_vertex, searching_vertex)
+ ```
+* Algorithm of Dijkstra:
+```ruby
+     g.dijkstra_algorythm!(graph, starting_vertex)
+```  
+* Find Strongly Connected Components:
+```ruby
+     g.find_strongly_connected_components
+```
 ### Plotter
 
 #### Determine your function
