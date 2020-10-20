@@ -1,10 +1,10 @@
-require 'lib/linear_regression'
+require 'linear_regression'
 require 'test_helper'
 
 class LinearRegressionTest < MiniTest::Test
 
   include Silicium
-  @@delta = 0.0001
+  @@delta = 0.001
 
   @@plot1 = {-3 => -6, -2 => -4, -1 => -2, 0 => 0, 1=> 2, 2 => 4, 3 => 6, 4=>8, 5=>10, 6=>12, 7=>14, 8=>16}
   @@plot2 = {-5 => 1, -4 => 1, -3 => 1, -2 => 1, -1 => 1, 0 => 1, 1 => 1, 2 => 1, 3 => 1, 4 => 1, 5 => 1}
