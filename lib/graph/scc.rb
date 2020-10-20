@@ -6,7 +6,7 @@ module Silicium
 
       ##
       # Finds Strongly Connected Components (SCC) in graph. SCC is a subgraph where every vertex is reachable from every other vertex.
-      # @return Array of SCC. Each component is represented as Array of vertices.
+      # @return Array of SCC. Each component is represented as Array of vertices in decreasing order of their DFS timestamps.
       # @author vaimon
       def find_strongly_connected_components
         # Vertices we have already visited.
@@ -18,9 +18,7 @@ module Silicium
 
         # Step 1: Launch DFS to get order marks
         @vertices.keys.each do |key|
-          unless visited[key]
-            visited, order = scc_dfs_first key, visited, order
-          end
+          visited, order = scc_dfs_first key, visited, order unless visited[key]
         end
 
         # Step 2: Transpose adjacency list
@@ -53,13 +51,9 @@ module Silicium
       def scc_dfs_first(v, visited, order)
         visited[v] = true
         @vertices[v].each do |adj|
-          unless visited[adj]
-            visited, order = scc_dfs_first adj, visited, order
-          end
+          visited, order = scc_dfs_first adj, visited, order unless visited[adj]
         end
-        unless order.include? v
-          order << v
-        end
+        order << v unless order.include? v
         [visited, order]
       end
 
