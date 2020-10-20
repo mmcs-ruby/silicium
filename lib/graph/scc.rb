@@ -20,11 +20,14 @@ module Silicium
         @vertices.keys.each do |key|
           visited, order = scc_dfs_first key, visited, order unless visited[key]
         end
+        order.uniq!
 
         # Step 2: Transpose adjacency list
         transposed = transpose_adjacency_list
 
         # Step 3: Launch second DFS in reverse order of timestamps from Step 1 to build components.
+        # HACK: In original algorithm, we use *visited* again, but here the code is a bit
+        # optimized using *order* instead of *visited*
         until order.empty?
           component = []
           order, component = scc_dfs_second order.last, component, order, transposed
@@ -50,7 +53,7 @@ module Silicium
         @vertices[v].each do |adj|
           visited, order = scc_dfs_first adj, visited, order unless visited[adj]
         end
-        order << v unless order.include? v
+        order << v
         [visited, order]
       end
 
@@ -74,10 +77,10 @@ module Silicium
       # Parameters:
       #   +v+:              current vertex;
       #   +component+:      component we are building;
-      #   +visited+:        array of booleans representing which vertices have been processed;
+      #   +order+:          order of timestamps got after first DFS;
       #   +transposed+:     transposed adjacency list.
       #
-      # @return Tuple <code>[visited, component]</code> of params changed during current step of DFS.
+      # @return Tuple <code>[order, component]</code> of params changed during current step of DFS.
       def scc_dfs_second(v, component, order, transposed)
       order.delete v
       component << v
