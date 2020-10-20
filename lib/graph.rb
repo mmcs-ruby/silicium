@@ -287,22 +287,37 @@ module Silicium
       #
     end
 
-    ##
     # Implements algorithm of Kruskal
     def kruskal_mst(graph)
-      # TODO: check if graph oriented/non-connected/etc
-      mst = UnorientedGraph
-      labels = graph_to_sets(graph)
-      labels.each do |label, edge|
-        mst.add_edge!(edge[0], edge[1]) if add_edge_to_mst?(label, edge)
+      mst = UnorientedGraph.new
+      graph_to_sets(graph).each do |label, edge|
+        if add_edge_to_mst?(mst, edge)
+          mst.add_edge!(edge[0], edge[1])
+          mst.label_edge!(edge[0], edge[1], label)
+        end
       end
       # if adjacted_with(current_vertice) doesnt contain vertices from mst
       # go forward
       # else add to mst
     end
 
+    class UnionFind
+      def initialize
+        @parents = vertices.inject([]) { |parents, i| parents[i] = i; parents }
+      end
+
+      def connected?(vertex1, vertex2)
+        @parents[vertex1] == @parents[vertex2]
+      end
+
+      def union(vertex1, vertex2)
+        parent1, parent2 = @parents[vertex1], @parents[vertex2]
+        @parents.map! { |i| (i == parent1) ? parent2 : i }
+      end
+    end
+
     ##
-    #
+    # "Split" graph into elements like :label = [from, to]
     def graph_to_sets(graph)
       labels = {}
       graph.vertices.each do |from|
@@ -313,10 +328,11 @@ module Silicium
       labels = labels.to_set.sort_by { |elem| elem[0] }.to_h
     end
 
-    ##
     #
-    def add_edge_to_mst?(edge_label, pair)
-
+    def add_edge_to_mst?(mst, edge)
+      if has_edge?(from, to)
+        @parents[id1] == @parents[id2]
+      end
     end
   end
 end
