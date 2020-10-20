@@ -25,13 +25,10 @@ module Silicium
         transposed = transpose_adjacency_list
 
         # Step 3: Launch second DFS in reverse order of timestamps from Step 1 to build components.
-        visited = Hash.new(false)
-        order.reverse.each do |v|
-          unless visited[v]
-            component = []
-            visited, component = scc_dfs_second v, component, visited, transposed
-            res << component
-          end
+        until order.empty?
+          component = []
+          order, component = scc_dfs_second order.last, component, order, transposed
+          res << component
         end
         res
       end
@@ -81,16 +78,16 @@ module Silicium
       #   +transposed+:     transposed adjacency list.
       #
       # @return Tuple <code>[visited, component]</code> of params changed during current step of DFS.
-      def scc_dfs_second(v, component, visited, transposed)
-        visited[v] = true
-        component << v
-        transposed[v].each do |adj|
-          unless visited[adj]
-            visited, component = scc_dfs_second adj, component, visited, transposed
-          end
+      def scc_dfs_second(v, component, order, transposed)
+      order.delete v
+      component << v
+      transposed[v].each do |adj|
+        if order.include? adj
+          order,component = scc_dfs_second adj, component, order, transposed
         end
-        [visited, component]
       end
+      [order,component]
+    end
     end
   end
 
