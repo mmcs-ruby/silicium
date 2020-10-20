@@ -286,5 +286,37 @@ module Silicium
     def dijkstra_algorythm(graph, starting_vertex)
       #
     end
+
+    ##
+    # Implements algorithm of Kruskal
+    def kruskal_mst(graph)
+      # TODO: check if graph oriented/non-connected/etc
+      mst = UnorientedGraph
+      labels = graph_to_sets(graph)
+      labels.each do |label, edge|
+        mst.add_edge!(edge[0], edge[1]) if add_edge_to_mst?(label, edge)
+      end
+      # if adjacted_with(current_vertice) doesnt contain vertices from mst
+      # go forward
+      # else add to mst
+    end
+
+    ##
+    #
+    def graph_to_sets(graph)
+      labels = {}
+      graph.vertices.each do |from|
+        adjacted_with(from).each do |to|
+          labels[get_edge_label(from, to)] = Pair.new(from, to)
+        end
+      end
+      labels = labels.to_set.sort_by { |elem| elem[0] }.to_h
+    end
+
+    ##
+    #
+    def add_edge_to_mst?(edge_label, pair)
+
+    end
   end
 end
