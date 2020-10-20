@@ -290,20 +290,20 @@ module Silicium
     # Implements algorithm of Kruskal
     def kruskal_mst(graph)
       mst = UnorientedGraph.new
+      uf = UnionFind.new(graph)
       graph_to_sets(graph).each do |label, edge|
-        if add_edge_to_mst?(mst, edge)
+        unless uf.connected?(edge[0], edge[1])
           mst.add_edge!(edge[0], edge[1])
           mst.label_edge!(edge[0], edge[1], label)
+          uf.union(edge[0], edge[1])
         end
       end
-      # if adjacted_with(current_vertice) doesnt contain vertices from mst
-      # go forward
-      # else add to mst
+      mst
     end
 
     class UnionFind
-      def initialize
-        @parents = vertices.inject([]) { |parents, i| parents[i] = i; parents }
+      def initialize(graph)
+        @parents = graph.vertices.inject([]) { |parents, i| parents[i] = i; parents }
       end
 
       def connected?(vertex1, vertex2)
@@ -326,13 +326,6 @@ module Silicium
         end
       end
       labels = labels.to_set.sort_by { |elem| elem[0] }.to_h
-    end
-
-    #
-    def add_edge_to_mst?(mst, edge)
-      if has_edge?(from, to)
-        @parents[id1] == @parents[id2]
-      end
     end
   end
 end
