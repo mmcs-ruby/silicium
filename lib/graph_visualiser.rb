@@ -50,19 +50,20 @@ module Silicium
     ##
     # set all edges of the graph
     def set_edges(graph)
-      @edges = {}
-      #
-      #temp_coordinates = Hash.new
-      #@vertices.each do |vert|
-      #  temp_coordinates[vert[:v]] = vert
-      #end
-
+      @edges = []
       @vertices.keys.each do |v1|
         graph.vertices[v1].each do |v2|
           c1 = @vertices[v1]
           c2 = @vertices[v2]
-          arrow = draw_oriented_edge(c1.x,c1.y,c2.x,c2.y)
-          @edges[v1] = {vert1: v1, vert2: v2, arrow: arrow}
+          col = Color.new('random')
+          @edges.each do |vert|
+            if (vert[:vert1]==v2) and (vert[:vert2]==v1)
+              col = vert[:color]
+              break
+            end
+          end
+          arrow = draw_oriented_edge(c1.x,c1.y,c2.x,c2.y,col)
+          @edges.push({vert1: v1, vert2: v2, arrow: arrow, color: col})
         end
       end
     end
@@ -93,8 +94,7 @@ module Silicium
 
     ##
     # creates arrow of edge between vertices
-    def draw_oriented_edge(x1,y1,x2,y2)
-      col = Color.new('random')
+    def draw_oriented_edge(x1,y1,x2,y2,col)
       x_len = x1-x2
       y_len = y1-y2
       len = Math.sqrt(x_len*x_len+y_len*y_len)
