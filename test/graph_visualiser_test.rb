@@ -28,7 +28,23 @@ class GraphVisualiserTest < Minitest::Test
     change_edge_width(5)
     change_vertices_radius(20)
     #graph = OrientedGraph.new([{v: 0, i: []}, {v: :one, i: []}, {v: 'two', i: [0]}])
-    graph = OrientedGraph.new([{v: 0, i: [:one]}, {v: :one, i: [0, 'two']}, {v: 'two', i: [0, 'two']},{v: 2, i: [:one, 2]}, {v: :two, i: [2, 'two']}, {v: 'three', i: [0, 2]}])
+    graph = OrientedGraph.new([{v: 0, i: [:one]},
+                               {v: :one, i: [0, 'two']},
+                               {v: 'two', i: [0, 'two']},
+                               {v: 2, i: [:one, 2]},
+                               {v: :two, i: [2, 'two']},
+                               {v: 'three', i: [0, 2]}])
+    graph.label_vertex!(:one,'one')
+    graph.label_vertex!(0,'null')
+    graph.label_vertex!('two','two')
+    graph.label_vertex!(2,'2')
+    graph.label_vertex!(:two,':two')
+    graph.label_vertex!('three',3)
+
+    graph.label_edge!(0,:one,'0 to one')
+    #graph.label_edge!(:one,0,'one to 0')
+    graph.label_edge!(:one,'two','one to two')
+    graph.label_edge!(2,:one,'2 to one')
     set_graph(graph)
     show_window
   end

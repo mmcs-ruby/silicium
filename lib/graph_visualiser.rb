@@ -52,6 +52,12 @@ module Silicium
     ##
     # width of the edges
     @@line_width = 5
+    ##
+    # color of labels
+    @@label_color = Color.new('red')
+    ##
+    # color of vertices
+    @@vertex_color = Color.new('white')
 
     def set_oriented_graph(graph)
       set_vertices(graph)
@@ -63,34 +69,64 @@ module Silicium
       set_vertices(graph)
     end
 
+    ##
+    # creates labels of edges and vertices
     def set_labels(graph)
       @v_labels = {}
       graph.vertex_labels.keys.each do |v|
         @v_labels[v] = draw_vertex_label(v, graph.vertex_labels[v])
       end
+
+      @e_labels = {}
+      graph.edge_labels.keys.each do |pair|
+        @e_labels[pair] = draw_edge_label(pair, graph.edge_labels[pair])
+      end
     end
 
+    ##
+    # draws label on vertex
     def draw_vertex_label(v,label)
-      x = @vertices[v].x
-      y = @vertices[v].y
-      return Text.new(label,x: x, y: y, size: @@vert_radius, color: (Window.get :background))
+      if (label.class != String and label.class != Integer)
+        return
+      end
+      x = @vertices[v].x - Math.sqrt(2)/2*@@vert_radius
+      y = @vertices[v].y - Math.sqrt(2)/2*@@vert_radius
+      return Text.new(label,x: x, y: y, size: @@vert_radius, color: @@label_color)
+    end
+
+    ##
+    # draws label on edge
+    def draw_edge_label(pair,label)
+      if (label.class != String and label.class != Integer)
+        return
+      end
+      x1 = @vertices[pair[:first]].x
+      y1 = @vertices[pair[:first]].y
+      x2 = @vertices[pair[:second]].x
+      y2 = @vertices[pair[:second]].y
+      x_len = (x2-x1)/2
+      y_len = (y2-y1)/2
+      x = x1+x_len
+      y = y1+y_len
+
+      return Text.new(label,x: x, y: y, size: @@vert_radius, color: @@label_color)
     end
 
     ##
     # set all edges of the graph
     def set_oriented_edges(graph)
-      @edges = []
+      @edges = {}
       @vertices.keys.each do |v1|
         graph.vertices[v1].each do |v2|
           col = Color.new('random')
-          @edges.each do |vert|
-            if (vert[:vert1]==v2) and (vert[:vert2]==v1)
-              col = vert[:color]
-              break
-            end
+          while (col == @@label_color) or (col == @@vertex_color)
+            col = Color.new('random')
           end
-          arrow = draw_oriented_edge(v1,v2,col)
-          @edges.push({vert1: v1, vert2: v2, arrow: arrow, color: col})
+          if @edges.has_key?(Pair.new(v2,v1))
+            col = @edges[Pair.new(v2,v1)][:line].color
+            break
+          end
+          @edges[Pair.new(v1,v2)] = draw_oriented_edge(v1,v2,col)
         end
       end
     end
