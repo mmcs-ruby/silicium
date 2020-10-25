@@ -178,6 +178,18 @@ module Silicium
         @vertices
       end
 
+      ##
+      # Returns labels of edges
+      def edge_labels
+        @edge_labels
+      end
+
+      ##
+      # Returns labels of vertices
+      def vertex_labels
+        @vertex_labels
+      end
+
       protected
       ##
       # Adds edge to graph

@@ -55,16 +55,30 @@ module Silicium
 
     def set_oriented_graph(graph)
       set_vertices(graph)
-      set_edges(graph)
+      set_oriented_edges(graph)
+      set_labels(graph)
     end
 
     def set_unoriented_graph(graph)
       set_vertices(graph)
     end
 
+    def set_labels(graph)
+      @v_labels = {}
+      graph.vertex_labels.keys.each do |v|
+        @v_labels[v] = draw_vertex_label(v, graph.vertex_labels[v])
+      end
+    end
+
+    def draw_vertex_label(v,label)
+      x = @vertices[v].x
+      y = @vertices[v].y
+      return Text.new(label,x: x, y: y, size: @@vert_radius, color: (Window.get :background))
+    end
+
     ##
     # set all edges of the graph
-    def set_edges(graph)
+    def set_oriented_edges(graph)
       @edges = []
       @vertices.keys.each do |v1|
         graph.vertices[v1].each do |v2|
