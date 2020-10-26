@@ -88,45 +88,34 @@ module Silicium
 
       # This function returns a string: greatest common integer divisor of two polynoms
       def polynom_gcd(poly_1, poly_2)
-        coeff_array_1 = polynom_parser(poly_1)
-        coeff_array_2 = polynom_parser(poly_2)
-
         #"Bigger" polynom should be divided by "smaller" polynom, compare by degree
-        if coeff_array_1.size >= coeff_array_2.size
+        if polynom_parser(poly_1).size >= polynom_parser(poly_2).size
           dividend = poly_1
           divisor = poly_2
         else
           dividend = poly_2
           divisor = poly_1
         end
-
-        division = polynom_division(dividend, divisor)
-        remainder = division[1]
-
+        remainder = polynom_division(dividend, divisor)[1]
         #Providing precision because of storage of float numbers
         until polynom_parser(remainder).all?{|item| item.abs < 0.01} do
           division = polynom_division(divisor, remainder)
-          new_remainder = division[1]
           divisor = remainder
-          remainder = new_remainder
+          remainder = division[1]
         end
-
         # Division of greatest common divisor by number does not change the sense of greatest common divisor
         # So I do this to make the first coefficient of resulting polynom be 1
         normalizer = polynom_parser(divisor)[0]
         temp_result = polynom_division(divisor, normalizer.to_s+"*x**0")[0]
-
         #There still can be an error, so I round coefficients which are really needed in it(condition in map! method)
-        coeffs = polynom_parser(temp_result)
-        coeffs.map! { |element| (element.round - element).abs < 0.01 ? element.round.to_f : element}
-
+        coefficients = polynom_parser(temp_result)
+        coefficients.map! { |element| (element.round - element).abs < 0.01 ? element.round.to_f : element}
         # And then create a new string with valid coefficients - The True Greatest Common Divisor
         gcd = ""
-        size = coeffs.size
-        for index in 0..(size - 1) do
-          coeff = coeffs[index]
-          plus = (coeff >= 0 and index != 0) ? "+" : ""
-          gcd += "#{plus}#{coeff}*x**#{size - index - 1}"
+        coefficients.each_index do |index|
+          coefficient = coefficients[index]
+          plus = (coefficient >= 0 and index != 0) ? "+" : ""
+          gcd += "#{plus}#{coefficient}*x**#{coefficients.size - index - 1}"
         end
         gcd
       end
