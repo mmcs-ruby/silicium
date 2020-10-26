@@ -3,7 +3,6 @@ require_relative 'geometry/figure'
 module Silicium
 
   module Geometry
-
     ##
     # Represents a point as two coordinates
     # in two-dimensional space
@@ -14,8 +13,9 @@ module Silicium
     # in three-dimensional space
     Point3d = Struct.new(:x, :y, :z)
 
+
     ##
-    #Calculates the distance from given points in two-dimensional space
+    # Calculates the distance from given points in two-dimensional space
     def distance_point_to_point2d(a, b)
       Math.sqrt((b.x - a.x)**2 + (b.y - a.y)**2)
     end
@@ -37,9 +37,7 @@ module Silicium
       ##
       # Initializes with two objects of type Point
       def initialize(point1, point2)
-        if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)
-          raise ArgumentError, 'You need 2 different points'
-        end
+        raise ArgumentError, 'You need 2 different points' if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)
 
         if point1.x.equal?(point2.x)
           @x_coefficient = 1
@@ -53,7 +51,12 @@ module Silicium
         end
       end
 
-
+      # Initializes with coefficients
+      def initializeWithCoefficients(a, b, c)
+        @x_coefficient = a
+        @y_coefficient = b
+        @free_coefficient = c
+      end
 
       ##
       # Checks the point lies on the line or not
@@ -61,8 +64,6 @@ module Silicium
         (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
       end
 
-
-      ##
       # Checks if two lines are parallel
       def parallel?(other_line)
         @x_coefficient.equal?(other_line.x_coefficient) && @y_coefficient.equal?(other_line.y_coefficient)
@@ -79,16 +80,19 @@ module Silicium
       def perpendicular?(other_line)
         (@x_coefficient * other_line.x_coefficient).equal?(- @y_coefficient * other_line.y_coefficient)
       end
+
       ##
       # Checking if the point is on a segment
       def check_point_on_segment(point)
         (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
       end
+
       ##
       # Returns a point of intersection of two lines
       # If not intersecting returns nil
       def intersection_point(other_line)
         return nil unless intersecting?(other_line)
+
         divisor = @x_coefficient * other_line.y_coefficient - other_line.x_coefficient * @y_coefficient
         x = (@y_coefficient * other_line.free_coefficient - other_line.y_coefficient * @free_coefficient) / divisor
         y = (@free_coefficient * other_line.x_coefficient - other_line.free_coefficient * @x_coefficient) / divisor
@@ -99,7 +103,8 @@ module Silicium
       # Returns distance between lines
       def distance_to_line(other_line)
         return 0 if intersecting?(other_line)
-        (@free_coefficient - other_line.free_coefficient).abs / Math.sqrt(@x_coefficient ** 2 + @y_coefficient ** 2)
+
+        (@free_coefficient - other_line.free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2)
       end
 
       ##
@@ -107,43 +112,103 @@ module Silicium
       # return 0 if the equation does not define a line.
       def distance_point_to_line(point)
         return 0 if @x_coefficient.eql?(0) && @y_coefficient.eql?(0)
+
         (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
       end
 
-
-    end
-  ##
-  # Class represents a plane as equation Ax + By + Cz+D = 0
-  # in two-dimensional space
-  class Plane3d
-    attr_reader :x_coefficient
-    attr_reader :y_coefficient
-    attr_reader :z_coefficient
-    attr_reader :free_coefficient
-
-    ##
-    # Initializes with two objects of type Point
-    def initialize(point1, point2, point3)
-      if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)&&point1.z.equal?(point2.z)&&
-          point3.x.equal?(point2.x) && point3.y.equal?(point2.y)&&point3.z.equal?(point2.z)&&
-          point3.x.equal?(point1.x) && point3.y.equal?(point1.y)&&point3.z.equal?(point1.z)
-        norm = norm_vect(point1, point2, point3)
-        @x_coefficient=norm.x
-        @y_coefficient=norm.y
-        @z_coefficient=norm.z
-        @free_coefficient = -point1.x*norm.x+ (-point1.y*norm.y)+ (-point1.z*norm.z)
+      ##
+      # The distance between parallel lines
+      def distance_between_parallel_lines(other_line)
+        if !parallel?(other_line)
+          raise 'Lines are not parallel'
+        else
+          (other_line.free_coefficient - @free_coefficient).abs / Math::sqrt(@x_coefficient**2 + @y_coefficient**2)
+        end
       end
-      raise ArgumentError, 'You need 3 different points'
 
     end
     ##
-    # check if the points isn't on the same line
-    def point_is_on_line?(point1,point2,point3)
-      (@x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z+ @free_coefficient).equal?(0)&&
-          (@x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z+ @free_coefficient).equal?(0)&&
-          (@x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z+ @free_coefficient).equal?(0)
+    # Class represents a plane as equation Ax + By + Cz+D = 0
+    # in two-dimensional space
+    class Plane3d
+      attr_reader :x_coefficient
+      attr_reader :y_coefficient
+      attr_reader :z_coefficient
+      attr_reader :free_coefficient
 
-    end
+      # Initializes with two objects of type Point
+      def initialize(point1, point2, point3)
+        # if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)&&point1.z.equal?(point2.z) ||
+        #  point3.x.equal?(point2.x) && point3.y.equal?(point2.y)&&point3.z.equal?(point2.z) ||
+        #   point3.x.equal?(point1.x) && point3.y.equal?(point1.y)&&point3.z.equal?(point1.z)
+        vect1 = Vector3d.new(point1)
+        norm = vect1.norm_vect(point2, point3)
+        @x_coefficient = norm.x
+        @y_coefficient = norm.y
+        @z_coefficient = norm.z
+        @free_coefficient = -point1.x * norm.x + (-point1.y * norm.y) + (-point1.z * norm.z)
+        # end
+        # raise ArgumentError, 'You need 3 different points'
+      end
+
+      # Initializes with coefficients
+      def initializeWithCoefficients(a, b, c, d)
+        @x_coefficient = a
+        @y_coefficient = b
+        @z_coefficient = c
+        @free_coefficient = d
+      end
+
+      ##
+      # check if the points isn't on the same line
+      def point_is_on_line?(point1, point2, point3)
+        (@x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z + @free_coefficient).equal?(0) &&
+            (@x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z + @free_coefficient).equal?(0) &&
+            (@x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z + @free_coefficient).equal?(0)
+      end
+
+      # check if the point isn't on the plane
+      def point_is_on_plane?(point)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @z_coefficient * point.z + @free_coefficient).equal?(0)
+      end
+
+      # Checks if two planes are parallel in 3-dimensional space
+      def parallel?(other_plane)
+        vect1 = Vector3d.new(Point3d.new(@x_coefficient, @y_coefficient, @z_coefficient))
+        vect2 = Vector3d.new(Point3d.new(other_plane.x_coefficient, other_plane.y_coefficient, other_plane.z_coefficient))
+        vect1.is_collinear?(vect2)
+      end
+
+      ##
+      # Checks if two planes are intersecting in 3-dimensional space
+      def intersecting?(other_plane)
+        @x_coefficient != other_plane.x_coefficient || @y_coefficient != other_plane.y_coefficient || @z_coefficient != other_plane.z_coefficient
+      end
+
+      ##
+      # Checks if two planes are perpendicular
+      def perpendicular?(other_plane)
+        (@x_coefficient * other_plane.x_coefficient + @y_coefficient * other_plane.y_coefficient + @z_coefficient * other_plane.z_coefficient).equal?(0)
+      end
+
+      ##
+      # The distance between parallel planes
+      def distance_between_parallel_planes(other_plane)
+        if !parallel?(other_plane)
+          raise 'Planes are not parallel'
+        else
+          (other_plane.free_coefficient - @free_coefficient).abs / Math::sqrt(@x_coefficient**2 + @y_coefficient**2 + @z_coefficient**2)
+        end
+      end
+
+      ##
+      # The distance from a point to a plane
+      #
+      def distance_point_to_plane(point)
+        norm =  1 / Math.sqrt(@x_coefficient**2 + @y_coefficient**2 + @z_coefficient**2)
+        (@x_coefficient * norm * point.x + @y_coefficient * norm * point.y +
+            @z_coefficient * norm * point.z + @free_coefficient * norm).abs
+      end
     end
     ##
     # Class represents vector
@@ -161,10 +226,11 @@ module Silicium
         @y = point.y
         @z = point.z
       end
+
       ##
       # Checks if vector is zero vector
       def zero_vector?
-        (@x.eql?(0) && @y.eql?(0) && @z.eql?(0)).eql?(true)? true : false
+        (@x.eql?(0) && @y.eql?(0) && @z.eql?(0)).eql?(true) ? true : false
       end
 
       ##
@@ -176,75 +242,89 @@ module Silicium
       ##
       # Add one vector to another
       def addition!(other_vector)
-        @x+=other_vector.x
-        @y+=other_vector.y
-        @z+=other_vector.z
+        @x += other_vector.x
+        @y += other_vector.y
+        @z += other_vector.z
       end
-
 
       ##
       # Sub one vector from another
       def subtraction!(other_vector)
-        @x-=other_vector.x
-        @y-=other_vector.y
-        @z-=other_vector.z
+        @x -= other_vector.x
+        @y -= other_vector.y
+        @z -= other_vector.z
       end
 
       ##
       # Mult vector by number
       def multiplication_by_number!(r)
-        @x*=r
-        @y*=r
-        @z*=r
+        @x *= r
+        @y *= r
+        @z *= r
       end
 
       ##
       # Returns scalar multiplication of 2 vectors
       def scalar_multiplication(other_vector)
-        x*other_vector.x + y*other_vector.y + z*other_vector.z
+        x * other_vector.x + y * other_vector.y + z * other_vector.z
       end
 
       ##
       # Returns cos between two vectors
       def cos_between_vectors(other_vector)
-        scalar_multiplication(other_vector)/(length*other_vector.length).to_f
+        scalar_multiplication(other_vector) / (length * other_vector.length).to_f
       end
 
       ##
       # Returns vector multiplication of 2 vectors
       def vector_multiplication(other_vector)
-        x=@y*other_vector.z - @z*other_vector.y
-        y=@z*other_vector.x - @x*other_vector.z
-        z=@x*other_vector.y - @y*other_vector.x
+        x = @y * other_vector.z - @z * other_vector.y
+        y = @z * other_vector.x - @x * other_vector.z
+        z = @x * other_vector.y - @y * other_vector.x
         Vector3d.new(Point3d.new(x, y, z))
       end
+
       ##
       # Find normal vector
       ##
-      #vector mult
+      # vector mult
       def norm_vect(point2, point3)
-        point1=Point3d(@x,@y,@z)
-        vector1=Vector3d(point1)
-        vector2=Vector3d(point2)
-        vector3=Vector3d(point3)
-        #checking if the points isn't on the same line
-
-        if point_is_on_line?(point1,point2,point3)
-          #check after
-          x= 0
-          y = 0
-          z = 0
-
-        else
-          vector12=vector1.scalar_multiplication(vector2)
-          vector13=vector1.scalar_multiplication(vector3)
-          x=vector12.y*vector13.z-vector12.z*vector13.y
-          y=vector12.x*vector13.z-vector12.z*vector13.x
-          z=vector12.x*vector13.y-vector12.y*vector13.x
-          end
-        Vector3d(x,y,z)
-    end
+        point1 = Point3d.new(@x, @y, @z)
+        vector1 = Vector3d.new(point1)
+        vector2 = Vector3d.new(point2)
+        vector3 = Vector3d.new(point3)
+        # checking if the points isn't on the same line
+        # finding vector between points 1 and 2 ;1 and 3
+        vector12 = Vector3d.new(Point3d.new(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z))
+        vector13 = Vector3d.new(Point3d.new(point3.x - point1.x, point3.y - point1.y, point3.z - point1.z))
+        # vector13=vector1.scalar_multiplication(vector3)
+        x = vector12.y * vector13.z - vector12.z * vector13.y
+        y = -(vector12.x * vector13.z - vector12.z * vector13.x)
+        z = vector12.x * vector13.y - vector12.y * vector13.x
+        Vector3d.new(Point3d.new(x, y, z))
       end
+
+
+      def sign(integer)
+        integer >= 0 ? 1 : -1
+      end
+      ##
+      #  Check if two vectors are collinear
+      def is_collinear?(vector2)
+        x1 = (vector2.x).abs
+        x2 = @x.abs
+        y1 = (vector2.y).abs
+        y2 = @y.abs
+        z1 = (vector2.z).abs
+        z2 = @z.abs
+        x = x1 > x2  ? x1 / x2 : x2 / x1
+        y =  y1 > y2  ? y1 / y2 : y2 / y1
+        z =  z1 > z2  ? z1 / z2 : z2 / z1
+        (x * sign(vector2.x) * sign(@x) == y * sign(vector2.y) * sign(@y)) &&
+            (x * sign(vector2.x) * sign(@x) == z * sign(vector2.z) * sign(@z)) &&
+            (z * sign(vector2.z) * sign(@z) == y * sign(vector2.y) * sign(@y))
+      end
+    end
     ##
     # The distance from a point to a line on a plane
     # The line is defined by two points
@@ -285,9 +365,7 @@ module Silicium
 
     def put_point_in_part(part, point, direction)
       direction = method(direction)
-      while part.size >= 2 && !direction.call(part[part.size - 2], part[part.size - 1], point)
-        part.pop
-      end
+      part.pop while part.size >= 2 && !direction.call(part[part.size - 2], part[part.size - 1], point)
       part.push(point)
     end
 
@@ -307,12 +385,8 @@ module Silicium
       (1...points.size).each do |i|
         point = points[i]
         is_last = i == points.size - 1
-        if is_last || clockwise(first, point, last)
-          put_point_in_part(up, point, :clockwise)
-        end
-        if is_last || counter_clockwise(first, point, last)
-          put_point_in_part(down, point, :counter_clockwise)
-        end
+        put_point_in_part(up, point, :clockwise) if is_last || clockwise(first, point, last)
+        put_point_in_part(down, point, :counter_clockwise) if is_last || counter_clockwise(first, point, last)
       end
       up + down[1...-1]
     end
@@ -353,7 +427,7 @@ module Silicium
       process_line_by_coordinates(line_equation, :process_cf)
     end
 
-    class VariablesOrderException < Exception
+    class VariablesOrderException < RuntimeError
     end
 
     def needed_variables_order?(before, after)
@@ -365,9 +439,7 @@ module Silicium
         before = line_equation.index(variable) + 1
         after = line_equation.index('/')
 
-        unless needed_variables_order?(before, after)
-          throw VariablesOrderException
-        end
+        throw VariablesOrderException unless needed_variables_order?(before, after)
 
         line_equation.slice(before..after).gsub('/', '').to_f * -1
       else
@@ -391,54 +463,50 @@ module Silicium
         res[i] = v1[(i + 1) % 3] * v2[(i + 2) % 3] - v1[(i + 2) % 3] * v2[(i + 1) % 3]
       end
       res
-    e
+      e
 
-    def vector_length(vector)
-      Math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
-    end
+      def vector_length(vector)
+        Math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
+      end
 
-    ##
-    # Calculates the distance from a point given by a Point3d structure
-    # to a straight line given by a canonical equation.
-    # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
-    #
-    # Important: mandatory order of variables: x, y, z
-    def point_to_line_distance_3d(point, line_eq)
-      dir_vector = directing_vector3d(line_eq)
-      line_point = height_point_3d(line_eq)
-      height_vector = [line_point[0] - point.x, line_point[1] - point.y, line_point[2] - point.z]
+      ##
+      # Calculates the distance from a point given by a Point3d structure
+      # to a straight line given by a canonical equation.
+      # Example, (x-0) / 26 = (y + 300) / * (- 15) = (z-200) / 51
+      #
+      # Important: mandatory order of variables: x, y, z
+      def point_to_line_distance_3d(point, line_eq)
+        dir_vector = directing_vector3d(line_eq)
+        line_point = height_point_3d(line_eq)
+        height_vector = [line_point[0] - point.x, line_point[1] - point.y, line_point[2] - point.z]
 
-      height_on_dir = vectors_product(height_vector, dir_vector)
-      vector_length(height_on_dir) / vector_length(dir_vector)
-    end
+        height_on_dir = vectors_product(height_vector, dir_vector)
+        vector_length(height_on_dir) / vector_length(dir_vector)
+      end
 
+      # Closest pair of points_________________________
+      # find minimum distance between two points in set
+      def brute_min(points, current = Float::INFINITY)
+        return current  if points.length < 2
 
-    # Closest pair of points_________________________
-    # find minimum distance between two points in set
-    def brute_min(points, current = Float::INFINITY)
-      return current  if points.length < 2
+        head = points[0]
+        points.delete_at(0)
+        new_min = points.map { |x| distance_point_to_point2d(head, x)}.min
+        new_сurrent = [new_min, current].min
+        brute_min(points, new_сurrent)
+      end
 
-      head = points[0]
-      points.delete_at(0)
-      new_min = points.map { |x| distance_point_to_point2d(head, x)}.min
-      new_сurrent = [new_min, current].min
-      brute_min(points, new_сurrent)
-    end
+      def divide_min(points)
+        half = points.length / 2
+        points.sort_by! { |p| [p.x, p.y] }
+        minimum = [brute_min(points[0..half]), brute_min(points[half..points.length])].min
+        near_line = points.select { |x| x > half - minimum and x < half + minimum}
+        min([brute_min(near_line), minimum])
+      end
 
-    def divide_min(points)
-      half = points.length/2
-      points.sort_by! { |p| [p.x, p.y] }
-      minimum = [brute_min(points[0..half]), brute_min(points[half..points.length])].min
-      near_line = points.select{|x| x > half - minimum and x < half + minimum}
-      min([brute_min(near_line), minimum])
-    end
-
-
-    def insert_eq(line_equation)
-      line_equation.gsub(' ', '').insert(line_equation.length, '=')
-    end
-
-
+      def insert_eq(line_equation)
+        line_equation.gsub(' ', '').insert(line_equation.length, '=')
+      end
     end
   end
   end
