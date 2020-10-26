@@ -53,11 +53,14 @@ module Silicium
         end
       end
 
+
+
       ##
       # Checks the point lies on the line or not
       def point_is_on_line?(point)
         (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
       end
+
 
       ##
       # Checks if two lines are parallel
@@ -76,7 +79,11 @@ module Silicium
       def perpendicular?(other_line)
         (@x_coefficient * other_line.x_coefficient).equal?(- @y_coefficient * other_line.y_coefficient)
       end
-
+      ##
+      # Checking if the point is on a segment
+      def check_point_on_segment(point)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
+      end
       ##
       # Returns a point of intersection of two lines
       # If not intersecting returns nil
@@ -103,8 +110,41 @@ module Silicium
         (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
       end
 
-    end
 
+    end
+  ##
+  # Class represents a plane as equation Ax + By + Cz+D = 0
+  # in two-dimensional space
+  class Plane3d
+    attr_reader :x_coefficient
+    attr_reader :y_coefficient
+    attr_reader :z_coefficient
+    attr_reader :free_coefficient
+
+    ##
+    # Initializes with two objects of type Point
+    def initialize(point1, point2, point3)
+      if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)&&point1.z.equal?(point2.z)&&
+          point3.x.equal?(point2.x) && point3.y.equal?(point2.y)&&point3.z.equal?(point2.z)&&
+          point3.x.equal?(point1.x) && point3.y.equal?(point1.y)&&point3.z.equal?(point1.z)
+        norm = norm_vect(point1, point2, point3)
+        @x_coefficient=norm.x
+        @y_coefficient=norm.y
+        @z_coefficient=norm.z
+        @free_coefficient = -point1.x*norm.x+ (-point1.y*norm.y)+ (-point1.z*norm.z)
+      end
+      raise ArgumentError, 'You need 3 different points'
+
+    end
+    ##
+    # check if the points isn't on the same line
+    def point_is_on_line?(point1,point2,point3)
+      (@x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z+ @free_coefficient).equal?(0)&&
+          (@x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z+ @free_coefficient).equal?(0)&&
+          (@x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z+ @free_coefficient).equal?(0)
+
+    end
+    end
     ##
     # Class represents vector
     # in three-dimensional space
@@ -112,6 +152,7 @@ module Silicium
       attr_reader :x
       attr_reader :y
       attr_reader :z
+
       ##
       # Initializes with one objects of type Point3d
       # 2nd point is (0,0,0)
@@ -139,6 +180,7 @@ module Silicium
         @y+=other_vector.y
         @z+=other_vector.z
       end
+
 
       ##
       # Sub one vector from another
@@ -176,8 +218,33 @@ module Silicium
         z=@x*other_vector.y - @y*other_vector.x
         Vector3d.new(Point3d.new(x, y, z))
       end
-    end
+      ##
+      # Find normal vector
+      ##
+      #vector mult
+      def norm_vect(point2, point3)
+        point1=Point3d(@x,@y,@z)
+        vector1=Vector3d(point1)
+        vector2=Vector3d(point2)
+        vector3=Vector3d(point3)
+        #checking if the points isn't on the same line
 
+        if point_is_on_line?(point1,point2,point3)
+          #check after
+          x= 0
+          y = 0
+          z = 0
+
+        else
+          vector12=vector1.scalar_multiplication(vector2)
+          vector13=vector1.scalar_multiplication(vector3)
+          x=vector12.y*vector13.z-vector12.z*vector13.y
+          y=vector12.x*vector13.z-vector12.z*vector13.x
+          z=vector12.x*vector13.y-vector12.y*vector13.x
+          end
+        Vector3d(x,y,z)
+    end
+      end
     ##
     # The distance from a point to a line on a plane
     # The line is defined by two points
@@ -324,7 +391,7 @@ module Silicium
         res[i] = v1[(i + 1) % 3] * v2[(i + 2) % 3] - v1[(i + 2) % 3] * v2[(i + 1) % 3]
       end
       res
-    end
+    e
 
     def vector_length(vector)
       Math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
@@ -371,6 +438,8 @@ module Silicium
       line_equation.gsub(' ', '').insert(line_equation.length, '=')
     end
 
+
+    end
   end
-end
+  end
 
