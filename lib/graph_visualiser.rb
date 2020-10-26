@@ -45,6 +45,7 @@ module Silicium
 
     def set_unoriented_graph(graph)
       set_vertices(graph)
+      set_edges(graph)
     end
 
     ##
@@ -61,7 +62,7 @@ module Silicium
         graph.vertices[v1].each do |v2|
           c1 = @vertices[v1]
           c2 = @vertices[v2]
-          arrow = draw_oriented_edge(c1.x,c1.y,c2.x,c2.y)
+          arrow =(graph.class == OrientedGraph)? draw_oriented_edge(c1.x,c1.y,c2.x,c2.y):draw_unoriented_edge(c1.x,c1.y,c2.x,c2.y)
           @edges[v1] = {vert1: v1, vert2: v2, arrow: arrow}
         end
       end
@@ -92,6 +93,7 @@ module Silicium
     end
 
     ##
+    #
     # creates arrow of edge between vertices
     def draw_oriented_edge(x1,y1,x2,y2)
       col = Color.new('random')
@@ -123,6 +125,28 @@ module Silicium
       triangle = Triangle.new(x1: pos_x1, y1: pos_y1, x2: pos_x2, y2: pos_y2, x3: pos_x3, y3: pos_y3, color: col)
 
       return {line: line, triangle: triangle}
+    end
+
+    def draw_unoriented_edge(x1,y1,x2,y2)
+      col = Color.new('random')
+      x_len = x1-x2
+      y_len = y1-y2
+      len = Math.sqrt(x_len*x_len+y_len*y_len)
+      sin = y_len/len
+      cos = x_len/len
+      pos_x0 = x1 - @@vert_radius*cos
+      pos_y0 = y1 - @@vert_radius*sin
+
+      x_len = x2-x1
+      y_len = y2-y1
+      sin = y_len/len
+      cos = x_len/len
+      pos_x1 = x2 - @@vert_radius*cos
+      pos_y1 = y2 - @@vert_radius*sin
+
+      line = Line.new(x1: pos_x0, y1: pos_y0, x2: pos_x1, y2: pos_y1, width: 5, color: col)
+
+      return {line: line}
     end
     ##
     # show graph on the screen
