@@ -88,7 +88,6 @@ module Silicium
 
       # This function returns a string: greatest common integer divisor of two polynoms
       def polynom_gcd(poly_1, poly_2)
-        #"Bigger" polynom should be divided by "smaller" polynom, compare by degree
         if polynom_parser(poly_1).size >= polynom_parser(poly_2).size
           dividend = poly_1
           divisor = poly_2
@@ -97,20 +96,15 @@ module Silicium
           divisor = poly_1
         end
         remainder = polynom_division(dividend, divisor)[1]
-        #Providing precision because of storage of float numbers
         until polynom_parser(remainder).all?{|item| item.abs < 0.01} do
           division = polynom_division(divisor, remainder)
           divisor = remainder
           remainder = division[1]
         end
-        # Division of greatest common divisor by number does not change the sense of greatest common divisor
-        # So I do this to make the first coefficient of resulting polynom be 1
         normalizer = polynom_parser(divisor)[0]
         temp_result = polynom_division(divisor, normalizer.to_s+"*x**0")[0]
-        #There still can be an error, so I round coefficients which are really needed in it(condition in map! method)
         coefficients = polynom_parser(temp_result)
         coefficients.map! { |element| (element.round - element).abs < 0.01 ? element.round.to_f : element}
-        # And then create a new string with valid coefficients - The True Greatest Common Divisor
         gcd = ""
         coefficients.each_index do |index|
           coefficient = coefficients[index]
