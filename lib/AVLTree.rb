@@ -42,11 +42,14 @@ class AvlTree
     @dummy.parent = @dummy
   end
 
-  def initialize(node_list = null)
+  def initialize(node_list = nil)
     @dummy = make_dummy
-    @tree_size = node_list.nil? ? 0 : node_list.size
+    @tree_size = 0
 
-    node_list.each {|node| insert_value node}
+    unless node_list.nil?
+      node_list.each { |node| insert_value node }
+
+    end
 
   end
 
@@ -62,7 +65,7 @@ class AvlTree
     node_x.right = node_y
     node_x.parent = node_y.parent
 
-    if !node_y.parent.eql? dummy
+    if !(node_y.parent.eql? @dummy)
 
       if node_y.parent.left.eql? node_y
         node_y.parent.left = node_x
@@ -92,7 +95,7 @@ class AvlTree
     node_y.left = node_x
     node_y.parent = node_x.parent
 
-    if !node_x.parent.eql? dummy
+    if !(node_x.parent.eql? @dummy)
 
       if node_x.parent.left.eql? node_x
         node_x.parent.left = node_y
@@ -112,7 +115,7 @@ class AvlTree
 
   def get_balance_factor(node)
 
-    unless node.eql? dummy
+    unless node.eql? @dummy
       return node.left.get_height - node.right.get_height
     end
 
@@ -121,23 +124,25 @@ class AvlTree
 
   def balance(node)
     #Big left turn
-    if (get_balance_factor node) == 2
+    if get_balance_factor(node) == 2
 
-      if (get_balance_factor node.left) < 0
+      if get_balance_factor(node.left) < 0
         node.left = turn_left node.left
       end
 
       return turn_right node
     end
     #Big right turn
-    if (get_balance_factor node) == -2
+    if get_balance_factor(node) == -2
 
-      if (get_balance_factor node.right) > 0
+      if get_balance_factor(node.right) > 0
         node.right = turn_right node.right
       end
 
-      turn_left node
+      return turn_left node
     end
+
+    node
   end
 
   def insert_value(value)
@@ -163,7 +168,8 @@ class AvlTree
       @dummy.left = new_node
       @dummy.right = new_node
 
-    else if value < prev.data
+    else
+      if value < prev.data
            prev.left = new_node
 
            if @dummy.left.eql? prev
@@ -192,34 +198,158 @@ class AvlTree
     new_node
   end
 
-  def print_node(current, width = 0)
-    spaces = ''
+  def find(value)
+    current = @dummy.parent
+    until current.eql? @dummy
 
-    (0..width).each do
-      spaces += "  "
-    end
-    if current.eql? @dummy
-      puts "#{spaces}Dummy\n"
-      return
+      if value < current.data
+        current = current.left
+        next
+      else if current.data < value
+        current = current.right
+        next
+        end
+      end
+
+      break
     end
 
-    print_node current.right, width + 5
-    puts "#{spaces} #{current.data}\n"
-    print_node current.left, width + 5
+    res = (current.eql? @dummy) ? nil : current
   end
 
-  def print_tree
-    print_node @dummy.parent
-    puts "********************************************************\n"
+  def get_max(node)
+    temp_max = node
+    unless temp_max.eql? @dummy
+      until temp_max.right.eql? @dummy
+        temp_max = temp_max.right
+      end
+    end
+
+    temp_max
   end
+
+  def get_min(node)
+    temp_min = node
+    unless temp_min.eql? @dummy
+      until temp_min.right.eql? @dummy
+        temp_min = temp_min.right
+      end
+    end
+
+    temp_min
+  end
+
+  def delete(value)
+    elem = find(value)
+    if elem.nil?
+      return nil
+    end
+    balpoint = elem.parent
+    #elem is list
+    if elem.right.eql? @dummy and elem.left.eql? @dummy
+      parent = elem.parent
+      if !parent.eql? dummy
+        if parent.left == elem
+          parent.left = @dummy
+        else
+          parent.right = @dummy
+        end
+      else
+        @dummy.parent = @dummy
+        @dummy.left = @dummy
+        @dummy.right = @dummy
+      end
+
+    else
+      #elem not list with left subtree
+      if elem.right.eql? @dummy
+
+        if elem.parent.eql? @dummy
+          @dummy.parent = elem.left
+          elem.left.parent = @dummy
+          @dummy.right = get_max(elem.left)
+
+        else
+          elem.left.parent = elem.parent
+          if (elem.parent.right.eql? elem)
+            elem.parent.right = elem.left
+
+            if elem.eql? @dummy.right
+              @dummy.right = get_max(elem.left)
+            end
+
+          else
+            elem.parent.left = elem.left
+          end
+        end
+
+      else
+        #elem not list with right subtree
+        if elem.left.eql? @dummy
+
+          if elem.parent.eql? @dummy
+            @dummy.parent = elem.right
+            elem.right.parent = @dummy
+            @dummy.left = get_min(elem.right)
+
+          else
+            elem.right.parent = elem.parent
+            if (elem.parent.right.eql? elem)
+              elem.parent.right = elem.right
+
+            else
+              elem.parent.left = elem.right
+              if elem.eql? @dummy.left
+                @dummy.left = get_min(elem.right)
+              end
+            end
+          end
+        end
+      end
+    end
+
+    @tree_size -= 1
+
+    until balpoint.eql? dummy
+      balpoint.set_height(@dummy)
+      if (get_balance_factor balpoint).abs > 1
+        if balpoint.parent.eql? @dummy
+          @dummy.parent = balance(balpoint)
+
+        else
+          balance(balpoint)
+        end
+      end
+
+      balpoint = balpoint.parent
+    end
+
+    elem
+  end
+
+  #def print_node(current, width = 0)
+  #spaces = ''
+
+  #(0..width).each do
+  # spaces += "  "
+  #end
+  #if current.eql? @dummy
+  #  puts "#{spaces}Dummy\n"
+  # return
+  #end
+
+  #print_node current.right, width + 5
+  # puts "#{spaces} #{current.data}\n"
+  #print_node current.left, width + 5
+  #end
+
+  #def print_tree
+  #print_node @dummy.parent
+  #puts "********************************************************\n"
+  #end
 end
 
-my_tree = AvlTree.new([2, 3])
-my_tree.insert_value 4
-my_tree.insert_value 6
-my_tree.insert_value 13
-my_tree.insert_value 8
-my_tree.insert_value 4
-my_tree.print_tree
+
+
 
 
