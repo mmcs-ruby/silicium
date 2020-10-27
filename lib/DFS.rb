@@ -6,13 +6,9 @@ def depth_first_search?(graph, start, goal)
   until stack.empty?
     node = stack.pop
     raise ArgumentError if graph.vertices[node].nil?
-    if node == goal
-      return true
-    end
+    return true if node == goal
 
-    unless visited[node]
-      add_to_stack(graph, node, stack, visited)
-    end
+    add_to_stack(graph, node, stack, visited) unless visited[node]
   end
   false
 end
@@ -35,6 +31,8 @@ def dfs_traverse_recursive(graph, node, visited, traversed)
   visited[node] = true
   traversed.push(node)
   graph.vertices[node].each do |child|
-    dfs_traverse_recursive(graph, child, visited, traversed) unless visited[child]
+    unless visited[child]
+      dfs_traverse_recursive(graph, child, visited, traversed)
+    end
   end
 end
