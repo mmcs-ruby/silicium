@@ -1,5 +1,6 @@
 #require 'set'
 #require 'silicium'
+require 'dfs'
 
 module Silicium
   module Graphs

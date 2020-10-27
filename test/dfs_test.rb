@@ -1,7 +1,7 @@
 require 'test_helper'
 require 'silicium_test'
 require 'graph'
-require 'DFS'
+require 'silicium'
 
 class DFSTest <  SiliciumTest
   include Silicium::Graphs
