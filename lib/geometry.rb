@@ -67,6 +67,14 @@ module Silicium
       # Checks if two lines are parallel
       def parallel?(other_line)
         @x_coefficient.equal?(other_line.x_coefficient) && @y_coefficient.equal?(other_line.y_coefficient)
+        #x1 = (other_line.x).abs
+        # x2 = @x.abs
+        #y1 = (other_line.y).abs
+        #y2 = @y.abs
+        #x = x1 > x2  ? x1 / x2 : x2 / x1
+        #y =  y1 > y2  ? y1 / y2 : y2 / y1
+        #(x * sign(other_line.x) * sign(@x) == y * sign(other_line.y) * sign(@y))
+
       end
 
       ##
@@ -115,6 +123,17 @@ module Silicium
 
         (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
       end
+      ##
+      # Check if array of points is on the same line
+      def array_of_points_is_on_line(array)
+        #first = array[0]
+        res= Array.new
+        for i in 0..array.size-1 do
+          res.push(point_is_on_line?(array[i]))
+        end
+        p(res)
+
+      end
 
       ##
       # The distance between parallel lines
@@ -151,6 +170,7 @@ module Silicium
         # raise ArgumentError, 'You need 3 different points'
       end
 
+      ##
       # Initializes with coefficients
       def initializeWithCoefficients(a, b, c, d)
         @x_coefficient = a
@@ -304,10 +324,12 @@ module Silicium
         Vector3d.new(Point3d.new(x, y, z))
       end
 
-
+      ##
+      # Function for checking sign of number
       def sign(integer)
         integer >= 0 ? 1 : -1
       end
+
       ##
       #  Check if two vectors are collinear
       def is_collinear?(vector2)
@@ -326,6 +348,11 @@ module Silicium
       end
     end
     ##
+     ##
+    # Function for checking sign of number
+    def sign(integer)
+      integer >= 0 ? 1 : -1
+    end
     # The distance from a point to a line on a plane
     # The line is defined by two points
     # https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
@@ -510,4 +537,5 @@ module Silicium
     end
   end
   end
+
 
