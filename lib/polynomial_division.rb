@@ -89,13 +89,12 @@ module Silicium
       # This function returns a string: greatest common integer divisor of two polynoms
       def polynom_gcd(poly_1, poly_2)
         if polynom_parser(poly_1).size >= polynom_parser(poly_2).size
-          dividend = poly_1
           divisor = poly_2
+          remainder = polynom_division(poly_1, divisor)[1]
         else
-          dividend = poly_2
           divisor = poly_1
+          remainder = polynom_division(poly_2, divisor)[1]
         end
-        remainder = polynom_division(dividend, divisor)[1]
         until polynom_parser(remainder).all?{|item| item.abs < 0.01} do
           division = polynom_division(divisor, remainder)
           divisor = remainder
