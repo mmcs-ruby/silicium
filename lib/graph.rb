@@ -1,5 +1,6 @@
 #require 'set'
 #require 'silicium'
+require_relative 'graph/scc'
 
 module Silicium
   module Graphs
@@ -84,7 +85,7 @@ module Silicium
       # Returns edge label
       # @raise [GraphError] if graph does not contain edge
       def get_edge_label(from, to)
-        if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
+        if !@vertices.has_key?(from) || !@vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
 
@@ -101,36 +102,43 @@ module Silicium
 
         @vertex_labels[vertex]
       end
+
       ##
       # Returns number of vertices
       def vertex_number
         @vertices.count
       end
+
       ##
       # Returns number of edges
       def edge_number
         @edge_number
       end
+
       ##
       # Returns number of vertex labels
       def vertex_label_number
         @vertex_labels.count
       end
+
       ##
       # Returns number of edge labels
       def edge_label_number
         @edge_labels.count
       end
+
       ##
       # Checks if graph contains vertex
       def has_vertex?(vertex)
         @vertices.has_key?(vertex)
       end
+
       ##
       # Checks if graph contains edge
       def has_edge?(from, to)
         @vertices.has_key?(from) && @vertices[from].include?(to)
       end
+
       ##
       # Deletes vertex from graph
       def delete_vertex!(vertex)
@@ -146,12 +154,14 @@ module Silicium
           end
         end
       end
+
       ##
       # Deletes edge from graph
       def delete_edge!(from, to)
         protected_delete_edge!(from, to)
         @edge_number -= 1
       end
+
       ##
       # Reverses graph
       def reverse!
@@ -172,6 +182,7 @@ module Silicium
         @vertices = v
         @edge_labels = l
       end
+
       ##
       # Returns array of vertices
       def vertices
@@ -179,6 +190,7 @@ module Silicium
       end
 
       protected
+
       ##
       # Adds edge to graph
       def protected_add_edge!(from, to)
@@ -186,6 +198,7 @@ module Silicium
           @vertices[from] << to
         end
       end
+
       ##
       # Deletes edge from graph
       def protected_delete_edge!(from, to)
@@ -196,6 +209,7 @@ module Silicium
       end
 
     end
+
     ##
     # Class represents unoriented graph
     class UnorientedGraph < OrientedGraph
@@ -206,12 +220,14 @@ module Silicium
         protected_add_edge!(to, from)
         @edge_number += 1
       end
+
       ##
       # Adds label to edge
       def label_edge!(from, to, label)
         super(from, to, label)
         super(to, from, label)
       end
+
       ##
       # Deletes edge from graph
       def delete_edge!(from, to)
@@ -221,6 +237,7 @@ module Silicium
       end
 
     end
+
     ##
     # Implements breadth-first search (BFS)
     def breadth_first_search?(graph, start, goal)
@@ -237,16 +254,18 @@ module Silicium
       end
       false
     end
+
     ##
     # Adds to queue not visited vertices
     def add_to_queue(graph, queue, node, visited)
-    graph.vertices[node].each do |child|
-      unless visited[child]
-        queue.push(child)
-        visited[child] = true
+      graph.vertices[node].each do |child|
+        unless visited[child]
+          queue.push(child)
+          visited[child] = true
+        end
       end
     end
-    end
+
     ##
     # Checks if graph is connected
     def connected?(graph)
@@ -258,6 +277,7 @@ module Silicium
       graph.reverse!
       pred
     end
+
     ##
     # Returns number of connected vertices
     def number_of_connected(graph)
@@ -271,6 +291,7 @@ module Silicium
       end
       res
     end
+
     ##
     # Passes graph's vertices and marks them visited
     def dfu(graph, vertice, visited)
@@ -281,6 +302,7 @@ module Silicium
         end
       end
     end
+
     ##
     # Implements algorythm of Dijkstra
     def dijkstra_algorythm(graph, starting_vertex)
