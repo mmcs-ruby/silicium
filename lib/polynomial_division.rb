@@ -5,6 +5,9 @@ module Silicium
     ##
     # TODO: class docs
     class PolynomialDivision
+
+      DELTA = 0.01
+
       # This function returns an array of coefficients obtained by parsing input string in format: "<coeff>*x**<degree>+..."
       # Even if in your expression don't exist x with some degree, you should to write it with 0 coefficient
       # Also free term you should to write with 0 degree
@@ -86,31 +89,53 @@ module Silicium
         [res_exp, rem_exp]
       end
 
-      # This function returns a string: greatest common integer divisor of two polynoms
-      def polynom_gcd(poly_1, poly_2)
-        if polynom_parser(poly_1).size >= polynom_parser(poly_2).size
-          divisor = poly_2
-          remainder = polynom_division(poly_1, divisor)[1]
-        else
-          divisor = poly_1
-          remainder = polynom_division(poly_2, divisor)[1]
+      def compare_polynoms(poly1, poly2)
+        polynom_parser(poly1).size - polynom_parser(poly2).size
+      end
+
+      def zero_coeffs?(polynom, delta = DELTA)
+        polynom_parser(polynom).all?{ |item| item.abs < delta }
+      end
+
+      def round_coeffs(coefficients, delta = DELTA)
+        coefficients.map do |element|
+          (element.round - element).abs < delta ? element.round.to_f : element
         end
-        until polynom_parser(remainder).all?{|item| item.abs < 0.01} do
+      end
+
+      def build_polynom_from_coeffs(coefficients)
+        "#{coefficients[0]}*x**#{coefficients.size - 1}" +
+          coefficients[1..-1].each_with_index.inject('') do |acc, (coefficient, index)|
+            leading_sign = coefficient >= 0 ? '+' : ''
+            acc + "#{leading_sign}#{coefficient}*x**#{ coefficients.size - index - 2 }"
+          end
+      end
+      
+      # This function returns a string: greatest common integer divisor of two polynoms
+      def polynom_gcd(poly1, poly2, delta = DELTA)
+        divisor, remainder = order_gcd_operands(poly1, poly2)
+        until zero_coeffs?(remainder) do
           division = polynom_division(divisor, remainder)
           divisor = remainder
           remainder = division[1]
         end
         normalizer = polynom_parser(divisor)[0]
-        temp_result = polynom_division(divisor, normalizer.to_s+"*x**0")[0]
-        coefficients = polynom_parser(temp_result)
-        coefficients.map! { |element| (element.round - element).abs < 0.01 ? element.round.to_f : element}
-        gcd = ""
-        coefficients.each_index do |index|
-          coefficient = coefficients[index]
-          plus = (coefficient >= 0 and index != 0) ? "+" : ""
-          gcd += "#{plus}#{coefficient}*x**#{coefficients.size - index - 1}"
+        temp_result = polynom_division(divisor, normalizer.to_s+'*x**0')[0]
+        coefficients = round_coeffs(polynom_parser(temp_result), delta)
+        build_polynom_from_coeffs(coefficients)
+      end
+
+      private
+
+      def order_gcd_operands(poly1, poly2)
+        if compare_polynoms(poly1, poly2) >= 0
+          divisor = poly2
+          remainder = polynom_division(poly1, divisor)[1]
+        else
+          divisor = poly1
+          remainder = polynom_division(poly2, divisor)[1]
         end
-        gcd
+        [divisor, remainder]
       end
     end
   end
