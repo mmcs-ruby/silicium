@@ -13,6 +13,7 @@ class GraphVisualiserTest < Minitest::Test
     assert_equal(300, (Window.get :height))
   end
 
+
   def test_vertices_radius
     change_vertices_radius(35)
     assert_equal(35, @@vert_radius)
@@ -46,7 +47,16 @@ class GraphVisualiserTest < Minitest::Test
     graph.label_edge!(:one,'two','one to two')
     graph.label_edge!(2,:one,'2 to one')
     set_graph(graph)
-    show_window
+    #uncomment me if you wanna see
+    #show_window
   end
 
+  def test_show_unoriented_graph
+    change_window_size(1000, 600)
+    #graph = OrientedGraph.new([{v: 0, i: []}, {v: :one, i: []}, {v: 'two', i: [0]}])
+    graph = UnorientedGraph.new([{v: 0, i: [:one]}, {v: :one, i: [0, 'two']}, {v: 'two', i: [0, 'two']},{v: 2, i: [:one, 2]}, {v: :two, i: [2, 'two']}, {v: 'three', i: [0, 2]}])
+    set_graph(graph)
+    #uncomment me if you wanna see
+    show_window
+  end
 end

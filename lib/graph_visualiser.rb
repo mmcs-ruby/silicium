@@ -67,6 +67,7 @@ module Silicium
 
     def set_unoriented_graph(graph)
       set_vertices(graph)
+      set_edges(graph)
     end
 
     ##
@@ -156,6 +157,7 @@ module Silicium
     end
 
     ##
+    #
     # creates arrow of edge between vertices
     def draw_oriented_edge(v1,v2,col)
       line = draw_edge(v1,v2,col)
@@ -233,6 +235,29 @@ module Silicium
       Circle.new(x: pos_x1, y: pos_y1, radius: @@vert_radius*2-@@line_width, color: Window.get( :background))
       @vertices[v] = Circle.new(x: x, y: y, radius: @@vert_radius+1, color: @vertices[v].color)
       return circle
+    end
+
+
+    def draw_unoriented_edge(x1,y1,x2,y2)
+      col = Color.new('random')
+      x_len = x1-x2
+      y_len = y1-y2
+      len = Math.sqrt(x_len*x_len+y_len*y_len)
+      sin = y_len/len
+      cos = x_len/len
+      pos_x0 = x1 - @@vert_radius*cos
+      pos_y0 = y1 - @@vert_radius*sin
+
+      x_len = x2-x1
+      y_len = y2-y1
+      sin = y_len/len
+      cos = x_len/len
+      pos_x1 = x2 - @@vert_radius*cos
+      pos_y1 = y2 - @@vert_radius*sin
+
+      line = Line.new(x1: pos_x0, y1: pos_y0, x2: pos_x1, y2: pos_y1, width: 5, color: col)
+
+      return {line: line}
     end
 
     ##
