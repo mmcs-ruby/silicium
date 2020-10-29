@@ -33,15 +33,30 @@ module Silicium
     end
 
     ##
-    # Set graph for visualization
+    # Change label size
+    def change_label_size(s)
+      @@label_size = s
+    end
+
+    ##
+    # Change label color
+    def change_label_color(c)
+      @@label_color = Color.new(c)
+    end
+
+    ##
+    # Change vertex color
+    def change_vertex_color(c)
+      @@vertex_color = Color.new(c)
+    end
+
+    ##
+    # choose graph to visualise
     def set_graph(graph)
-      if graph.class == OrientedGraph
-        set_oriented_graph(graph)
-      elsif graph.class == UnorientedGraph
-        set_unoriented_graph(graph)
-      elsif
-        raise 'Wrong type of graph!'
-      end
+      clear_window
+      set_vertices(graph)
+      set_edges(graph)
+      set_labels(graph)
     end
 
     private
@@ -52,23 +67,14 @@ module Silicium
     ##
     # width of the edges
     @@line_width = 5
+    # color of vertices
+    @@label_size = 20
     ##
     # color of labels
     @@label_color = Color.new('red')
     ##
     # color of vertices
     @@vertex_color = Color.new('white')
-
-    def set_oriented_graph(graph)
-      set_vertices(graph)
-      set_oriented_edges(graph)
-      set_labels(graph)
-    end
-
-    def set_unoriented_graph(graph)
-      set_vertices(graph)
-      set_edges(graph)
-    end
 
     ##
     # creates labels of edges and vertices
@@ -92,7 +98,7 @@ module Silicium
       end
       x = @vertices[v].x - Math.sqrt(2)/2*@@vert_radius
       y = @vertices[v].y - Math.sqrt(2)/2*@@vert_radius
-      return Text.new(label,x: x, y: y, size: @@vert_radius, color: @@label_color)
+      return Text.new(label,x: x, y: y, size: @@label_size, color: @@label_color)
     end
 
     ##
@@ -105,29 +111,32 @@ module Silicium
       y1 = @vertices[pair[:first]].y
       x2 = @vertices[pair[:second]].x
       y2 = @vertices[pair[:second]].y
-      x_len = (x2-x1)/2
-      y_len = (y2-y1)/2
-      x = x1+x_len
-      y = y1+y_len
+      x = (x1+x2)/2
+      y = (y1+y2)/2
 
-      return Text.new(label,x: x, y: y, size: @@vert_radius, color: @@label_color)
+      if x1 == x2 and y1 == y2
+        x = @edges[pair][:line].x
+        y = @edges[pair][:line].y
+      end
+
+      return Text.new(label,x: x, y: y, size: @@label_size, color: @@label_color)
     end
 
     ##
     # set all edges of the graph
-    def set_oriented_edges(graph)
+    def set_edges(graph)
       @edges = {}
-      @vertices.keys.each do |v1|
+      graph.vertices.keys.each do |v1|
         graph.vertices[v1].each do |v2|
           col = Color.new('random')
           while (col == @@label_color) or (col == @@vertex_color)
             col = Color.new('random')
           end
-          if @edges.has_key?(Pair.new(v2,v1))
+          if (graph.class == OrientedGraph) and @edges.has_key?(Pair.new(v2,v1))
             col = @edges[Pair.new(v2,v1)][:line].color
-            break
           end
-          @edges[Pair.new(v1,v2)] = draw_oriented_edge(v1,v2,col)
+          arrow = (graph.class == OrientedGraph)? draw_oriented_edge(v1,v2,col):draw_edge(v1,v2,col)
+          @edges[Pair.new(v1,v2)] = arrow
         end
       end
     end
@@ -152,12 +161,11 @@ module Silicium
     ##
     # creates circle for vertex
     def draw_vertex(x, y)
-      circle = Circle.new(x: x, y: y, radius: @@vert_radius, sectors: 128)
+      circle = Circle.new(x: x, y: y, radius: @@vert_radius, sectors: 128, color: @@vertex_color)
       return circle
     end
 
     ##
-    #
     # creates arrow of edge between vertices
     def draw_oriented_edge(v1,v2,col)
       line = draw_edge(v1,v2,col)
@@ -233,31 +241,21 @@ module Silicium
       pos_y1 = y - @@vert_radius*sin*2
       circle = Circle.new(x: pos_x1, y: pos_y1, radius: @@vert_radius*2, color: col)
       Circle.new(x: pos_x1, y: pos_y1, radius: @@vert_radius*2-@@line_width, color: Window.get( :background))
-      @vertices[v] = Circle.new(x: x, y: y, radius: @@vert_radius+1, color: @vertices[v].color)
+      @vertices[v] = Circle.new(x: x, y: y, radius: @@vert_radius+1, color: @@vertex_color)
       return circle
     end
 
 
-    def draw_unoriented_edge(x1,y1,x2,y2)
-      col = Color.new('random')
-      x_len = x1-x2
-      y_len = y1-y2
-      len = Math.sqrt(x_len*x_len+y_len*y_len)
-      sin = y_len/len
-      cos = x_len/len
-      pos_x0 = x1 - @@vert_radius*cos
-      pos_y0 = y1 - @@vert_radius*sin
+    ##
+    # clear screen
+    def clear_window
+      Window.clear
+    end
 
-      x_len = x2-x1
-      y_len = y2-y1
-      sin = y_len/len
-      cos = x_len/len
-      pos_x1 = x2 - @@vert_radius*cos
-      pos_y1 = y2 - @@vert_radius*sin
-
-      line = Line.new(x1: pos_x0, y1: pos_y0, x2: pos_x1, y2: pos_y1, width: 5, color: col)
-
-      return {line: line}
+    ##
+    # close screen
+    def close_window
+      Window.close
     end
 
     ##
