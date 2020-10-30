@@ -1,20 +1,29 @@
 # Class represents computational graph
 module BackPropogation
   class ComputationalGraph
+
+    PRIORITY = Hash['(' => 0, '+' => 1, '-' => 1, '*' => 2, '/' => 2, '^' => 3]
+    TEMPLATES = {
+        operand: /^\s*([^\+\-\*\/\(\)\^\s]+)\s*(.*)/,
+        string: /^\s*([\+\-\*\/\^])\s*(.*)/,
+        brackets: /^\s*\(\s*(.*)/,
+        nested: /^\s*\)\s*(.*)/
+    }
+
     attr_accessor :graph
-    def initialize(exprS)
-      exprproc = ComputationalGraph::PolishParser(exprS, [])
+    def initialize(expr_s)
+      exprproc = ComputationalGraph::polish_parser(expr_s, [])
       pregraph = []
       @graph = []
       exprproc.split.each do |elem|
         case elem
-        when "+"
+        when '+'
           dot = ComputationalGates::SummGate.new(elem)
           dot.connect(pregraph.pop,pregraph.pop)
-        when "*"
+        when '*'
           dot = ComputationalGates::MultGate.new(elem)
           dot.connect(pregraph.pop,pregraph.pop)
-        when "/"
+        when '/'
           dot = ComputationalGates::DivGate.new(elem)
           scnd = pregraph.pop
           frst = pregraph.pop
@@ -27,7 +36,7 @@ module BackPropogation
       end
     end
     #Compute a value of expression
-    def ForwardPass(variables_val)
+    def forward_pass(variables_val)
       @graph.each do |elem|
         if elem.class != ComputationalGates::CompGate
           elem.forward_pass
@@ -35,10 +44,10 @@ module BackPropogation
           elem.frwrd = variables_val[elem.name]
         end
       end
-      return graph.last.frwrd
+      graph.last.frwrd
     end
     #Compute a gradient value for inputs
-    def BackwardPass(loss_value)
+    def backward_pass(loss_value)
       param_grad = Hash.new()
       @graph.last.bckwrd = loss_value
       @graph.reverse.each do |elem|
@@ -48,27 +57,57 @@ module BackPropogation
           param_grad[elem.name] = elem.bckwrd
         end
       end
-      return param_grad
+      param_grad
     end
+
+
+    def self.parse_operand(left, right, stack)
+      left + ' ' + polish_parser(right, stack)
+    end
+
+    def self.parse_string(left, right, i_str, stack)
+      if stack.empty? || PRIORITY[stack.last] < PRIORITY[left]
+        polish_parser(right, stack)
+      else 
+        stack.pop + ' ' + polish_parser(i_str, stack) 
+      end
+    end
+
+    def self.parse_nested(left, right, stack)
+      raise ArgumentError, 'Error: Excess of closing brackets.' if stack.empty?
+
+      head = stack.pop
+      PRIORITY[head].positive? ? head + ' ' + polish_parser(right, stack) : polish_parser(left, stack)
+    end
+
+    def self.parse_brackets(left, stack)
+      polish_parser(left, stack)
+    end
+
+    def self.parse_default(left, stack)
+      return '' if stack.empty?
+      raise ArgumentError, 'Error: Excess of opening brackets.'  unless PRIORITY[stack.last] > 0
+
+      stack.pop + ' ' + polish_parser(left, stack)
+    end
+    
     #String preprocessing algorithm expression for computation
-    def self.PolishParser(iStr, stack)
-      priority = Hash["(" => 0, "+" => 1, "-" => 1, "*" => 2, "/" => 2, "^" => 3]
-      case iStr
-      when /^\s*([^\+\-\*\/\(\)\^\s]+)\s*(.*)/ then $1 + " " + PolishParser($2, stack)
-      when /^\s*([\+\-\*\/\^])\s*(.*)/
-        if (stack.empty? or priority[stack.last] < priority[$1]) then PolishParser($2, stack.push($1))
-        else stack.pop + " " + PolishParser(iStr, stack) end
-      when /^\s*\(\s*(.*)/ then PolishParser($1, stack.push("("))
-      when /^\s*\)\s*(.*)/
-        if stack.empty? then raise ArgumentError.new "Error: Excess of closing brackets."
-        elsif priority[head = stack.pop] > 0 then head + " " + PolishParser(iStr, stack)
-        else PolishParser($1, stack) end
-      else if stack.empty? then ""
-           elsif priority[stack.last] > 0 then stack.pop + " " + PolishParser(iStr, stack)
-           else raise ArgumentError.new "Error: Excess of opening brackets." end
+    def self.polish_parser(i_str, stack)
+      case i_str
+      when TEMPLATES[:operand]
+        parse_operand(Regexp.last_match(1), Regexp.last_match(2), stack)
+      when TEMPLATES[:string]
+        parse_string(Regexp.last_match(1), Regexp.last_match(2), i_str, stack)
+      when TEMPLATES[:brackets]
+        parse_brackets(Regexp.last_match(1), stack.push('('))
+      when TEMPLATES[:nested]
+        parse_nested(Regexp.last_match(1), i_str, stack)
+      else
+        parse_default(i_str, stack)
       end
     end
   end
+
   module ComputationalGates
     class CompGate
       attr_accessor :frwrd,:bckwrd,:out,:name
@@ -88,6 +127,7 @@ module BackPropogation
         f_n.out = self
         s_n.out = self
       end
+
       def forward_pass()
         @frwrd = @in_frst.frwrd + @in_scnd.frwrd
       end
