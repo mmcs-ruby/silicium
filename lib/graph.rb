@@ -1,6 +1,9 @@
 #require 'set'
 #require 'silicium'
+
+require 'graph/dfs'
 require_relative 'graph/scc'
+
 
 module Silicium
   module Graphs
