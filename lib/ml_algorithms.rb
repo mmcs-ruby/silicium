@@ -2,40 +2,34 @@
 module BackPropogation
   class ComputationalGraph
     attr_accessor :graph
-    def initialize(expr_s)
-      expr_proc = ComputationalGraph::PolishParser(expr_s, [])
-      pre_graph = []
+    def initialize(exprS)
+      exprproc = ComputationalGraph::PolishParser(exprS, [])
+      pregraph = []
       @graph = []
-      expr_proc.split.each do |elem|
+      exprproc.split.each do |elem|
         case elem
         when "+"
-          dot = ComputationalGates::Summ_Gate.new(elem)
-          dot.connect(pre_graph.pop,pre_graph.pop)
-          pre_graph.push(dot)
-          @graph.push(dot)
+          dot = ComputationalGates::SummGate.new(elem)
+          dot.connect(pregraph.pop,pregraph.pop)
         when "*"
-          dot = ComputationalGates::Mult_Gate.new(elem)
-          dot.connect(pre_graph.pop,pre_graph.pop)
-          pre_graph.push(dot)
-          @graph.push(dot)
+          dot = ComputationalGates::MultGate.new(elem)
+          dot.connect(pregraph.pop,pregraph.pop)
         when "/"
-          dot = ComputationalGates::Div_Gate.new(elem)
-          scnd = pre_graph.pop
-          frst = pre_graph.pop
+          dot = ComputationalGates::DivGate.new(elem)
+          scnd = pregraph.pop
+          frst = pregraph.pop
           dot.connect(frst,scnd)
-          pre_graph.push(dot)
-          @graph.push(dot)
         else
-          dot = ComputationalGates::Comp_Gate.new(elem)
-          pre_graph.push(dot)
-          @graph.push(dot)
+          dot = ComputationalGates::CompGate.new(elem)
         end
+        pregraph.push(dot)
+        @graph.push(dot)
       end
     end
     #Compute a value of expression
     def ForwardPass(variables_val)
       @graph.each do |elem|
-        if elem.class != ComputationalGates::Comp_Gate
+        if elem.class != ComputationalGates::CompGate
           elem.forward_pass
         else
           elem.frwrd = variables_val[elem.name]
@@ -48,7 +42,7 @@ module BackPropogation
       param_grad = Hash.new()
       @graph.last.bckwrd = loss_value
       @graph.reverse.each do |elem|
-        if elem.class != ComputationalGates::Comp_Gate
+        if elem.class != ComputationalGates::CompGate
           elem.backward_pass
         else
           param_grad[elem.name] = elem.bckwrd
@@ -56,7 +50,7 @@ module BackPropogation
       end
       return param_grad
     end
-    #String preprocessing algorithm expression for computition
+    #String preprocessing algorithm expression for computation
     def self.PolishParser(iStr, stack)
       priority = Hash["(" => 0, "+" => 1, "-" => 1, "*" => 2, "/" => 2, "^" => 3]
       case iStr
@@ -76,14 +70,14 @@ module BackPropogation
     end
   end
   module ComputationalGates
-    class Comp_Gate
+    class CompGate
       attr_accessor :frwrd,:bckwrd,:out,:name
       def initialize(name)
         @name = name
         @frwrd = self
       end
     end
-    class Summ_Gate < Comp_Gate
+    class SummGate < CompGate
       attr_accessor :in_frst,:in_scnd
       def initialize(name)
         super(name)
@@ -103,7 +97,7 @@ module BackPropogation
       end
 
     end
-    class Mult_Gate < Comp_Gate
+    class MultGate < CompGate
       attr_accessor :in_frst,:in_scnd
       def initialize(name)
         super(name)
@@ -123,7 +117,7 @@ module BackPropogation
       end
 
     end
-    class Div_Gate < Comp_Gate
+    class DivGate < CompGate
       attr_accessor :in_frst,:in_scnd
       def initialize(name)
         super(name)
