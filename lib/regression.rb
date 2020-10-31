@@ -1,5 +1,5 @@
 module Silicium
-  module LinearRegression
+  module Regression
     class LinearRegressionByGradientDescent
       # Finds parameters theta0, theta1 for equation theta0 + theta1 * x
       # for linear regression of given plot of one variable
@@ -41,6 +41,37 @@ module Silicium
          return result
       end
 
-    end
+    end 
+    
+    class PolynomialRegressionByGradientDescent 
+      def generate_function(given_plot, alpha, n = 5, scaling = false)
+        plot = feature_scaled_plot(given_plot) if scaling else given_plot
+        array = Array.new(n + 1, 1)
+        m = plot.length.to_f 
+        epsilon = 0.000001 
+        bias = 0.5 
+        while bias.abs() > epsilon 
+          old_array = array 
+          array.each do |elem|
+            elem = elem - alpha / m * d_dt(plot, old_array)
+          end
+        end 
+        return array
+      end
+      
+      def feature_scaled_plot(given_plot, n)
+        max = given_plot[0]
+        min = given_plot[0]
+        sum = 0 
+        given_plot.each do |x, _|
+          max = x if x > max  
+          min = x if x < min 
+          sum += x
+        end 
+        avg = sum.to_f / given_plot.length 
+        given_plot.map! {|x, y| (x.to_f - avg) / (max - min)**n}
+        return given_plot
+      end
+    end 
   end
 end
