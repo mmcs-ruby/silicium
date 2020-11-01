@@ -83,8 +83,8 @@ module Silicium
     ##
     # width of the edges
     @@line_width = 5
-    # color of vertices
-    @@label_size = 20
+    # size of labels
+    @@label_size = 15
     ##
     # color of labels
     @@label_color = Color.new('red')
