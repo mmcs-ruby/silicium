@@ -24,6 +24,8 @@ module Silicium
         return theta0, theta1
       end
 
+      private
+
       def self.d_dt_for_theta0(plot, theta0, theta1)
         result = 0.0 
         plot.each do |x, y|
@@ -47,34 +49,47 @@ module Silicium
     # @param alpha Speed of learning (should be little enough not to diverge)
     # @param n Degree of expected polynom
     # @return Array[Numeric] parameners (little index is lower degree parameter)
-    class PolynomialRegressionByGradientDescent 
-      def generate_function(given_plot, alpha, n = 5, scaling = false)
-        plot = feature_scaled_plot(given_plot) if scaling else given_plot
+
+    class PolynomialRegressionByGradientDescent
+      def self.generate_function(given_plot, alpha, n = 5, scaling = false)
+        if scaling
+          plot = feature_scaled_plot(given_plot, n)
+        else
+          plot = given_plot
+        end
+
         array = Array.new(n + 1, 1)
         m = plot.length.to_f 
-        epsilon = 0.000001 
-        bias = 0.5 
+        epsilon = 0.0000001
+        bias = 0.5
+        old_bias = bias
         while bias.abs() > epsilon 
-          old_array = array 
-          i = 0
-          array.each do |elem|
-            elem = elem - alpha / m * d_dt(plot, old_array, i)
+          old_array = array.dup()
+          i = -1
+          array.map! { |elem|
             i += 1
-          end
+            elem = elem - alpha / m * d_dt(plot, old_array, i)
+          }
           bias = (array.zip(old_array).map {|new, old| (new - old).abs()}).max()
+          if bias > old_bias
+            raise "Divergence"
+          end
+          old_bias = bias
         end 
         return array
-      end 
-      
-      def d_dt(plot, old_array, i)
+      end
+
+      private
+
+      def self.d_dt(plot, old_array, i)
         sum = 0.0 
         plot.each do |x, y|  
-          sum += (func(array, x) - y) * (i + 1) * (x ** i)
+          sum += (func(old_array, x) - y) * (i + 1) * (x ** i)
         end 
         return sum
       end 
       
-      def func(array, x)
+      def self.func(array, x)
         sum = 0.0 
         i = 0 
         array.each do |elem|
@@ -84,19 +99,33 @@ module Silicium
         return sum
       end 
       
-      def feature_scaled_plot(given_plot, n)
+      def self.feature_scaled_plot(given_plot, n)
         max = given_plot[0]
         min = given_plot[0]
-        sum = 0.0 
+        sum = 0.0
         given_plot.each do |x, _|
           max = x if x > max  
           min = x if x < min 
           sum += x
-        end 
+        end
         avg = sum.to_f / given_plot.length 
-        given_plot.map! {|x, y| (x.to_f - avg) / (max - min)**n}
-        return given_plot
+        new_plot = given_plot.map {|x, y| [(x.to_f - avg) / (max - min)**n, y]}
+        return new_plot
       end
     end 
   end
 end
+
+# -x^2 + 3x + 2
+# plot = {0 => 2, -1 => -2, -2 => -8, -3 => -16, 1 => 4, 2 => 4, 3 => 2, 4 => -2, -4 => -26}
+# res = Silicium::Regression::PolynomialRegressionByGradientDescent::
+#       generate_function(plot, 0.001, 2,)
+# puts res
+
+# -x^3 + x^2 - 3x + 5
+pol_plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
+
+res = Silicium::Regression::PolynomialRegressionByGradientDescent::
+        generate_function(pol_plot2, 0.00001, 3)
+
+p res
