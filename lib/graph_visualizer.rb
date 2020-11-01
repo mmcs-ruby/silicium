@@ -15,43 +15,43 @@ module Silicium
     public
 
     ##
-    # Change window and image size
+    # Changes window size
     def change_window_size(w, h)
       (Window.get :window).set width: w, height: h
     end
 
     ##
-    # Change window and image size
+    # Changes width of edges
     def change_edge_width(w)
       @@line_width = w
     end
 
     ##
-    # Change window and image size
+    # Changes radius of vertices
     def change_vertices_radius(r)
       @@vert_radius = r
     end
 
     ##
-    # Change label size
+    # Changes labels size
     def change_label_size(s)
       @@label_size = s
     end
 
     ##
-    # Change label color
+    # Changes labels color
     def change_label_color(c)
       @@label_color = Color.new(c)
     end
 
     ##
-    # Change vertex color
+    # Changes vertices color
     def change_vertex_color(c)
       @@vertex_color = Color.new(c)
     end
 
     ##
-    # choose graph to visualise
+    # Set the graph for visualization
     def set_graph(graph)
       clear_window
       set_vertices(graph)
@@ -59,7 +59,23 @@ module Silicium
       set_labels(graph)
     end
 
-    private
+    ##
+    # clear screen
+    def clear_window
+      Window.clear
+    end
+
+    ##
+    # close screen
+    def close_window
+      Window.close
+    end
+
+    ##
+    # show graph on the screen
+    def show_window
+      Window.show
+    end
 
     ##
     # radius of vertices circles
@@ -75,6 +91,8 @@ module Silicium
     ##
     # color of vertices
     @@vertex_color = Color.new('white')
+
+    private
 
     ##
     # creates labels of edges and vertices
@@ -245,23 +263,5 @@ module Silicium
       return circle
     end
 
-
-    ##
-    # clear screen
-    def clear_window
-      Window.clear
-    end
-
-    ##
-    # close screen
-    def close_window
-      Window.close
-    end
-
-    ##
-    # show graph on the screen
-    def show_window
-      Window.show
-    end
   end
 end
