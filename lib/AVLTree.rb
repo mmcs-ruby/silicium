@@ -127,7 +127,7 @@ class AvlTree
       node.right = turn_right node.right
     end
 
-    return turn_left node
+    turn_left node
   end
 
   def big_left_turn(node)
@@ -135,7 +135,7 @@ class AvlTree
       node.left = turn_left node.left
     end
 
-    return turn_right node
+    turn_right node
   end
 
   def balance(node)
@@ -163,7 +163,6 @@ class AvlTree
         next
       else
         current = current.right
-        next
       end
     end
 
@@ -216,18 +215,14 @@ class AvlTree
 
   def find(value)
     current = @dummy.parent
-    until current.eql? @dummy
+    until current.eql? @dummy or current.data == value
 
       if value < current.data
         current = current.left
-        next
       else if current.data < value
         current = current.right
-        next
         end
       end
-
-      break
     end
 
     if current.eql? @dummy
