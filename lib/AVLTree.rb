@@ -256,11 +256,11 @@ class AvlTree
   def delete_right_sub(elem)
     if elem.parent.eql? @dummy
       @dummy.parent = elem.right
-      elem.right.parent = @dummy
+      elem = @dummy
       @dummy.left = get_min(elem.right)
 
     else
-      elem.right.parent = elem.parent
+      elem = elem.parent
       if elem.parent.right.eql? elem
         elem.parent.right = elem.right
 
@@ -276,11 +276,11 @@ class AvlTree
   def delete_left_sub(elem)
     if elem.parent.eql? @dummy
       @dummy.parent = elem.left
-      elem.left.parent = @dummy
+      elem = @dummy
       @dummy.right = get_max(elem.left)
 
     else
-      elem.left.parent = elem.parent
+      elem = elem.parent
       if elem.parent.right.eql? elem
         elem.parent.right = elem.left
 
