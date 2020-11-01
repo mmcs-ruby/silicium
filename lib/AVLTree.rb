@@ -145,7 +145,7 @@ class AvlTree
     node
   end
 
-  def insert_value(value)
+  def find_place(value)
     prev = @dummy
     current = @dummy.parent
 
@@ -160,6 +160,26 @@ class AvlTree
         next
       end
     end
+
+    prev
+  end
+
+  def balance_inserted(new_node)
+    root = new_node
+    until root.eql? @dummy
+      root.set_height(@dummy)
+
+      if (get_balance_factor root).abs > 1
+        balance root
+      end
+
+      root = root.parent
+    end
+  end
+
+  def insert_value(value)
+    prev = find_place value
+
     new_node = Node.new value, @dummy, @dummy, prev
     @tree_size += 1
 
@@ -184,17 +204,8 @@ class AvlTree
            end
          end
     end
+    balance_inserted(new_node)
 
-    root = new_node
-    until root.eql? @dummy
-      root.set_height(@dummy)
-
-      if (get_balance_factor root).abs > 1
-        balance root
-      end
-
-      root = root.parent
-    end
     new_node
   end
 
@@ -239,6 +250,77 @@ class AvlTree
     temp_min
   end
 
+  def delete_right_sub(elem)
+    if elem.parent.eql? @dummy
+      @dummy.parent = elem.right
+      elem.right.parent = @dummy
+      @dummy.left = get_min(elem.right)
+
+    else
+      elem.right.parent = elem.parent
+      if (elem.parent.right.eql? elem)
+        elem.parent.right = elem.right
+
+      else
+        elem.parent.left = elem.right
+        if elem.eql? @dummy.left
+          @dummy.left = get_min(elem.right)
+        end
+      end
+    end
+  end
+
+  def delete_left_sub(elem)
+    if elem.parent.eql? @dummy
+      @dummy.parent = elem.left
+      elem.left.parent = @dummy
+      @dummy.right = get_max(elem.left)
+
+    else
+      elem.left.parent = elem.parent
+      if (elem.parent.right.eql? elem)
+        elem.parent.right = elem.left
+
+        if elem.eql? @dummy.right
+          @dummy.right = get_max(elem.left)
+        end
+
+      else
+        elem.parent.left = elem.left
+      end
+    end
+  end
+
+  def delete_list(elem)
+    parent = elem.parent
+    if !parent.eql? dummy
+      if parent.left == elem
+        parent.left = @dummy
+      else
+        parent.right = @dummy
+      end
+    else
+      @dummy.parent = @dummy
+      @dummy.left = @dummy
+      @dummy.right = @dummy
+    end
+  end
+
+  def balance_deleted(balpoint)
+    until balpoint.eql? dummy
+      balpoint.set_height(@dummy)
+      if (get_balance_factor balpoint).abs > 1
+        if balpoint.parent.eql? @dummy
+          @dummy.parent = balance(balpoint)
+        else
+          balance(balpoint)
+        end
+      end
+
+      balpoint = balpoint.parent
+    end
+  end
+
   def delete(value)
     elem = find(value)
     if elem.nil?
@@ -247,83 +329,21 @@ class AvlTree
     balpoint = elem.parent
     #elem is list
     if elem.right.eql? @dummy and elem.left.eql? @dummy
-      parent = elem.parent
-      if !parent.eql? dummy
-        if parent.left == elem
-          parent.left = @dummy
-        else
-          parent.right = @dummy
-        end
-      else
-        @dummy.parent = @dummy
-        @dummy.left = @dummy
-        @dummy.right = @dummy
-      end
-
+      delete_list(elem)
     else
       #elem not list with left subtree
       if elem.right.eql? @dummy
-
-        if elem.parent.eql? @dummy
-          @dummy.parent = elem.left
-          elem.left.parent = @dummy
-          @dummy.right = get_max(elem.left)
-
-        else
-          elem.left.parent = elem.parent
-          if (elem.parent.right.eql? elem)
-            elem.parent.right = elem.left
-
-            if elem.eql? @dummy.right
-              @dummy.right = get_max(elem.left)
-            end
-
-          else
-            elem.parent.left = elem.left
-          end
-        end
-
+        delete_left_sub(elem)
       else
         #elem not list with right subtree
         if elem.left.eql? @dummy
-
-          if elem.parent.eql? @dummy
-            @dummy.parent = elem.right
-            elem.right.parent = @dummy
-            @dummy.left = get_min(elem.right)
-
-          else
-            elem.right.parent = elem.parent
-            if (elem.parent.right.eql? elem)
-              elem.parent.right = elem.right
-
-            else
-              elem.parent.left = elem.right
-              if elem.eql? @dummy.left
-                @dummy.left = get_min(elem.right)
-              end
-            end
-          end
+          delete_right_sub(elem)
         end
       end
     end
 
     @tree_size -= 1
-
-    until balpoint.eql? dummy
-      balpoint.set_height(@dummy)
-      if (get_balance_factor balpoint).abs > 1
-        if balpoint.parent.eql? @dummy
-          @dummy.parent = balance(balpoint)
-
-        else
-          balance(balpoint)
-        end
-      end
-
-      balpoint = balpoint.parent
-    end
-
+    balance_deleted(balpoint)
     elem
   end
 
