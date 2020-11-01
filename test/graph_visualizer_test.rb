@@ -1,10 +1,10 @@
 require 'test_helper'
-require 'graph_visualiser'
+require 'graph_visualizer'
 require 'ruby2d'
 require 'ruby2d/color'
 
-class GraphVisualiserTest < Minitest::Test
-  include Silicium::GraphVisualiser
+class GraphVisualizerTest < Minitest::Test
+  include Silicium::GraphVisualizer
   include Silicium::Graphs
 
   def test_window_size

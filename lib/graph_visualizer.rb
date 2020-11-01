@@ -8,7 +8,7 @@ module Silicium
   #
   #
   #
-  module GraphVisualiser
+  module GraphVisualizer
     include Silicium::Graphs
     include Ruby2D
 
