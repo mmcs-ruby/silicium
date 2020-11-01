@@ -122,24 +122,30 @@ class AvlTree
     0
   end
 
+  def big_right_turn(node)
+    if get_balance_factor(node.right) > 0
+      node.right = turn_right node.right
+    end
+
+    return turn_left node
+  end
+
+  def big_left_turn(node)
+    if get_balance_factor(node.left) < 0
+      node.left = turn_left node.left
+    end
+
+    return turn_right node
+  end
+
   def balance(node)
     #Big left turn
     if get_balance_factor(node) == 2
-
-      if get_balance_factor(node.left) < 0
-        node.left = turn_left node.left
-      end
-
-      return turn_right node
+      big_left_turn(node)
     end
     #Big right turn
     if get_balance_factor(node) == -2
-
-      if get_balance_factor(node.right) > 0
-        node.right = turn_right node.right
-      end
-
-      return turn_left node
+      big_right_turn(node)
     end
 
     node
@@ -190,19 +196,18 @@ class AvlTree
 
     else
       if value < prev.data
-           prev.left = new_node
+        prev.left = new_node
 
-           if @dummy.left.eql? prev
-             @dummy.left = new_node
-           end
+        if @dummy.left.eql? prev
+          @dummy.left = new_node
+        end
+      else
+        prev.right = new_node
 
-         else
-           prev.right = new_node
-
-           if @dummy.right.eql? prev
-             @dummy.right = new_node
-           end
-         end
+        if @dummy.right.eql? prev
+          @dummy.right = new_node
+        end
+      end
     end
     balance_inserted(new_node)
 
@@ -225,7 +230,10 @@ class AvlTree
       break
     end
 
-    res = (current.eql? @dummy) ? nil : current
+    if current.eql? @dummy
+      return nil
+    end
+    current
   end
 
   def get_max(node)
@@ -258,7 +266,7 @@ class AvlTree
 
     else
       elem.right.parent = elem.parent
-      if (elem.parent.right.eql? elem)
+      if elem.parent.right.eql? elem
         elem.parent.right = elem.right
 
       else
@@ -278,7 +286,7 @@ class AvlTree
 
     else
       elem.left.parent = elem.parent
-      if (elem.parent.right.eql? elem)
+      if elem.parent.right.eql? elem
         elem.parent.right = elem.left
 
         if elem.eql? @dummy.right
