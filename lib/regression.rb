@@ -53,32 +53,37 @@ module Silicium
     class PolynomialRegressionByGradientDescent
       def self.generate_function(given_plot, n = 5, alpha = 0.001, epsilon = 0.000001)
         scaling = n > 3
-        scaling ?
-            (plot, avg_x, div = feature_scaled_plot(given_plot, n))
-            :
+        if scaling
+            plot, avg_x, div = feature_scaled_plot(given_plot, n)
+        else
             (plot = given_plot)
-
+        end
         array = Array.new(n + 1, 1)
         m = plot.length.to_f
         bias = old_bias = 0.5
 
-        while bias.abs() > epsilon
-          old_array = array.dup()
-          i = -1
-          array.map! { |elem|
-            i += 1
-            elem - alpha / m * d_dt(plot, old_array, i)
-          }
-          bias = (array.zip(old_array).map {|new, old| (new - old).abs()}).max()
-          raise "Divergence" if bias > old_bias
-          old_bias = bias
-        end
+        array = calculate([bias, epsilon, array, alpha, plot, old_bias, m])
 
         return array.map! {|x| x * div + avg_x } if scaling
         return array
       end
 
       private
+
+      def self.calculate(params)
+        while params[0].abs() > params[1]
+          old_array = params[2].dup()
+          i = -1
+          params[2].map! { |elem|
+            i += 1
+            elem - params[3] / params[6] * d_dt(params[4], old_array, i)
+          }
+          params[0] = (params[2].zip(old_array).map {|new, old| (new - old).abs()}).max()
+          raise "Divergence" if params[0] > params[5]
+          params[5] = params[0]
+        end
+        return params[2]
+      end
 
       def self.d_dt(plot, old_array, i)
         sum = 0.0 
@@ -116,3 +121,7 @@ module Silicium
     end 
   end
 end
+
+# plot = {0 => 2, -1 => -2, -2 => -8, -3 => -16, 1 => 4, 2 => 4, 3 => 2, 4 => -2, -4 => -26}
+# res = Silicium::Regression::PolynomialRegressionByGradientDescent::generate_function(plot, 2, 0.001, 0.000001)
+# p res

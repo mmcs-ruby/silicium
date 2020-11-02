@@ -8,7 +8,8 @@ class RegressionTest < MiniTest::Test
   # LINEAR REGRESSION
 
   @@delta = 0.001
-  @@delta2 = 0.1
+  @@delta2 = 0.01
+  @@delta3 = 0.1
 
   @@plot1 = {-3 => -6, -2 => -4, -1 => -2, 0 => 0, 1=> 2, 2 => 4, 3 => 6, 4=>8, 5=>10, 6=>12, 7=>14, 8=>16}
   @@plot2 = {-5 => 1, -4 => 1, -3 => 1, -2 => 1, -1 => 1, 0 => 1, 1 => 1, 2 => 1, 3 => 1, 4 => 1, 5 => 1}
@@ -39,7 +40,7 @@ class RegressionTest < MiniTest::Test
 
   def test_polynomial_regression1
     array = Regression::PolynomialRegressionByGradientDescent::generate_function(@@pol_plot1, 2, 0.001, 0.00000001 )
-    assert_in_delta array, [2, 3, -1], @@delta
+    assert_in_delta array, [2, 3, -1], @@delta2
   end
 
   # -x^3 + x^2 - 3x + 5
@@ -47,7 +48,7 @@ class RegressionTest < MiniTest::Test
 
   def test_polynomial_regression2
     array = Regression::PolynomialRegressionByGradientDescent::generate_function(@@pol_plot2, 3,0.00001, 0.0000001)
-    assert_equal_arrays_in_delta array, [5, -3, 1, -1], @@delta2
+    assert_equal_arrays_in_delta array, [5, -3, 1, -1], @@delta3
   end
 
   def test_polynomial_plot_scaling1
