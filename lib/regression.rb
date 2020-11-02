@@ -51,14 +51,13 @@ module Silicium
     # @return Array[Numeric] parameners (little index is lower degree parameter)
 
     class PolynomialRegressionByGradientDescent
-      def self.generate_function(given_plot, n = 5, alpha = 0.001, epsilon = 0.000001, scaling = false)
+      def self.generate_function(given_plot, n = 5, alpha = 0.001, epsilon = 0.000001)
+        scaling = n > 3
         if scaling
           plot, avg_x, div = feature_scaled_plot(given_plot, n)
         else
           plot = given_plot
         end
-
-        p plot
 
         array = Array.new(n + 1, 1)
         m = plot.length.to_f
@@ -132,6 +131,6 @@ end
 plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
 
  res = Silicium::Regression::PolynomialRegressionByGradientDescent::
-        generate_function(plot2, 3, 0.001, 0.0000001, true)
+        generate_function(plot2, 3, 0.00001, 0.0000001)
 
  p res
