@@ -330,9 +330,13 @@ module Silicium
         x1 = vector2.x.abs
         y1 = vector2.y.abs
         z1 = vector2.z.abs
-        x = x1 > @x.abs ? x1 / @x.abs : @x.abs / x1
-        y =  y1 > @y.abs ? y1 / @y.abs : @y.abs / y1
-        z =  z1 > @z.abs ? z1 / @z.abs : @z.abs / z1
+        d1 = x1 / @x.abs
+        d2 = y1 / @y.abs
+        d3 = z1 / @z.abs
+
+        x = x1 > @x.abs ? d1 : (1.0 / d1)
+        y =  y1 > @y.abs ? d2 : (1.0 / d2)
+        z =  z1 > @z.abs ? d3 : (1.0 / d3)
         arr = [x,y,z]
       end
 
