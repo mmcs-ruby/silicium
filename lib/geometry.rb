@@ -325,16 +325,30 @@ module Silicium
       end
 
       ##
-      #  Check if two vectors are collinear
-      def collinear?(vector2)
+      # help function for collinear function
+      def help_collinear(vector2)
         y1 = vector2.y.abs
         z1 = vector2.z.abs
         x = vector2.x.abs > @x.abs ? vector2.x.abs / @x.abs : @x.abs / vector2.x.abs
         y =  y1 > @y.abs ? y1 / @y.abs : @y.abs / y1
         z =  z1 > @z.abs ? z1 / @z.abs : @z.abs / z1
-        check1 = (x * sign(vector2.x) * sign(@x) == y * sign(vector2.y) * sign(@y))
-        check2 = (x * sign(vector2.x) * sign(@x) == z * sign(vector2.z) * sign(@z))
-        check1 && check2 && (z * sign(vector2.z) * sign(@z) == y * sign(vector2.y) * sign(@y))
+        arr = [x,y,z]
+      end
+
+      ##
+      #  Check if two vectors are collinear
+      def collinear?(vector2)
+        arr = help_collinear(vector2)
+        x = arr[0]
+        y = arr[1]
+        z = arr[2]
+        check_x = x * sign(vector2.x) * sign(@x)
+        check_y = y * sign(vector2.y) * sign(@y)
+        check_z = z * sign(vector2.z) * sign(@z)
+        check1 = check_x == check_y
+        check2 = check_x == check_z
+        check_3 = check_y == check_z
+        check1 && check2 && check_3
       end
     end
      ##
