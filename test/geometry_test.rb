@@ -19,13 +19,17 @@ class GeometryTest < Minitest::Test
                          minimal_convex_hull_2d([Point.new(0, 0), Point.new(-2, -1),
                                                  Point.new(1, 2), Point.new(2, -1)]))
   end
-
-  def test_point_is_on_line # TODO:наше
+  ##
+  # 2020
+  def test_point_is_on_line
     line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3, 4))
     line1.initialize_with_coefficients(2, 0, -2)
     assert_equal(true, line1.point_is_on_line?(Point.new(1, 0)))
     assert_equal(false, line1.point_is_on_line?(Point.new(-1, 2)))
     assert_equal(true, line1.point_is_on_line?(Point.new(1, 2)))
+    line1.initialize_with_coefficients(1, 3, 0)
+    assert_equal(false, line1.point_is_on_line?(Point.new(1, 0)))
+    assert_equal(true, line1.point_is_on_line?(Point.new(3, -1)))
   end
 
   def test_initialize_with_coefficients
@@ -424,7 +428,8 @@ class GeometryTest < Minitest::Test
     assert_in_delta(3, line1.distance_to_line(line2))
   end
 
-  #TODO наше
+  ##
+  # 2020
   def test_sign
     assert_equal(1, sign(9))
     assert_equal(1, sign(0))
@@ -437,7 +442,7 @@ class GeometryTest < Minitest::Test
     assert_in_delta(Math.sqrt(2) / 2, line1.distance_to_line(line2))
   end
 
-  #TODO наше
+
   def test_distance_between_parallel_lines
     line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3,4))
     line1.initialize_with_coefficients(1, 0, -3)
@@ -458,7 +463,7 @@ class GeometryTest < Minitest::Test
     assert_equal('Lines are not parallel', ex.class)
   end
 
-  def test_method_pointis_on_line_returns_false_simple
+  def test_method_points_on_line_returns_false_simple
     assert_equal(false, Line2dCanon.new(Point.new(0, 0), Point.new(1, 0)).point_is_on_line?(Point.new(1, 1)))
   end
 
@@ -537,10 +542,6 @@ class GeometryTest < Minitest::Test
     assert(!plane.point_is_on_plane?(Point3d.new(0, 0, 0)))
   end
 
-
-
-
-
   def test_point_is_on_plane
     a = Point3d.new(5, -3, 10)
     b = Point3d.new(-1, 2, 4)
@@ -553,7 +554,6 @@ class GeometryTest < Minitest::Test
     assert_equal(true, plane.point_is_on_plane?(Point3d.new(-1, 2, -3)))
   end
 
-  #TODO наше
   def test_norm_vector
     a = Point3d.new(-3, 2, -1)
     b = Point3d.new(-1, 2, 4)
@@ -626,8 +626,14 @@ class GeometryTest < Minitest::Test
     assert_equal([2, -14, 5], vectors_product([3, -1, -4], [2, 1, 2]))
   end
 
-  def test_vector_length
+  def test_vector_length_1
     assert_in_delta(5.385164807, vector_length([2, 3, -4]), 0.00001)
+  end
+  def test_vector_length_2
+    assert_in_delta(6.4807406984, vector_length([5, 4, 1]), 0.00001)
+  end
+  def test_vector_length_3
+    assert_equal(3, vector_length([2, 2, 1]))
   end
 
 
@@ -853,7 +859,18 @@ class GeometryTest < Minitest::Test
     vr=v1.vector_multiplication(v2)
     assert_equal(true,vr.x.eql?(0) && vr.y.eql?(-5) && vr.z.eql?(-5))
   end
-  
+  def test_vector_multiplication_4
+    v1= Vector3d.new(Point3d.new(-5,1,0))
+    v2= Vector3d.new(Point3d.new(4,1,1))
+    vr=v1.vector_multiplication(v2)
+    assert_equal(true,vr.x.eql?(1) && vr.y.eql?(5) && vr.z.eql?(-9))
+  end
+  def test_vector_multiplication_5
+    v1= Vector3d.new(Point3d.new(-1,1,0))
+    v2= Vector3d.new(Point3d.new(0,1,1))
+    vr=v1.vector_multiplication(v2)
+    assert_equal(true,vr.x.eql?(1) && vr.y.eql?(1) && vr.z.eql?(-1))
+  end
   def test_divide_min_simple
     #assert_equal(1, divide_min([Point.new(1,1), Point.new(2,1), Point.new(3,2)]))
   end
