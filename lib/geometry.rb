@@ -171,11 +171,9 @@ module Silicium
       ##
       # check if the points isn't on the same line
       def point_is_on_line?(point1, point2, point3)
-        p = @free_coefficient
         check_p1 = @x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z +  @free_coefficient
         check_p2 = @x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z + @free_coefficient
         check_p3 = @x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z + @free_coefficient
-        p = @free_coefficient
         check_p1.equal?(0) && check_p2.equal?(0) && check_p3.equal?(0)
       end
 
@@ -335,14 +333,11 @@ module Silicium
       #  Check if two vectors are collinear
       def collinear?(vector2)
         x1 = (vector2.x).abs
-        x2 = @x.abs
         y1 = (vector2.y).abs
-        y2 = @y.abs
         z1 = (vector2.z).abs
-        z2 = @z.abs
-        x = x1 > x2 ? x1 / x2 : x2 / x1
-        y =  y1 > y2 ? y1 / y2 : y2 / y1
-        z =  z1 > z2 ? z1 / z2 : z2 / z1
+        x = x1 > @x.abs ? x1 / @x.abs : @x.abs / x1
+        y =  y1 > @y.abs ? y1 / @y.abs : @y.abs / y1
+        z =  z1 > @z.abs ? z1 / @z.abs : @z.abs / z1
         help_check(vector2, x, y, z)
       end
     end
