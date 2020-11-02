@@ -323,48 +323,30 @@ module Silicium
       def sign(integer)
         integer >= 0 ? 1 : -1
       end
-
       ##
       # help function for collinear function
-      def help2_collinear(vector2,x,y,z)
-        d1 = x / @x.abs
-        d2 = y / @y.abs
-        d3 = z / @z.abs
-        arr = [d1,d2,d3]
+      def help_check(vector2,x,y,z)
+        check1 = x * sign(vector2.x) * sign(@x) == y * sign(vector2.y) * sign(@y)
+        check2 = x * sign(vector2.x) * sign(@x) == z * sign(vector2.z) * sign(@z)
+        check3 = z * sign(vector2.z) * sign(@z) == y * sign(vector2.y) * sign(@y)
+        check1 && check2 && check3
       end
 
-      ##
-      # help function for collinear function
-      def help_collinear(vector2)
-        x1 = vector2.x.abs
-        y1 = vector2.y.abs
-        z1 = vector2.z.abs
-        arr = help2_collinear(vector2,x1,y1,z1)
-        d1 = arr[0]
-        d2 = arr[1]
-        d3 = arr[2]
-        x = x1 > @x.abs ? d1 : (1.0 / d1)
-        y =  y1 > @y.abs ? d2 : (1.0 / d2)
-        z =  z1 > @z.abs ? d3 : (1.0 / d3)
-        arr = [x,y,z]
-      end
-
-      ##
       #  Check if two vectors are collinear
       def collinear?(vector2)
-        arr = help_collinear(vector2)
-        x = arr[0]
-        y = arr[1]
-        z = arr[2]
-        check_x = x * sign(vector2.x) * sign(@x)
-        check_y = y * sign(vector2.y) * sign(@y)
-        check_z = z * sign(vector2.z) * sign(@z)
-        check1 = check_x == check_y
-        check2 = check_x == check_z
-        check_3 = check_y == check_z
-        check1 && check2 && check_3
+        x1 = (vector2.x).abs
+        x2 = @x.abs
+        y1 = (vector2.y).abs
+        y2 = @y.abs
+        z1 = (vector2.z).abs
+        z2 = @z.abs
+        x = x1 > x2 ? x1 / x2 : x2 / x1
+        y =  y1 > y2 ? y1 / y2 : y2 / y1
+        z =  z1 > z2 ? z1 / z2 : z2 / z1
+        help_check(vector2, x, y, z)
       end
     end
+    ##
      ##
     # Function for checking sign of number
     def sign(integer)
