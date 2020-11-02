@@ -46,7 +46,7 @@ class RegressionTest < MiniTest::Test
   @@pol_plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
 
   def test_polynomial_regression2
-    array = Regression::PolynomialRegressionByGradientDescent::generate_function(@@pol_plot2, 3,0.00001, 0.0000001)
+    array = Regression::PolynomialRegressionByGradientDescent::generate_function(@@pol_plot2, 3,0.00001, 0.000001)
     assert_equal_arrays_in_delta array, [5, -3, 1, -1], @@delta2
   end
 

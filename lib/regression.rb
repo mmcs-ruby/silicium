@@ -61,8 +61,8 @@ module Silicium
 
         array = Array.new(n + 1, 1)
         m = plot.length.to_f
-        bias = 0.5
-        old_bias = bias
+        bias = old_bias = 0.5
+
         while bias.abs() > epsilon
           old_array = array.dup()
           i = -1
@@ -71,11 +71,10 @@ module Silicium
             elem - alpha / m * d_dt(plot, old_array, i)
           }
           bias = (array.zip(old_array).map {|new, old| (new - old).abs()}).max()
-          if bias > old_bias
-            raise "Divergence"
-          end
+          raise "Divergence" if bias > old_bias
           old_bias = bias
         end
+
         return array.map! {|x| x * div + avg_x } if scaling
         return array
       end
