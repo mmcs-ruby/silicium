@@ -46,10 +46,10 @@ module Silicium
     
     # Finds parameters as array [1..n] for polynom of n-th degree
     # @param plot Actually hash x => y for different points of the plot
-    # @param alpha Speed of learning (should be little enough not to diverge)
     # @param n Degree of expected polynom
-    # @return Array[Numeric] parameners (little index is lower degree parameter)
-
+    # @param alpha Speed of learning (should be little enough not to diverge)
+    # @param epsilon Accuracy
+    # @return Array[Numeric] coefficients (little index is lower degree parameter)
     class PolynomialRegressionByGradientDescent
       def self.generate_function(given_plot, n = 5, alpha = 0.001, epsilon = 0.000001)
         scaling = n > 3
@@ -76,9 +76,7 @@ module Silicium
           end
           old_bias = bias
         end
-        if (scaling)
-          return array.map! {|x| x * div + avg_x }
-        end
+        return array.map! {|x| x * div + avg_x } if scaling
         return array
       end
 
@@ -120,17 +118,3 @@ module Silicium
     end 
   end
 end
-
-# -x^2 + 3x + 2
-# plot = {0 => 2, -1 => -2, -2 => -8, -3 => -16, 1 => 4, 2 => 4, 3 => 2, 4 => -2, -4 => -26}
-# res = Silicium::Regression::PolynomialRegressionByGradientDescent::
-#       generate_function(plot, 0.001, 2, true)
-# puts res
-
-# -x^3 + x^2 - 3x + 5
-plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
-
- res = Silicium::Regression::PolynomialRegressionByGradientDescent::
-        generate_function(plot2, 3, 0.00001, 0.0000001)
-
- p res
