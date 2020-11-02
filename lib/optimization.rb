@@ -181,12 +181,15 @@ module Silicium
       return num1 * num2 if num1 < 10 || num2 < 10
 
       max_size = [num1.to_s.length, num2.to_s.length].max
-      n = max_size / 2
 
       first_half1, last_half1 = make_equal(num1, max_size)
       first_half2, last_half2 = make_equal(num2, max_size)
 
-      compute_karatsuba(first_half1, last_half1, first_half2, last_half2, n)
+      t0 = karatsuba(last_half1, last_half2)
+      t1 = karatsuba((first_half1 + last_half1), (first_half2 + last_half2))
+      t2 = karatsuba(first_half1, first_half2)
+
+      compute_karatsuba(t0, t1, t2, max_size / 2)
     end
 
     private
@@ -199,12 +202,8 @@ module Silicium
     end
 
     # Helper for karatsuba method. Computes the result of karatsuba's multiplication.
-    def compute_karatsuba(fh1, lh1, fh2, lh2, num)
-      t0 = karatsuba(lh1, lh2)
-      t1 = karatsuba((fh1 + lh1), (fh2 + lh2))
-      t2 = karatsuba(fh1, fh2)
-
-      t2 * 10**(2 * num) + ((t1 - t0 - t2) * 10**num) + t0
+    def compute_karatsuba(tp0, tp1, tp2, num)
+      tp2 * 10**(2 * num) + ((tp1 - tp0 - tp2) * 10**num) + tp0
     end
   end
 end
