@@ -1,4 +1,5 @@
-require 'test_helper'
+require './test/test_helper'
+
 require 'geometry'
 
 class GeometryTest < Minitest::Test
@@ -18,12 +19,79 @@ class GeometryTest < Minitest::Test
                          minimal_convex_hull_2d([Point.new(0, 0), Point.new(-2, -1),
                                                  Point.new(1, 2), Point.new(2, -1)]))
   end
-  def test_point_is_on_line
-    line1 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
+
+  def test_point_is_on_line # TODO:наше
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3, 4))
     line1.initialize_with_coefficients(2, 0, -2)
-    assert_equal(true,line1.point_is_on_line?(Point.new(1, 0)))
-    assert_equal(false,line1.point_is_on_line?(Point.new(-1, 2)))
-    assert_equal(false,line1.point_is_on_line?(Point.new(0, 2)))
+    assert_equal(true, line1.point_is_on_line?(Point.new(1, 0)))
+    assert_equal(false, line1.point_is_on_line?(Point.new(-1, 2)))
+    assert_equal(true, line1.point_is_on_line?(Point.new(1, 2)))
+  end
+
+  def test_initialize_with_coefficients
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3, 4))
+    line1.initialize_with_coefficients(2, 0, -2)
+    assert_equal(2, line1.x_coefficient)
+    assert_equal(0, line1.y_coefficient)
+    assert_equal(-2, line1.free_coefficient)
+  end
+
+
+  def test_initialize_with_0_coefficients
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3, 4))
+     assert_raises ArgumentError do
+    line1.initialize_with_coefficients(0, 0, 0)
+     end
+  end
+
+  def test_initialize_with_0_coefficients2
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3, 4))
+    assert_raises ArgumentError do
+      line1.initialize_with_coefficients(0, 0, -2)
+    end
+  end
+
+  def test_initialize_with_0_free_coefficient
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3, 4))
+    line1.initialize_with_coefficients(2, 0, 0)
+    assert_equal(2, line1.x_coefficient)
+    assert_equal(0, line1.y_coefficient)
+    assert_equal(0, line1.free_coefficient)
+  end
+
+  def test_check_point_on_segment
+    line1 = Line2dCanon.new(Point.new(2, -3), Point.new(-3, 4))
+    assert(!line1.check_point_on_segment(Point.new(5, -1.5)))
+  end
+
+  def test_check_point_on_segment2
+    line1 = Line2dCanon.new(Point.new(2, -3), Point.new(-3, 4))
+    assert(!line1.check_point_on_segment(Point.new(4.9, 5)))
+  end
+
+  def test_check_point_on_segment3
+    line1 = Line2dCanon.new(Point.new(2, -3), Point.new(-3, 4))
+    line1.initialize_with_coefficients(2, 0, 1)
+    assert(line1.check_point_on_segment(Point.new(-0.5, 0)))
+  end
+
+  def test_array_of_points_is_on_line_empty_array
+    assert_raises ArgumentError do
+      line1 = Line2dCanon.new(Point.new(2, -3), Point.new(-3, 4))
+      line1.array_of_points_is_on_line(Array.new)
+    end
+  end
+
+  def test_array_of_points_is_on_line
+    line1 = Line2dCanon.new(Point.new(2, -3), Point.new(-3, 4))
+    line1.initialize_with_coefficients(2,3,4)
+    assert_equal([true], line1.array_of_points_is_on_line([Point.new(-3.5, 1)]))
+  end
+
+  def test_array_of_points_is_on_line2
+    line1 = Line2dCanon.new(Point.new(2, -3), Point.new(-3, 4))
+    line1.initialize_with_coefficients(2,3,4)
+    assert_equal([true, false, false], line1.array_of_points_is_on_line([Point.new(-3.5, 1), Point.new(0,0),Point.new(-6,3)]))
   end
 
 
@@ -51,7 +119,6 @@ class GeometryTest < Minitest::Test
                     distance_point_to_point3d(Point3d.new(-222, -333, -444), Point3d.new(-2, -5, -6)), 0.0001)
   end
 
-
   def test_directing_vector3d1
     assert_equal([2.0, 1.0, 2.0], directing_vector3d('(x-3)/2=(y-1)/1=(z+1)/2'))
   end
@@ -75,7 +142,6 @@ class GeometryTest < Minitest::Test
     assert_in_delta(256.782523588213, point_to_line_distance_3d(Point3d.new(-50, 20, -50), '(x-0)/26=(y+300)/*(-15)=(z-200)/51'), 0.00001)
   end
 
-
   def test_distance_line_on_point
     assert_equal(0, distance_point_line2d(Point.new(0, 0), Point.new(2, 2), Point.new(0, 0)))
   end
@@ -89,11 +155,11 @@ class GeometryTest < Minitest::Test
   end
 
   def test_distance_point_line_equation2d_simple
-    assert_equal(4, Line2dCanon.new(Point.new(0,-4),Point.new(1,-4)).distance_point_to_line(Point.new(0, 0)))
+    assert_equal(4, Line2dCanon.new(Point.new(0, -4), Point.new(1, -4)).distance_point_to_line(Point.new(0, 0)))
   end
 
   def test_distance_point_line_equation2d_simple2
-    assert_equal(4, Line2dCanon.new(Point.new(-4,0),Point.new(-4, 1)).distance_point_to_line(Point.new(0, 0)))
+    assert_equal(4, Line2dCanon.new(Point.new(-4, 0), Point.new(-4, 1)).distance_point_to_line(Point.new(0, 0)))
   end
 
   def test_distance_point_line_equation2d_normal
@@ -151,13 +217,13 @@ class GeometryTest < Minitest::Test
   end
 
   def test_init_line2d_vertical_y
-    line = Line2dCanon.new(Point.new(3,5),Point.new(3,10))
+    line = Line2dCanon.new(Point.new(3, 5), Point.new(3, 10))
     assert_in_delta(0, line.y_coefficient)
   end
 
   def test_init_line2d_vertical_x
-    line = Line2dCanon.new(Point.new(3,5),Point.new(3,10))
-    assert_in_delta(- 3, line.free_coefficient/line.x_coefficient)
+    line = Line2dCanon.new(Point.new(3, 5), Point.new(3, 10))
+    assert_in_delta(- 3, line.free_coefficient / line.x_coefficient)
   end
 
   def test_init_line2d_horizontal_x
@@ -356,10 +422,11 @@ class GeometryTest < Minitest::Test
     assert_in_delta(3, line1.distance_to_line(line2))
   end
 
+  #TODO наше
   def test_sign
-    assert_equal(1,sign(9))
-    assert_equal(1,sign(0))
-    assert_equal(-1,sign(-4))
+    assert_equal(1, sign(9))
+    assert_equal(1, sign(0))
+    assert_equal(-1, sign(-4))
   end
 
   def test_line_distance_common
@@ -368,17 +435,18 @@ class GeometryTest < Minitest::Test
     assert_in_delta(Math.sqrt(2) / 2, line1.distance_to_line(line2))
   end
 
+  #TODO наше
   def test_distance_between_parallel_lines
-    line1 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
+    line1 = Line2dCanon.new(Point.new(1, 2), Point.new(3,4))
     line1.initialize_with_coefficients(1, 0, -3)
-    line2 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
+    line2 = Line2dCanon.new(Point.new(1, 2), Point.new(3,4))
     line2.initialize_with_coefficients(1, 0, 5)
-    assert_in_delta(8.0,line1.distance_between_parallel_lines(line2))
+    assert_in_delta(8.0, line1.distance_between_parallel_lines(line2))
     line1.initialize_with_coefficients(1, 0, 2)
     line2.initialize_with_coefficients(1, 0, 9)
-    assert_in_delta(7.0,line1.distance_between_parallel_lines(line2))
-
+    assert_in_delta(7.0, line1.distance_between_parallel_lines(line2))
   end
+
   def test_not_between_parallel_lines
     line1 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
     line1.initialize_with_coefficients(-1, 0, -3)
@@ -413,31 +481,33 @@ class GeometryTest < Minitest::Test
   end
 
   def test_point_is_on_plane
-    a =Point3d.new(5, -3, 10)
-    b =Point3d.new(-1, 2, 4)
-    c =Point3d.new(3, 3, -1)
+    a = Point3d.new(5, -3, 10)
+    b = Point3d.new(-1, 2, 4)
+    c = Point3d.new(3, 3, -1)
     x = Point3d.new(0, 0, 0)
     plane = Plane3d.new(a, b, c)
     plane.initialize_with_coefficients(2, -1, 5, -3)
     assert_equal(false,plane.point_is_on_plane?(x))
     plane.initialize_with_coefficients(3, 7, -5, -26)
-    assert_equal(true,plane.point_is_on_plane?(Point3d.new(-1,2,-3)))
+    assert_equal(true,plane.point_is_on_plane?(Point3d.new(-1, 2, -3)))
   end
 
-  def test_norm_vect
-    a =Point3d.new(-3, 2, -1)
-    b =Point3d.new(-1, 2, 4)
-    c =Point3d.new(3, 3, -1)
-    vec=Vector3d.new(a)
-    v=vec.norm_vector(b, c)
-    assert_equal(true,v.x.eql?(-5) && v.y.eql?(30) && v.z.eql?(2))
+  #TODO наше
+  def test_norm_vector
+    a = Point3d.new(-3, 2, -1)
+    b = Point3d.new(-1, 2, 4)
+    c = Point3d.new(3, 3, -1)
+    vec = Vector3d.new(a)
+    v = vec.norm_vector(b, c)
+    assert_equal(true, v.x.eql?(-5) && v.y.eql?(30) && v.z.eql?(2))
   end
-  def test_is_collinear
-    v1=Vector3d.new(Point3d.new(3,1,2))
-    v2=Vector3d.new(Point3d.new(6,2,4))
-    assert_equal(true,v1.collinear?(v2))
-    assert_equal(false,v1.collinear?(Vector3d.new(Point3d.new(-3, 2, 4))))
-    assert_equal(true,v1.collinear?(Vector3d.new(Point3d.new(-3, -1, -2))))
+
+  def test_collinear
+    v1 = Vector3d.new(Point3d.new(3,1,2))
+    v2 = Vector3d.new(Point3d.new(6,2,4))
+    assert_equal(true, v1.collinear?(v2))
+    assert_equal(false, v1.collinear?(Vector3d.new(Point3d.new(-3, 2, 4))))
+    assert_equal(true, v1.collinear?(Vector3d.new(Point3d.new(-3, -1, -2))))
   end
 
   def test_directing_vector3d_exception

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
+
 require_relative 'geometry/figure'
+
 module Silicium
 
   module Geometry
@@ -52,6 +54,8 @@ module Silicium
 
       # Initializes with coefficients
       def initialize_with_coefficients(a, b, c)
+        raise ArgumentError, 'All coefficients cannot be 0 ' if a.equal?(0) && b.equal?(0) && (c.equal?(0) || !c.equal?(0))
+
         @x_coefficient = a
         @y_coefficient = b
         @free_coefficient = c
@@ -60,20 +64,12 @@ module Silicium
       ##
       # Checks the point lies on the line or not
       def point_is_on_line?(point)
-        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
+        ((@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient) - 0.0).abs < 0.0001
       end
 
       # Checks if two lines are parallel
       def parallel?(other_line)
         @x_coefficient.equal?(other_line.x_coefficient) && @y_coefficient.equal?(other_line.y_coefficient)
-        #x1 = (other_line.x).abs
-        # x2 = @x.abs
-        #y1 = (other_line.y).abs
-        #y2 = @y.abs
-        #x = x1 > x2  ? x1 / x2 : x2 / x1
-        #y =  y1 > y2  ? y1 / y2 : y2 / y1
-        #(x * sign(other_line.x) * sign(@x) == y * sign(other_line.y) * sign(@y))
-
       end
 
       ##
@@ -91,7 +87,7 @@ module Silicium
       ##
       # Checking if the point is on a segment
       def check_point_on_segment(point)
-        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).equal?(0)
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient) - 0.0 <= 0.0001
       end
 
       ##
@@ -119,12 +115,14 @@ module Silicium
       # return 0 if the equation does not define a line.
       def distance_point_to_line(point)
         return 0 if @x_coefficient.eql?(0) && @y_coefficient.eql?(0)
-        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs /
-            Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
+
+        res = (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs
+        res / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
       end
       ##
       # Check if array of points is on the same line
       def array_of_points_is_on_line(array)
+        raise ArgumentError, 'Array is empty!' if array.length == 0
         res = Array.new
         for i in 0..array.size-1 do
           res.push(point_is_on_line?(array[i]))
@@ -135,8 +133,9 @@ module Silicium
       ##
       # The distance between parallel lines
       def distance_between_parallel_lines(other_line)
-        raise 'Lines are not parallel' if !parallel?(other_line)
-        (other_line.free_coefficient - @free_coefficient).abs / sqrt(@x_coefficient**2 + @y_coefficient**2)
+        raise ArgumentError, 'Lines are not parallel' if !parallel?(other_line)
+
+        (other_line.free_coefficient - @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2)
       end
     end
     ##
@@ -521,7 +520,7 @@ module Silicium
       def insert_eq(line_equation)
         line_equation.gsub(' ', '').insert(line_equation.length, '=')
       end
-    end
   end
+end
 
 
