@@ -45,16 +45,6 @@ class GraphVisualizerTest < Minitest::Test
                                       {v: :four, i:[ :one, :four]},
                                       {v: :three, i:[ :one, :two]}])
 
-    graph.label_vertex!(:one,'one')
-    graph.label_vertex!(:two,'two')
-    graph.label_vertex!(:three,'three')
-    graph.label_vertex!(:four,'four')
-    graph.label_vertex!(:five,'five')
-
-    graph.label_edge!(:one,:one,'one to one')
-    graph.label_edge!(:two,:two,'two to two')
-    graph.label_edge!(:five,:four,'five to four')
-    graph.label_edge!(:five,:three,'five to three')
 
     set_graph(graph)
     #uncomment me if you wanna see
