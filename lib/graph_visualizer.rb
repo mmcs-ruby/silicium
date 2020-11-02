@@ -150,14 +150,20 @@ module Silicium
       @is_oriented = graph.class == OrientedGraph
       graph.vertices.keys.each do |from_vert|
         graph.vertices[from_vert].each do |to_vert|
-          col = get_random_color
-          if @is_oriented and has_edge?(to_vert,from_vert)
-            col = @edges[Pair.new(to_vert,from_vert)][:line].color
-          end
-          arrow = @is_oriented ? draw_oriented_edge(from_vert,to_vert,col):draw_edge(from_vert,to_vert,col)
-          @edges[Pair.new(from_vert,to_vert)] = arrow
+          push_edge(from_vert,to_vert)
         end
       end
+    end
+
+    ##
+    # creates edge and push it to the @edges
+    def push_edge(from_vert, to_vert)
+      col = get_random_color
+      if @is_oriented and has_edge?(to_vert,from_vert)
+        col = @edges[Pair.new(to_vert,from_vert)][:line].color
+      end
+      arrow = @is_oriented ? draw_oriented_edge(from_vert,to_vert,col):draw_edge(from_vert,to_vert,col)
+      @edges[Pair.new(from_vert,to_vert)] = arrow
     end
 
     ##

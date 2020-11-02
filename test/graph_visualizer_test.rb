@@ -71,5 +71,6 @@ class GraphVisualizerTest < Minitest::Test
     set_graph(graph)
     #uncomment me if you wanna see
     #show_window
+    #show_window
   end
 end
