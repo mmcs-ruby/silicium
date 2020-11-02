@@ -326,14 +326,23 @@ module Silicium
 
       ##
       # help function for collinear function
+      def help2_collinear(vector2,x,y,z)
+        d1 = x / @x.abs
+        d2 = y / @y.abs
+        d3 = z / @z.abs
+        arr = [d1,d2,d3]
+      end
+
+      ##
+      # help function for collinear function
       def help_collinear(vector2)
         x1 = vector2.x.abs
         y1 = vector2.y.abs
         z1 = vector2.z.abs
-        d1 = x1 / @x.abs
-        d2 = y1 / @y.abs
-        d3 = z1 / @z.abs
-
+        arr = help2_collinear(vector2,x1,y1,z1)
+        d1 = arr[0]
+        d2 = arr[1]
+        d3 = arr[2]
         x = x1 > @x.abs ? d1 : (1.0 / d1)
         y =  y1 > @y.abs ? d2 : (1.0 / d2)
         z =  z1 > @z.abs ? d3 : (1.0 / d3)
