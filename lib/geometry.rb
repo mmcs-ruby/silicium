@@ -160,6 +160,8 @@ module Silicium
       ##
       # Initializes with coefficients
       def initialize_with_coefficients(a, b, c, d)
+        raise ArgumentError, 'All coefficients cannot be 0 ' if a.equal?(0) && b.equal?(0) && c.equal?(0) && (d.equal?(0) || !d.equal?(0))
+
         @x_coefficient = a
         @y_coefficient = b
         @z_coefficient = c
@@ -169,9 +171,11 @@ module Silicium
       ##
       # check if the points isn't on the same line
       def point_is_on_line?(point1, point2, point3)
-        check_p1 = (@x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z + @free_coefficient)
-        check_p2 = (@x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z + @free_coefficient)
-        check_p3 = (@x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z + @free_coefficient)
+        p = @free_coefficient
+        check_p1 = @x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z +  @free_coefficient
+        check_p2 = @x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z + @free_coefficient
+        check_p3 = @x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z + @free_coefficient
+        p = @free_coefficient
         check_p1.equal?(0) && check_p2.equal?(0) && check_p3.equal?(0)
       end
 

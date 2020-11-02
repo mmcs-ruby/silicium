@@ -95,6 +95,8 @@ class GeometryTest < Minitest::Test
   end
 
 
+
+
   def test_general
     assert_equal_as_sets([Point.new(-2, -1), Point.new(-1, 1),
                           Point.new(1, -2), Point.new(2, 0), Point.new(2, 2)],
@@ -480,6 +482,65 @@ class GeometryTest < Minitest::Test
     assert_equal('123hello', cut_by_eq('qqqqq=123hello'))
   end
 
+  def test_initialize_Point3d_class
+    a = Point3d.new(5, -3, 10)
+    b = Point3d.new(-1, 2, 4)
+    c = Point3d.new(3, 3, -1)
+    plane = Plane3d.new(a, b, c)
+    assert_equal(-19,plane.x_coefficient)
+    assert_equal(-54,plane.y_coefficient)
+    assert_equal(-26,plane.z_coefficient)
+    assert_equal(193,plane.free_coefficient)
+  end
+
+  def test_initialize_Point3d_class_with_0
+    a = Point3d.new(5, -3, 10)
+    b = Point3d.new(-1, 2, 4)
+    c = Point3d.new(3, 3, -1)
+    plane = Plane3d.new(a, b, c)
+    assert_raises ArgumentError do
+      plane.initialize_with_coefficients(0,0,0,0)
+    end
+  end
+
+  def test_initialize_Point3d_class_with_02
+    a = Point3d.new(5, -3, 10)
+    b = Point3d.new(-1, 2, 4)
+    c = Point3d.new(3, 3, -1)
+    plane = Plane3d.new(a, b, c)
+    assert_raises ArgumentError do
+      plane.initialize_with_coefficients(0, 0, 0, 5)
+    end
+  end
+
+  def test_point_is_on_line3d
+    a = Point3d.new(1, -2, 0)
+    b = Point3d.new(2, 0, -1)
+    c = Point3d.new(0, -1, 2)
+    plane = Plane3d.new(a, b, c)
+    assert(plane.point_is_on_line?(a, b, c))
+  end
+
+  def test_point_not_is_on_line3d
+    a = Point3d.new(1, -2, 0)
+    b = Point3d.new(2, 0, -1)
+    c = Point3d.new(0, -1, 2)
+    plane = Plane3d.new(a, b, c)
+    assert(plane.point_is_on_line?(a, a, a))
+  end
+
+  def test_point_is_on_plane
+    a = Point3d.new(1, -2, 0)
+    b = Point3d.new(2, 0, -1)
+    c = Point3d.new(0, -1, 2)
+    plane = Plane3d.new(a, b, c)
+    assert(!plane.point_is_on_plane?(Point3d.new(0, 0, 0)))
+  end
+
+
+
+
+
   def test_point_is_on_plane
     a = Point3d.new(5, -3, 10)
     b = Point3d.new(-1, 2, 4)
@@ -487,9 +548,9 @@ class GeometryTest < Minitest::Test
     x = Point3d.new(0, 0, 0)
     plane = Plane3d.new(a, b, c)
     plane.initialize_with_coefficients(2, -1, 5, -3)
-    assert_equal(false,plane.point_is_on_plane?(x))
+    assert_equal(false, plane.point_is_on_plane?(x))
     plane.initialize_with_coefficients(3, 7, -5, -26)
-    assert_equal(true,plane.point_is_on_plane?(Point3d.new(-1, 2, -3)))
+    assert_equal(true, plane.point_is_on_plane?(Point3d.new(-1, 2, -3)))
   end
 
   #TODO наше
