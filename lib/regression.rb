@@ -125,3 +125,11 @@ end
 # plot = {0 => 2, -1 => -2, -2 => -8, -3 => -16, 1 => 4, 2 => 4, 3 => 2, 4 => -2, -4 => -26}
 # res = Silicium::Regression::PolynomialRegressionByGradientDescent::generate_function(plot, 2, 0.001, 0.000001)
 # p res
+
+pol_plot1 = {0 => 2, -1 => -2, -2 => -8, -3 => -16, 1 => 4, 2 => 4, 3 => 2, 4 => -2, -4 => -26}
+
+# -x^3 + x^2 - 3x + 5
+pol_plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
+
+res = Silicium::Regression::PolynomialRegressionByGradientDescent::feature_scaled_plot(pol_plot2, 3)
+p res

@@ -53,7 +53,7 @@ class RegressionTest < MiniTest::Test
 
   def test_polynomial_plot_scaling1
     result = Regression::PolynomialRegressionByGradientDescent::feature_scaled_plot(@@pol_plot1, 2)
-    assert_equal_arrays result, [0.03125, -0.03125, -0.125, 0.0625, 0.0625, 0.03125, -0.03125, -0.40625]
+    assert_equal_arrays result, [0.03125, -0.03125, -0.125, -0.25, 0.0625, 0.0625, 0.03125, -0.03125, -0.40625]
   end
 
   def test_polynomial_plot_scaling2
