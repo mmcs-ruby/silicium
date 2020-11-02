@@ -51,31 +51,35 @@ module Silicium
     # @return Array[Numeric] parameners (little index is lower degree parameter)
 
     class PolynomialRegressionByGradientDescent
-      def self.generate_function(given_plot, alpha, n = 5, scaling = false)
+      def self.generate_function(given_plot, n = 5, alpha = 0.001, epsilon = 0.000001, scaling = false)
         if scaling
-          plot = feature_scaled_plot(given_plot, n)
+          plot, avg_x, div = feature_scaled_plot(given_plot, n)
         else
           plot = given_plot
         end
 
+        p plot
+
         array = Array.new(n + 1, 1)
-        m = plot.length.to_f 
-        epsilon = 0.0000001
+        m = plot.length.to_f
         bias = 0.5
         old_bias = bias
-        while bias.abs() > epsilon 
+        while bias.abs() > epsilon
           old_array = array.dup()
           i = -1
           array.map! { |elem|
             i += 1
-            elem = elem - alpha / m * d_dt(plot, old_array, i)
+            elem - alpha / m * d_dt(plot, old_array, i)
           }
           bias = (array.zip(old_array).map {|new, old| (new - old).abs()}).max()
           if bias > old_bias
             raise "Divergence"
           end
           old_bias = bias
-        end 
+        end
+        if (scaling)
+          return array.map! {|x| x * div + avg_x }
+        end
         return array
       end
 
@@ -100,17 +104,19 @@ module Silicium
       end 
       
       def self.feature_scaled_plot(given_plot, n)
-        max = given_plot[0]
-        min = given_plot[0]
-        sum = 0.0
+        max_x = given_plot[0][0]
+        min_x = given_plot[0][0]
+        sum_x = 0.0
         given_plot.each do |x, _|
-          max = x if x > max  
-          min = x if x < min 
-          sum += x
+          max_x = x if x > max_x
+          min_x = x if x < min_x
+          sum_x += x
         end
-        avg = sum.to_f / given_plot.length 
-        new_plot = given_plot.map {|x, y| [(x.to_f - avg) / (max - min)**n, y]}
-        return new_plot
+        avg_x = sum_x.to_f / given_plot.length
+        range_x = max_x - min_x
+        div = range_x ** n
+        new_plot = given_plot.map {|x, y| [x, (y.to_f - avg_x) / div]}
+        return new_plot, avg_x, div
       end
     end 
   end
@@ -119,13 +125,13 @@ end
 # -x^2 + 3x + 2
 # plot = {0 => 2, -1 => -2, -2 => -8, -3 => -16, 1 => 4, 2 => 4, 3 => 2, 4 => -2, -4 => -26}
 # res = Silicium::Regression::PolynomialRegressionByGradientDescent::
-#       generate_function(plot, 0.001, 2,)
+#       generate_function(plot, 0.001, 2, true)
 # puts res
 
 # -x^3 + x^2 - 3x + 5
-pol_plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
+plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
 
-res = Silicium::Regression::PolynomialRegressionByGradientDescent::
-        generate_function(pol_plot2, 0.00001, 3)
+ res = Silicium::Regression::PolynomialRegressionByGradientDescent::
+        generate_function(plot2, 3, 0.001, 0.0000001, true)
 
-p res
+ p res

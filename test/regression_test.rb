@@ -38,19 +38,25 @@ class RegressionTest < MiniTest::Test
 
   def test_polynomial_regression1
     array = Regression::PolynomialRegressionByGradientDescent::generate_function(@pol_plot1, 0.01, 2 )
-    assert_in_delta array[0], 2, @@delta
-    assert_in_delta array[1], 3, @@delta
-    assert_in_delta array[2], -1, @@delta
+    assert_in_delta array, [2, 3, -1], @@delta
   end
 
   # -x^3 + x^2 - 3x + 5
   @pol_plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
 
   def test_polynomial_regression2
-    array = Regression::PolynomialRegressionByGradientDescent::generate_function(@pol_plot2, 0.00001, 3)
-    assert_in_delta array[0], 5, @@delta
-    assert_in_delta array[1], -3, @@delta
-    assert_in_delta array[2], 1, @@delta
-    assert_in_delta array[3], -1, @@delta
+    array = Regression::PolynomialRegressionByGradientDescent::generate_function(@pol_plot2, 3,0.00001, 0.00000001)
+    assert_equal_arrays_in_delta array, [5, -3, 1, -1], @@delta
+  end
+
+  def test_polynomial_plot_scaling1
+    result = Regression::PolynomialRegressionByGradientDescent::feature_scaled_plot(@pol_plot1, 2)
+    assert_equal_arrays result, [0.03125, -0.03125, -0.125, 0.0625, 0.0625, 0.03125, -0.03125, -0.40625]
+  end
+
+  def test_polynomial_plot_scaling2
+    # [[-5, 0.17], [-4, 0.097], [-3, 0.05], [-2, 0.023], [-1, 0.01], [0, 0.005], [1, 0.002], [2, -0.005], [3, -0.022], [4, -0.055], [5, -0.11]]
+    result = Regression::PolynomialRegressionByGradientDescent::feature_scaled_plot(@pol_plot2, 3)
+    assert_equal_arrays result, [0.17, 0.097, 0.05, 0.023, 0.01, 0.005, 0.002, -0.005, -0.022, -0.055, -0.11]
   end
 end
