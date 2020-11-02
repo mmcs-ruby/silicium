@@ -327,10 +327,9 @@ module Silicium
       ##
       #  Check if two vectors are collinear
       def collinear?(vector2)
-        x1 = vector2.x.abs
         y1 = vector2.y.abs
         z1 = vector2.z.abs
-        x = x1 > @x.abs ? x1 / @x.abs  : @x.abs / x1
+        x = vector2.x.abs > @x.abs ? vector2.x.abs / @x.abs : @x.abs / vector2.x.abs
         y =  y1 > @y.abs ? y1 / @y.abs : @y.abs / y1
         z =  z1 > @z.abs ? z1 / @z.abs : @z.abs / z1
         check1 = (x * sign(vector2.x) * sign(@x) == y * sign(vector2.y) * sign(@y))
