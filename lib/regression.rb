@@ -53,11 +53,10 @@ module Silicium
     class PolynomialRegressionByGradientDescent
       def self.generate_function(given_plot, n = 5, alpha = 0.001, epsilon = 0.000001)
         scaling = n > 3
-        if scaling
-          plot, avg_x, div = feature_scaled_plot(given_plot, n)
-        else
-          plot = given_plot
-        end
+        scaling ?
+            (plot, avg_x, div = feature_scaled_plot(given_plot, n))
+            :
+            (plot = given_plot)
 
         array = Array.new(n + 1, 1)
         m = plot.length.to_f
