@@ -28,6 +28,13 @@ class GraphVisualizerTest < Minitest::Test
     assert_equal(10, @@label_size)
   end
 
+  def test_graph_type_exception
+    graph = 123
+    assert_raises do
+      set_graph(graph)
+    end
+  end
+
   def test_show
     change_window_size(1000, 600)
     change_edge_width(5)

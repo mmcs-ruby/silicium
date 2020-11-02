@@ -53,6 +53,9 @@ module Silicium
     ##
     # Set the graph for visualization
     def set_graph(graph)
+      if graph.class != OrientedGraph and graph.class != UnorientedGraph
+        raise ArgumentError, "Invalid graph type!"
+      end
       clear_window
       set_vertices(graph)
       set_edges(graph)
@@ -144,19 +147,36 @@ module Silicium
     # set all edges of the graph
     def set_edges(graph)
       @edges = {}
-      graph.vertices.keys.each do |v1|
-        graph.vertices[v1].each do |v2|
-          col = Color.new('random')
-          while (col == @@label_color) or (col == @@vertex_color)
-            col = Color.new('random')
+      @is_oriented = graph.class == OrientedGraph
+      graph.vertices.keys.each do |from_vert|
+        graph.vertices[from_vert].each do |to_vert|
+          col = get_random_color
+          if @is_oriented and has_edge?(to_vert,from_vert)
+            col = @edges[Pair.new(to_vert,from_vert)][:line].color
           end
-          if (graph.class == OrientedGraph) and @edges.has_key?(Pair.new(v2,v1))
-            col = @edges[Pair.new(v2,v1)][:line].color
-          end
-          arrow = (graph.class == OrientedGraph)? draw_oriented_edge(v1,v2,col):draw_edge(v1,v2,col)
-          @edges[Pair.new(v1,v2)] = arrow
+          arrow = @is_oriented ? draw_oriented_edge(from_vert,to_vert,col):draw_edge(from_vert,to_vert,col)
+          @edges[Pair.new(from_vert,to_vert)] = arrow
         end
       end
+    end
+
+    ##
+    # return true if graph contains current edge
+    def has_edge?(from_vert, to_vert)
+      if @is_oriented
+        return @edges.has_key?(Pair.new(from_vert,to_vert))
+      end
+      return (@edges.has_key?(Pair.new(to_vert,from_vert)) or @edges.has_key?(Pair.new(from_vert,to_vert)))
+    end
+
+    ##
+    # returns random color
+    def get_random_color
+      col = Color.new('random')
+      while (col == @@label_color) or (col == @@vertex_color)
+        col = Color.new('random')
+      end
+      return col
     end
 
     ##
