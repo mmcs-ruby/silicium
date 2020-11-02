@@ -148,11 +148,11 @@ change_window_size(1000, 600)
 #### Set graph
 	
 ```ruby
-graph = OrientedGraph.new([{v: :one, i: [ {:one, :two, :four]},
-                                      {v: :two, i:[ :one, :two]},
-                                      {v: :five, i:[ :one,:three, :four]},
-                                      {v: :four, i:[ :one, :four]},
-                                      {v: :three, i:[ :one, :two]}])
+graph = OrientedGraph.new([{v: :one, i:  [:one, :two, :four]},
+                           {v: :two, i:[ :one, :two]},
+                           {v: :five, i:[ :one,:three, :four]},
+                           {v: :four, i:[ :one, :four]},
+                           {v: :three, i:[ :one, :two]}])
 set_graph(graph)
 ```
 

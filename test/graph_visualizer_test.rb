@@ -1,7 +1,5 @@
 require 'test_helper'
 require 'graph_visualizer'
-require 'ruby2d'
-require 'ruby2d/color'
 
 class GraphVisualizerTest < Minitest::Test
   include Silicium::GraphVisualizer
