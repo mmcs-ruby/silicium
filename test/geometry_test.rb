@@ -1,5 +1,6 @@
-require './test/test_helper'
+require 'test_helper'
 require 'geometry'
+
 class GeometryTest < Minitest::Test
   include Silicium::Geometry
 
@@ -19,7 +20,7 @@ class GeometryTest < Minitest::Test
   end
   def test_point_is_on_line
     line1 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
-    line1.initializeWithCoefficients(2,0,-2)
+    line1.initialize_with_coefficients(2, 0, -2)
     assert_equal(true,line1.point_is_on_line?(Point.new(1, 0)))
     assert_equal(false,line1.point_is_on_line?(Point.new(-1, 2)))
     assert_equal(false,line1.point_is_on_line?(Point.new(0, 2)))
@@ -369,20 +370,20 @@ class GeometryTest < Minitest::Test
 
   def test_distance_between_parallel_lines
     line1 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
-    line1.initializeWithCoefficients(1,0,-3)
+    line1.initialize_with_coefficients(1, 0, -3)
     line2 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
-    line2.initializeWithCoefficients(1,0,5)
+    line2.initialize_with_coefficients(1, 0, 5)
     assert_in_delta(8.0,line1.distance_between_parallel_lines(line2))
-    line1.initializeWithCoefficients(1,0,2)
-    line2.initializeWithCoefficients(1,0,9)
+    line1.initialize_with_coefficients(1, 0, 2)
+    line2.initialize_with_coefficients(1, 0, 9)
     assert_in_delta(7.0,line1.distance_between_parallel_lines(line2))
 
   end
   def test_not_between_parallel_lines
     line1 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
-    line1.initializeWithCoefficients(-1,0,-3)
+    line1.initialize_with_coefficients(-1, 0, -3)
     line2 = Line2dCanon.new(Point.new(1,2),Point.new(3,4))
-    line2.initializeWithCoefficients(1,0,5)
+    line2.initialize_with_coefficients(1, 0, 5)
   rescue Exception => ex
     assert_equal('Lines are not parallel', ex.class)
   end
@@ -417,9 +418,9 @@ class GeometryTest < Minitest::Test
     c =Point3d.new(3, 3, -1)
     x = Point3d.new(0, 0, 0)
     plane = Plane3d.new(a, b, c)
-    plane.initializeWithCoefficients(2,-1,5,-3)
+    plane.initialize_with_coefficients(2, -1, 5, -3)
     assert_equal(false,plane.point_is_on_plane?(x))
-    plane.initializeWithCoefficients(3,7,-5,-26)
+    plane.initialize_with_coefficients(3, 7, -5, -26)
     assert_equal(true,plane.point_is_on_plane?(Point3d.new(-1,2,-3)))
   end
 
@@ -428,15 +429,15 @@ class GeometryTest < Minitest::Test
     b =Point3d.new(-1, 2, 4)
     c =Point3d.new(3, 3, -1)
     vec=Vector3d.new(a)
-    v=vec.norm_vect(b,c)
+    v=vec.norm_vector(b, c)
     assert_equal(true,v.x.eql?(-5) && v.y.eql?(30) && v.z.eql?(2))
   end
   def test_is_collinear
     v1=Vector3d.new(Point3d.new(3,1,2))
     v2=Vector3d.new(Point3d.new(6,2,4))
-    assert_equal(true,v1.is_collinear?(v2))
-    assert_equal(false,v1.is_collinear?(Vector3d.new(Point3d.new(-3,2,4))))
-    assert_equal(true,v1.is_collinear?(Vector3d.new(Point3d.new(-3,-1,-2))))
+    assert_equal(true,v1.collinear?(v2))
+    assert_equal(false,v1.collinear?(Vector3d.new(Point3d.new(-3, 2, 4))))
+    assert_equal(true,v1.collinear?(Vector3d.new(Point3d.new(-3, -1, -2))))
   end
 
   def test_directing_vector3d_exception

@@ -38,7 +38,6 @@ module Silicium
       # Initializes with two objects of type Point
       def initialize(point1, point2)
         raise ArgumentError, 'You need 2 different points' if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)
-
         if point1.x.equal?(point2.x)
           @x_coefficient = 1
           @y_coefficient = 0
@@ -52,7 +51,7 @@ module Silicium
       end
 
       # Initializes with coefficients
-      def initializeWithCoefficients(a, b, c)
+      def initialize_with_coefficients(a, b, c)
         @x_coefficient = a
         @y_coefficient = b
         @free_coefficient = c
@@ -120,31 +119,25 @@ module Silicium
       # return 0 if the equation does not define a line.
       def distance_point_to_line(point)
         return 0 if @x_coefficient.eql?(0) && @y_coefficient.eql?(0)
-
-        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs / Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
+        (@x_coefficient * point.x + @y_coefficient * point.y + @free_coefficient).abs /
+            Math.sqrt(@x_coefficient**2 + @y_coefficient**2).to_f
       end
       ##
       # Check if array of points is on the same line
       def array_of_points_is_on_line(array)
-        #first = array[0]
-        res= Array.new
+        res = Array.new
         for i in 0..array.size-1 do
           res.push(point_is_on_line?(array[i]))
         end
-        p(res)
-
+        res
       end
 
       ##
       # The distance between parallel lines
       def distance_between_parallel_lines(other_line)
-        if !parallel?(other_line)
-          raise 'Lines are not parallel'
-        else
-          (other_line.free_coefficient - @free_coefficient).abs / Math::sqrt(@x_coefficient**2 + @y_coefficient**2)
-        end
+        raise 'Lines are not parallel' if !parallel?(other_line)
+        (other_line.free_coefficient - @free_coefficient).abs / sqrt(@x_coefficient**2 + @y_coefficient**2)
       end
-
     end
     ##
     # Class represents a plane as equation Ax + By + Cz+D = 0
@@ -155,24 +148,19 @@ module Silicium
       attr_reader :z_coefficient
       attr_reader :free_coefficient
 
-      # Initializes with two objects of type Point
+      # Initializes with three objects of type Point
       def initialize(point1, point2, point3)
-        # if point1.x.equal?(point2.x) && point1.y.equal?(point2.y)&&point1.z.equal?(point2.z) ||
-        #  point3.x.equal?(point2.x) && point3.y.equal?(point2.y)&&point3.z.equal?(point2.z) ||
-        #   point3.x.equal?(point1.x) && point3.y.equal?(point1.y)&&point3.z.equal?(point1.z)
-        vect1 = Vector3d.new(point1)
-        norm = vect1.norm_vect(point2, point3)
+        vector1 = Vector3d.new(point1)
+        norm = vector1.norm_vector(point2, point3)
         @x_coefficient = norm.x
         @y_coefficient = norm.y
         @z_coefficient = norm.z
         @free_coefficient = -point1.x * norm.x + (-point1.y * norm.y) + (-point1.z * norm.z)
-        # end
-        # raise ArgumentError, 'You need 3 different points'
       end
 
       ##
       # Initializes with coefficients
-      def initializeWithCoefficients(a, b, c, d)
+      def initialize_with_coefficients(a, b, c, d)
         @x_coefficient = a
         @y_coefficient = b
         @z_coefficient = c
@@ -182,9 +170,10 @@ module Silicium
       ##
       # check if the points isn't on the same line
       def point_is_on_line?(point1, point2, point3)
-        (@x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z + @free_coefficient).equal?(0) &&
-            (@x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z + @free_coefficient).equal?(0) &&
-            (@x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z + @free_coefficient).equal?(0)
+        check_p1 = (@x_coefficient * point1.x + @y_coefficient * point1.y + @z_coefficient * point1.z + @free_coefficient)
+        check_p2 = (@x_coefficient * point2.x + @y_coefficient * point2.y + @z_coefficient * point2.z + @free_coefficient)
+        check_p3 = (@x_coefficient * point3.x + @y_coefficient * point3.y + @z_coefficient * point3.z + @free_coefficient)
+        check_p1.equal?(0) && check_p2.equal?(0) && check_p3.equal?(0)
       end
 
       # check if the point isn't on the plane
@@ -194,38 +183,43 @@ module Silicium
 
       # Checks if two planes are parallel in 3-dimensional space
       def parallel?(other_plane)
-        vect1 = Vector3d.new(Point3d.new(@x_coefficient, @y_coefficient, @z_coefficient))
-        vect2 = Vector3d.new(Point3d.new(other_plane.x_coefficient, other_plane.y_coefficient, other_plane.z_coefficient))
-        vect1.is_collinear?(vect2)
+        v1 = Vector3d.new(Point3d.new(@x_coefficient, @y_coefficient, @z_coefficient))
+        v2 = Vector3d.new(Point3d.new(other_plane.x_coefficient, other_plane.y_coefficient, other_plane.z_coefficient))
+        v1.collinear?(v2)
       end
 
       ##
       # Checks if two planes are intersecting in 3-dimensional space
       def intersecting?(other_plane)
-        @x_coefficient != other_plane.x_coefficient || @y_coefficient != other_plane.y_coefficient || @z_coefficient != other_plane.z_coefficient
+        check_x = @x_coefficient != other_plane.x_coefficient
+        check_y = @y_coefficient != other_plane.y_coefficient
+        check_z = @z_coefficient != other_plane.z_coefficient
+        check_x || check_y || check_z
       end
 
       ##
       # Checks if two planes are perpendicular
       def perpendicular?(other_plane)
-        (@x_coefficient * other_plane.x_coefficient + @y_coefficient * other_plane.y_coefficient + @z_coefficient * other_plane.z_coefficient).equal?(0)
+        check_x = @x_coefficient * other_plane.x_coefficient
+        check_y = @y_coefficient * other_plane.y_coefficient
+        check_z = @z_coefficient * other_plane.z_coefficient
+        (check_x + check_y + check_z).equal?(0)
       end
 
       ##
       # The distance between parallel planes
       def distance_between_parallel_planes(other_plane)
-        if !parallel?(other_plane)
-          raise 'Planes are not parallel'
-        else
-          (other_plane.free_coefficient - @free_coefficient).abs / Math::sqrt(@x_coefficient**2 + @y_coefficient**2 + @z_coefficient**2)
-        end
+        raise 'Planes are not parallel' if !parallel?(other_plane)
+
+        free = (other_plane.free_coefficient - @free_coefficient).abs
+        free / sqrt(@x_coefficient**2 + @y_coefficient**2 + @z_coefficient**2)
       end
 
       ##
       # The distance from a point to a plane
       #
       def distance_point_to_plane(point)
-        norm =  1 / Math.sqrt(@x_coefficient**2 + @y_coefficient**2 + @z_coefficient**2)
+        norm = 1 / Math.sqrt(@x_coefficient**2 + @y_coefficient**2 + @z_coefficient**2)
         (@x_coefficient * norm * point.x + @y_coefficient * norm * point.y +
             @z_coefficient * norm * point.z + @free_coefficient * norm).abs
       end
@@ -308,11 +302,8 @@ module Silicium
       # Find normal vector
       ##
       # vector mult
-      def norm_vect(point2, point3)
+      def norm_vector(point2, point3)
         point1 = Point3d.new(@x, @y, @z)
-        vector1 = Vector3d.new(point1)
-        vector2 = Vector3d.new(point2)
-        vector3 = Vector3d.new(point3)
         # checking if the points isn't on the same line
         # finding vector between points 1 and 2 ;1 and 3
         vector12 = Vector3d.new(Point3d.new(point2.x - point1.x, point2.y - point1.y, point2.z - point1.z))
@@ -332,22 +323,18 @@ module Silicium
 
       ##
       #  Check if two vectors are collinear
-      def is_collinear?(vector2)
-        x1 = (vector2.x).abs
-        x2 = @x.abs
-        y1 = (vector2.y).abs
-        y2 = @y.abs
-        z1 = (vector2.z).abs
-        z2 = @z.abs
-        x = x1 > x2  ? x1 / x2 : x2 / x1
-        y =  y1 > y2  ? y1 / y2 : y2 / y1
-        z =  z1 > z2  ? z1 / z2 : z2 / z1
-        (x * sign(vector2.x) * sign(@x) == y * sign(vector2.y) * sign(@y)) &&
-            (x * sign(vector2.x) * sign(@x) == z * sign(vector2.z) * sign(@z)) &&
-            (z * sign(vector2.z) * sign(@z) == y * sign(vector2.y) * sign(@y))
+      def collinear?(vector2)
+        x1 = vector2.x.abs
+        y1 = vector2.y.abs
+        z1 = vector2.z.abs
+        x = x1 > @x.abs ? x1 / @x.abs  : @x.abs / x1
+        y =  y1 > @y.abs ? y1 / @y.abs : @y.abs / y1
+        z =  z1 > @z.abs ? z1 / @z.abs : @z.abs / z1
+        check1 = (x * sign(vector2.x) * sign(@x) == y * sign(vector2.y) * sign(@y))
+        check2 = (x * sign(vector2.x) * sign(@x) == z * sign(vector2.z) * sign(@z))
+        check1 && check2 && (z * sign(vector2.z) * sign(@z) == y * sign(vector2.y) * sign(@y))
       end
     end
-    ##
      ##
     # Function for checking sign of number
     def sign(integer)
@@ -490,11 +477,11 @@ module Silicium
         res[i] = v1[(i + 1) % 3] * v2[(i + 2) % 3] - v1[(i + 2) % 3] * v2[(i + 1) % 3]
       end
       res
-      e
+    end
 
-      def vector_length(vector)
-        Math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
-      end
+    def vector_length(vector)
+      Math.sqrt(vector[0]**2 + vector[1]**2 + vector[2]**2)
+    end
 
       ##
       # Calculates the distance from a point given by a Point3d structure
@@ -535,7 +522,6 @@ module Silicium
         line_equation.gsub(' ', '').insert(line_equation.length, '=')
       end
     end
-  end
   end
 
 
