@@ -134,6 +134,34 @@ Same goes for the case with unoriented graph (note that missing edges will be ad
 ```ruby
      g.find_strongly_connected_components
 ```
+
+* Topological sort
+
+#### Description
+Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for every directed edge *u v*, vertex *u* comes before *v* in the ordering.
+
+#### How to use
+For you to have a topologically sorted graph, you need to create an object of the class ```Graph```:
+``` ruby
+    graph = Graph.new
+```
+Then you need to add vertices to this graph using the class ```Node```:
+``` ruby
+    graph.nodes << (node1 = Node.new(1))
+    graph.nodes << (node2 = Node.new(2))
+```
+Due to the fact that only a directed graph can be sorted topologically, it is necessary to add an edge:
+``` ruby
+    graph.add_edge(node1, node2)
+```
+And finally you can type:
+``` ruby
+    TopologicalSortClass.new(graph)
+```
+
+#### Result
+The result for ```TopologicalSortClass.new(graph).post_order.map(&:to_s)``` is [2, 1]
+
 ### Plotter
 
 #### Determine your function
