@@ -262,6 +262,15 @@ s.throw   # getting random score (from 3 to 18)
 
 s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
 ```
+### Optimization
+
+#### Karatsuba multiplication
+The Karatsuba algorithm is a fast multiplication algorithm. It reduces the multiplication of two n-digit numbers to at most ![formula](https://render.githubusercontent.com/render/math?math=\Theta(n^{1.58}))  single-digit multiplications in general. It is therefore faster than the traditional algorithm, which requires ![formula](https://render.githubusercontent.com/render/math?math=\Theta(n^{2})) single-digit products.
+
+##### Example:
+```ruby
+   karatsuba(15, 15) #returns 225
+```
 
 ## Development
 
