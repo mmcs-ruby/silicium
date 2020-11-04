@@ -16,35 +16,6 @@ module Silicium
     end
 
     ##
-    # +eratosthen_primes_to(n)+ finds all primes up to n
-    # with the sieve of eratosthenes
-    #
-    ## eratosthen_primes_to(1)		# => []
-    ## eratosthen_primes_to(15)		# => [2, 3, 5, 7, 11, 13]
-    ## eratosthen_primes_to(50)		# => [2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
-    def eratosthen_primes_to(n)
-      raise ArgumentError unless valid_n?(n)
-
-      array = (2..n).to_a
-      array.each do |prime|
-        square = prime**2
-        break if square > n
-
-        array -= square.step(n, prime).to_a
-      end
-      array
-    end
-
-    ##
-    # Checks if the number n is correct
-    def valid_n?(n)
-      return false if n <= 0
-      return false unless n.class == Integer
-      
-      true
-    end
-
-    ##
     # +polycop(str)+ determines whether the str is an appropriate function
     # which only has one variable
     #
