@@ -1,10 +1,6 @@
 #require 'set'
 #require 'silicium'
 
-require 'graph/dfs'
-require_relative 'graph/scc'
-
-
 module Silicium
   module Graphs
     Pair = Struct.new(:first, :second)
@@ -306,10 +302,57 @@ module Silicium
       end
     end
 
+
     ##
-    # Implements algorythm of Dijkstra
-    def dijkstra_algorythm(graph, starting_vertex)
-      #
+    # Implements algorithm of Dijkstra
+    def dijkstra_algorithm(graph, starting_vertex)
+      if !graph.has_vertex?(starting_vertex)
+        raise GraphError.new("Graph does not contains vertex #{starting_vertex}")
+      end
+      unvisited_vertices = graph.vertices.clone.to_a
+      labels = {}
+      paths = {}
+      initialize_labels_and_paths(graph, labels,paths,starting_vertex)
+      while unvisited_vertices.size > 0
+        unvisited_vertices.sort do |a, b|
+          compare_labels a, b, labels
+        end
+        vertex = unvisited_vertices.first
+        vertex[1].each do |adj|
+          new_label = labels[vertex[0]] + graph.get_edge_label(vertex[0], adj)
+          if change_label?(labels[adj], new_label)
+            labels[adj] = new_label
+            paths[adj] = paths[vertex[0]].clone
+            paths[adj].push adj
+          end
+        end
+        unvisited_vertices.delete_at(0)
+      end
+      {"labels" => labels, "paths" => paths}
     end
+
+    private
+
+    def initialize_labels_and_paths(graph, labels,paths,starting_vertex)
+      graph.vertices.each_key do |vertex|
+        labels[vertex] = -1
+        paths[vertex] = [starting_vertex]
+      end
+      labels[starting_vertex] = 0
+    end
+
+    def compare_labels a, b, labels
+      return -1 if labels[b[0]] == -1
+      return 1 if labels[a[0]] == -1
+      return labels[a[0]] <=> labels[b[0]]
+    end
+
+    def change_label?(label, new_label)
+      return true if label == -1
+      return false if new_label == -1
+      return new_label < label
+    end
+
   end
 end
+
