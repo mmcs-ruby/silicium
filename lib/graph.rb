@@ -309,21 +309,13 @@ module Silicium
       if !graph.has_vertex?(starting_vertex)
         raise GraphError.new("Graph does not contains vertex #{starting_vertex}")
       end
-      vertices = graph.vertices.clone
-      unvisited_vertices = vertices.clone.to_a
+      unvisited_vertices = graph.vertices.clone.to_a
       labels = {}
       paths = {}
-      vertices.each_key do |vertex|
-        labels[vertex] = -1
-        paths[vertex] = [starting_vertex]
-      end
-      labels[starting_vertex] = 0
-
+      initialize_labels_and_paths(graph, labels,paths,starting_vertex)
       while unvisited_vertices.size > 0
         unvisited_vertices.sort do |a, b|
-          -1 if labels[b[0]] == -1
-          1 if labels[a[0]] == -1
-          labels[a[0]] <=> labels[b[0]]
+          compare_labels a, b, labels
         end
         vertex = unvisited_vertices.first
         vertex[1].each do |adj|
@@ -340,6 +332,20 @@ module Silicium
     end
 
     private
+
+    def initialize_labels_and_paths(graph, labels,paths,starting_vertex)
+      graph.vertices.each_key do |vertex|
+        labels[vertex] = -1
+        paths[vertex] = [starting_vertex]
+      end
+      labels[starting_vertex] = 0
+    end
+
+    def compare_labels a, b, labels
+      return -1 if labels[b[0]] == -1
+      return 1 if labels[a[0]] == -1
+      return labels[a[0]] <=> labels[b[0]]
+    end
 
     def change_label?(label, new_label)
       return true if label == -1
