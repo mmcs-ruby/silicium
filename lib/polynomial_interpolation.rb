@@ -9,7 +9,7 @@ module Silicium
       # x : array of data points
       # y : array returned by function
       # z : interpolation point
-      def lagrange_polynomials(x , y , z )
+      def self.lagrange_polynomials(x , y , z )
         result = 0.0
         y.each_index do |j|
           p1 = 1.0
