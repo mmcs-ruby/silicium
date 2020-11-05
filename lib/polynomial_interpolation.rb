@@ -9,23 +9,25 @@ module Silicium
       # x : array of data points
       # y : array returned by function
       # z : interpolation point
-      def lagrange_polynomials(x, y, z)
+      def lagrange_polynomials(x , y , z )
         result = 0.0
-        (0..range(length(y))-1).each do |i|
-          p = 1.0
-          (0..range(length(x))-1).each do |j|
+        y.each_index do |j|
+          p1 = 1.0
+          p2 = 1.0
+          x.each_index do |i|
             if i != j
-              p *= (z - x[j]) / (x[i] - x[j])
+              p1 = p1 * (z - x[i])
+              p2 = p2 * (x[j] - x[i])
             end
           end
-          result = result + y[i] * p
+          result = result + y[j] * p1 / p2
         end
         result
       end
 
 
-      
     end
+
   end
 end
 
