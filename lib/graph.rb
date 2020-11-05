@@ -1,10 +1,6 @@
 #require 'set'
 #require 'silicium'
 
-require 'graph/dfs'
-require_relative 'graph/scc'
-
-
 module Silicium
   module Graphs
     Pair = Struct.new(:first, :second)
@@ -88,7 +84,7 @@ module Silicium
       # Returns edge label
       # @raise [GraphError] if graph does not contain edge
       def get_edge_label(from, to)
-        if !@vertices.has_key?(from) || !@vertices[from].include?(to)
+        if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
 
@@ -105,43 +101,36 @@ module Silicium
 
         @vertex_labels[vertex]
       end
-
       ##
       # Returns number of vertices
       def vertex_number
         @vertices.count
       end
-
       ##
       # Returns number of edges
       def edge_number
         @edge_number
       end
-
       ##
       # Returns number of vertex labels
       def vertex_label_number
         @vertex_labels.count
       end
-
       ##
       # Returns number of edge labels
       def edge_label_number
         @edge_labels.count
       end
-
       ##
       # Checks if graph contains vertex
       def has_vertex?(vertex)
         @vertices.has_key?(vertex)
       end
-
       ##
       # Checks if graph contains edge
       def has_edge?(from, to)
         @vertices.has_key?(from) && @vertices[from].include?(to)
       end
-
       ##
       # Deletes vertex from graph
       def delete_vertex!(vertex)
@@ -157,14 +146,12 @@ module Silicium
           end
         end
       end
-
       ##
       # Deletes edge from graph
       def delete_edge!(from, to)
         protected_delete_edge!(from, to)
         @edge_number -= 1
       end
-
       ##
       # Reverses graph
       def reverse!
@@ -185,7 +172,6 @@ module Silicium
         @vertices = v
         @edge_labels = l
       end
-
       ##
       # Returns array of vertices
       def vertices
@@ -193,7 +179,6 @@ module Silicium
       end
 
       protected
-
       ##
       # Adds edge to graph
       def protected_add_edge!(from, to)
@@ -201,7 +186,6 @@ module Silicium
           @vertices[from] << to
         end
       end
-
       ##
       # Deletes edge from graph
       def protected_delete_edge!(from, to)
@@ -212,7 +196,6 @@ module Silicium
       end
 
     end
-
     ##
     # Class represents unoriented graph
     class UnorientedGraph < OrientedGraph
@@ -223,14 +206,12 @@ module Silicium
         protected_add_edge!(to, from)
         @edge_number += 1
       end
-
       ##
       # Adds label to edge
       def label_edge!(from, to, label)
         super(from, to, label)
         super(to, from, label)
       end
-
       ##
       # Deletes edge from graph
       def delete_edge!(from, to)
@@ -240,7 +221,6 @@ module Silicium
       end
 
     end
-
     ##
     # Implements breadth-first search (BFS)
     def breadth_first_search?(graph, start, goal)
@@ -257,18 +237,16 @@ module Silicium
       end
       false
     end
-
     ##
     # Adds to queue not visited vertices
     def add_to_queue(graph, queue, node, visited)
-      graph.vertices[node].each do |child|
-        unless visited[child]
-          queue.push(child)
-          visited[child] = true
-        end
+    graph.vertices[node].each do |child|
+      unless visited[child]
+        queue.push(child)
+        visited[child] = true
       end
     end
-
+    end
     ##
     # Checks if graph is connected
     def connected?(graph)
@@ -280,7 +258,6 @@ module Silicium
       graph.reverse!
       pred
     end
-
     ##
     # Returns number of connected vertices
     def number_of_connected(graph)
@@ -294,7 +271,6 @@ module Silicium
       end
       res
     end
-
     ##
     # Passes graph's vertices and marks them visited
     def dfu(graph, vertice, visited)
@@ -305,7 +281,6 @@ module Silicium
         end
       end
     end
-
     ##
     # Implements algorythm of Dijkstra
     def dijkstra_algorythm(graph, starting_vertex)
@@ -316,19 +291,28 @@ module Silicium
     def kruskal_mst(graph)
       mst = UnorientedGraph.new
       uf = UnionFind.new(graph)
-      graph_to_sets(graph).each do |label, edge|
+      graph_to_sets(graph).each do |edge, label|
         unless uf.connected?(edge[0], edge[1])
-          mst.add_edge!(edge[0], edge[1])
-          mst.label_edge!(edge[0], edge[1], label)
+          add_edge!(mst, edge, label)
           uf.union(edge[0], edge[1])
         end
       end
       mst
     end
 
+    def add_edge!(mst, edge, label)
+      mst.add_vertex!(edge[0])
+      mst.add_vertex!(edge[1])
+      mst.add_edge!(edge[0], edge[1])
+      mst.label_edge!(edge[0], edge[1], label)
+    end
+
     class UnionFind
       def initialize(graph)
-        @parents = graph.vertices.inject([]) { |parents, i| parents[i] = i; parents }
+        @parents = []
+        graph.vertices.keys.each do |vertex|
+          @parents[vertex] = vertex
+        end
       end
 
       def connected?(vertex1, vertex2)
@@ -342,15 +326,26 @@ module Silicium
     end
 
     ##
-    # "Split" graph into elements like :label = [from, to]
+    # "Split" graph into elements like :[from, to] = label
     def graph_to_sets(graph)
       labels = {}
-      graph.vertices.each do |from|
-        adjacted_with(from).each do |to|
-          labels[get_edge_label(from, to)] = Pair.new(from, to)
+      graph.vertices.keys.each do |from|
+        graph.adjacted_with(from).each do |to|
+          labels[Pair.new(from, to)] = graph.get_edge_label(from, to)
         end
       end
-      labels = labels.uniq.sort_by { |elem| elem[0] }.to_h
+      labels.to_set.sort_by { |elem| elem[1] }.to_h
     end
+
+    def sum_labels(graph)
+      labels = 0
+      graph.vertices.keys.each do |from|
+        graph.adjacted_with(from).each do |to|
+          labels += graph.get_edge_label(from, to)
+        end
+      end
+      labels / 2
+    end
+
   end
 end
