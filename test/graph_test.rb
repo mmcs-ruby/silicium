@@ -940,4 +940,113 @@ class GraphTest < SiliciumTest
     assert(pred)
   end
 
+  def test_kruskal_five_edges
+    g = UnorientedGraph.new([{ v: 0, i: [1, 2, 3] }, { v: 1, i: [2] }, { v: 2, i: [3] },
+                             { v: 3, i: [] }])
+    g.label_edge!(0, 1, 10)
+    g.label_edge!(0, 2, 5)
+    g.label_edge!(0, 3, 5)
+    g.label_edge!(1, 2, 5)
+    g.label_edge!(2, 3, 10)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.has_vertex?(3) && mst.vertex_number == 4
+    pred = pred && mst.edge_number == 3 && sum_labels(mst) == 15
+    assert(pred)
+  end
+
+  def test_kruskal_six_edges
+    g = UnorientedGraph.new([{ v: 0, i: [1, 2, 3] }, { v: 1, i: [2, 3] }, { v: 2, i: [3] },
+                             { v: 3, i: [] }])
+    g.label_edge!(0, 1, 2)
+    g.label_edge!(0, 2, 2)
+    g.label_edge!(0, 3, 10)
+    g.label_edge!(1, 2, 10)
+    g.label_edge!(1, 3, 2)
+    g.label_edge!(2, 3, 5)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.has_vertex?(3) && mst.vertex_number == 4
+    pred = pred && mst.edge_number == 3 && sum_labels(mst) == 6
+    assert(pred)
+  end
+
+  def test_kruskal_seven_edges
+    g = UnorientedGraph.new([{ v: 0, i: [1, 2, 4] }, { v: 1, i: [2, 3] }, { v: 2, i: [4] }, { v: 3, i: [4] },
+                             { v: 4, i: [] }])
+    g.label_edge!(0, 1, 1)
+    g.label_edge!(0, 2, 11)
+    g.label_edge!(0, 4, 17)
+    g.label_edge!(1, 2, 3)
+    g.label_edge!(1, 3, 5)
+    g.label_edge!(2, 4, 13)
+    g.label_edge!(3, 4, 7)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.has_vertex?(3) && mst.has_vertex?(4)
+    pred = pred && mst.vertex_number == 5 && mst.edge_number == 4 && sum_labels(mst) == 16
+    assert(pred)
+  end
+
+  def test_kruskal_big_graph
+    g = UnorientedGraph.new([{ v: 0, i: [1, 4, 8] }, { v: 1, i: [2, 5] }, { v: 2, i: [3, 4, 8] }, { v: 3, i: [4] },
+                             { v: 4, i: [5] }, { v: 5, i: [6, 8] }, { v: 6, i: [7, 8] }, { v: 7, i: [8] }, { v: 8, i: [] }])
+    g.label_edge!(0, 1, 4)
+    g.label_edge!(0, 4, 40)
+    g.label_edge!(0, 8, 40)
+    g.label_edge!(1, 2, 40)
+    g.label_edge!(1, 5, 10)
+    g.label_edge!(2, 3, 2)
+    g.label_edge!(2, 4, 20)
+    g.label_edge!(2, 8, 10)
+    g.label_edge!(3, 4, 20)
+    g.label_edge!(4, 5, 4)
+    g.label_edge!(5, 6, 2)
+    g.label_edge!(5, 8, 40)
+    g.label_edge!(6, 7, 2)
+    g.label_edge!(6, 8, 2)
+    g.label_edge!(7, 8, 20)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.has_vertex?(3) && mst.has_vertex?(4)
+    pred = pred && mst.has_vertex?(5) && mst.has_vertex?(6) && mst.has_vertex?(7) && mst.has_vertex?(8)
+    pred = pred && mst.vertex_number == 9 && mst.edge_number == 8 && sum_labels(mst) == 36
+    assert(pred)
+  end
+
+  def test_kruskal_big_spanning_tree
+    g = UnorientedGraph.new([{ v: 0, i: [1] }, { v: 1, i: [2] }, { v: 2, i: [4] }, { v: 3, i: [4] },
+                             { v: 4, i: [5] }, { v: 5, i: [] }])
+    g.label_edge!(0, 1, 5)
+    g.label_edge!(1, 2, 20)
+    g.label_edge!(2, 4, 10)
+    g.label_edge!(3, 4, 6)
+    g.label_edge!(4, 5, 4)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.has_vertex?(3) && mst.has_vertex?(4)
+    pred = pred && mst.has_vertex?(5) && mst.vertex_number == 6 && mst.edge_number == 5 && sum_labels(mst) == 45
+    assert(pred)
+  end
+
+  def test_kruskal_graph_with_loops
+    g = UnorientedGraph.new([{ v: 0, i: [2, 3, 4] }, { v: 1, i: [1, 2, 4, 5] }, { v: 2, i: [5] }, { v: 3, i: [4] },
+                             { v: 4, i: [4] }, { v: 5, i: [] }])
+    g.label_edge!(0, 2, 5)
+    g.label_edge!(0, 3, 20)
+    g.label_edge!(0, 4, 5)
+    g.label_edge!(1, 1, 10)
+    g.label_edge!(1, 2, 2)
+    g.label_edge!(1, 4, 20)
+    g.label_edge!(1, 5, 2)
+    g.label_edge!(2, 5, 20)
+    g.label_edge!(3, 4, 2)
+    g.label_edge!(4, 4, 10)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.has_vertex?(3) && mst.has_vertex?(4)
+    pred = pred && mst.has_vertex?(5) && mst.vertex_number == 6 && mst.edge_number == 5 && sum_labels(mst) == 16
+    assert(pred)
+  end
+
 end

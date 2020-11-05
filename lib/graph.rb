@@ -293,14 +293,18 @@ module Silicium
       uf = UnionFind.new(graph)
       graph_to_sets(graph).each do |edge, label|
         unless uf.connected?(edge[0], edge[1])
-          mst.add_vertex!(edge[0])
-          mst.add_vertex!(edge[1])
-          mst.add_edge!(edge[0], edge[1])
-          mst.label_edge!(edge[0], edge[1], label)
+          add_edge!(mst, edge, label)
           uf.union(edge[0], edge[1])
         end
       end
       mst
+    end
+
+    def add_edge!(mst, edge, label)
+      mst.add_vertex!(edge[0])
+      mst.add_vertex!(edge[1])
+      mst.add_edge!(edge[0], edge[1])
+      mst.label_edge!(edge[0], edge[1], label)
     end
 
     class UnionFind
