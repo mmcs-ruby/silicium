@@ -286,5 +286,62 @@ module Silicium
     def dijkstra_algorythm(graph, starting_vertex)
       #
     end
+
+    # Implements algorithm of Kruskal
+    def kruskal_mst(graph)
+      mst = UnorientedGraph.new
+      uf = UnionFind.new(graph)
+      graph_to_sets(graph).each do |edge, label|
+        unless uf.connected?(edge[0], edge[1])
+          mst.add_vertex!(edge[0])
+          mst.add_vertex!(edge[1])
+          mst.add_edge!(edge[0], edge[1])
+          mst.label_edge!(edge[0], edge[1], label)
+          uf.union(edge[0], edge[1])
+        end
+      end
+      mst
+    end
+
+    class UnionFind
+      def initialize(graph)
+        @parents = []
+        graph.vertices.keys.each do |vertex|
+          @parents[vertex] = vertex
+        end
+      end
+
+      def connected?(vertex1, vertex2)
+        @parents[vertex1] == @parents[vertex2]
+      end
+
+      def union(vertex1, vertex2)
+        parent1, parent2 = @parents[vertex1], @parents[vertex2]
+        @parents.map! { |i| (i == parent1) ? parent2 : i }
+      end
+    end
+
+    ##
+    # "Split" graph into elements like :[from, to] = label
+    def graph_to_sets(graph)
+      labels = {}
+      graph.vertices.keys.each do |from|
+        graph.adjacted_with(from).each do |to|
+          labels[Pair.new(from, to)] = graph.get_edge_label(from, to)
+        end
+      end
+      labels.to_set.sort_by { |elem| elem[1] }.to_h
+    end
+
+    def sum_labels(graph)
+      labels = 0
+      graph.vertices.keys.each do |from|
+        graph.adjacted_with(from).each do |to|
+          labels += graph.get_edge_label(from, to)
+        end
+      end
+      labels / 2
+    end
+
   end
 end

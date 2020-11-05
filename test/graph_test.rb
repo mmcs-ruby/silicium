@@ -888,4 +888,56 @@ class GraphTest < SiliciumTest
     pred = pred && !g.has_edge?('two', 'two') && (g.edge_number == 0) && !g.has_edge?('two', 0) && !g.has_edge?(0, 'two')
     assert(pred)
   end
+
+
+  def test_kruskal_one_edge
+    g = UnorientedGraph.new([{ v: 0, i: [1] },
+                             { v: 1,  i: [] }])
+    g.label_edge!(0, 1, 10)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.vertex_number == 2 && mst.edge_number == 1
+    pred = pred && mst.has_edge?(0, 1) && mst.get_edge_label(0, 1) == 10
+    assert(pred)
+  end
+
+  def test_kruskal_two_edges
+    g = UnorientedGraph.new([{ v: 0, i: [1] }, { v: 1, i: [2] },
+                             { v: 2,  i: [] }])
+    g.label_edge!(0, 1, 10)
+    g.label_edge!(1, 2, 20)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.vertex_number == 3 && mst.edge_number == 2
+    pred = pred && mst.has_edge?(0, 1) && mst.has_edge?(1, 2) && mst.get_edge_label(0, 1) == 10 && mst.get_edge_label(1, 2) == 20
+    assert(pred)
+  end
+
+  def test_kruskal_three_edges
+    g = UnorientedGraph.new([{ v: 0, i: [1, 2] }, { v: 1, i: [2] },
+                             { v: 2,  i: [] }])
+    g.label_edge!(0, 1, 10)
+    g.label_edge!(0, 2, 5)
+    g.label_edge!(1, 2, 20)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.vertex_number == 3 && mst.edge_number == 2
+    pred = pred && mst.has_edge?(0, 1) && mst.has_edge?(0, 2) && mst.get_edge_label(0, 1) == 10 && mst.get_edge_label(0, 2) == 5
+    assert(pred)
+  end
+
+  def test_kruskal_four_edges
+    g = UnorientedGraph.new([{ v: 0, i: [1, 3] }, { v: 1, i: [2] }, { v: 2, i: [3] },
+                             { v: 3,  i: [] }])
+    g.label_edge!(0, 1, 10)
+    g.label_edge!(0, 3, 10)
+    g.label_edge!(1, 2, 10)
+    g.label_edge!(2, 3, 10)
+    mst = kruskal_mst(g)
+
+    pred = mst.has_vertex?(0) && mst.has_vertex?(1) && mst.has_vertex?(2) && mst.has_vertex?(3) && mst.vertex_number == 4
+    pred = pred && mst.edge_number == 3 && sum_labels(mst) == 30
+    assert(pred)
+  end
+
 end
