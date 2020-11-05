@@ -3,7 +3,9 @@ require_relative 'geometry/figure'
 module Silicium
 
   module Geometry
-
+    def sum (a,b)
+      a+b
+    end
     ##
     # Represents a point as two coordinates
     # in two-dimensional space

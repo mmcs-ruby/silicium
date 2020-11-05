@@ -3,6 +3,9 @@ require 'geometry'
 
 class GeometryTest < Minitest::Test
   include Silicium::Geometry
+  def test_sum
+    assert_equal(4,sum(2,2))
+  end
 
   def test_oriented_area
     assert_equal(-12, oriented_area(Point.new(-2, -1), Point.new(1, 2), Point.new(2, -1)))
