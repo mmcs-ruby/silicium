@@ -4,6 +4,7 @@
 require_relative 'graph/dfs'
 require_relative 'graph/scc'
 require_relative 'graph/kruskal'
+require_relative 'graph/BST'
 
 module Silicium
   module Graphs
