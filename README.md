@@ -300,6 +300,22 @@ The Karatsuba algorithm is a fast multiplication algorithm. It reduces the multi
    karatsuba(15, 15) #returns 225
 ```
 
+#### Dixon's factorialisation
+Dixon's factorialisation is factorisation function, offering a way to relatively fast generate array of all non-trivial divisors of a number. 
+
+##### Example:
+```ruby
+   dix_factor(23449) #returns [131,179]
+```
+
+#### Euler's totient function
+Euler's totient function counts the positive integers up to a given integer n that are relatively prime to n. This function gives the order of the multiplicative group of integers modulo n (the group of units of the ring ℤ/nℤ).
+
+##### Example:
+```ruby
+   eul_f(42) #returns 12
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
