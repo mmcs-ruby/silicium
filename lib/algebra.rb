@@ -114,6 +114,86 @@ module Silicium
       eval(res)
     end
 
+    ##
+    #Evaluation of multiple possible complex divisors of number n via Dixon's factorisation algorithm.
+    # Due to unreliable nation of factorization algorithm's that utilize smoothing,
+    # It's recommended to not use whole array, instead utilizing 'max' value to get largest factorisation value
+    # I still leave full array for other possible uses
+    # Be wary, as with other factorisation algorithms, you should consider checking if number is prime, to reduce possibility of worst case
+    def dix_factor(n)
+      # Technically, evaluating base inside gives higher performance && reduces precision problems, but this base is generally enough to factorise most useful numbers. Just don't launch space shuttles based on this function
+      base = [2,3,5,7,11,13]
+      pairs = []
+
+      # Getting start value, rounding to nearest integer
+      start = Math.sqrt(n).round
+
+      #First loop generates pairs of values for factorisation
+      (start..n).each do |i|
+
+        #Finding related squares
+        (0..base.length-1).each do |j|
+          lhs = i**2 % n
+          rhs = base[j]**2 % n
+
+          #If the numbers are two related squares, we can add them to array
+          if lhs==rhs
+            pairs.push([i,base[j]])
+          end
+        end
+      end
+      #Storage for future results
+      res = []
+      #For each pair in array we evaluate GDC
+      (0..pairs.length-1).each do |i|
+        factor = n.gcd(pairs[i][0] - pairs[i][1])
+        #in case of GDC other than 1 we can append it to results
+        if factor!=1
+          res.push(factor)
+        end
+
+      end
+      #If we didn't manage to find any possible value, it's highly likely that the value is prime number itself
+      if res.empty?
+        res.push(n)
+      end
+      #Due to the values being computed in pairs, a lot of copies are possible
+      # Therefore, it's good idea to remove copies to improve readability
+      res.uniq
+
+
+    end
+
+    ##
+    # Evaluates Euler's totient function for given n.
+    # This algorithm offers roughly O(sqrt(n)) complexity
+    def eul_f(n)
+      if n<=0
+        raise "Euler's function can't be evaluated for n less then 1"
+      end
+
+      #This line also covers situation of F(1)=1 by definition
+      result = n
+
+      #Main evaluation. Instead of increasing whenever number fits the criteria, we consider maximum possible n=n-1
+      #With this we reduce result by variable, whenever we see smaller number that is also a divisor, reducing possible res
+      #by amount of values, also divisible by it
+      (2..Math.sqrt(n)).each do |i|
+        if n%i==0
+          while n%i == 0
+            n/=i
+          end
+          result -= result/i
+        end
+      end
+
+      #Due to initially having result = n, we do this to set max result to n-1 instead
+      if n>1
+        result -= result/n
+      end
+
+      result
+    end
 
     ##
     # +PolynomRootsReal+
@@ -396,4 +476,4 @@ module Silicium
       end
     end
   end
-end
+  end

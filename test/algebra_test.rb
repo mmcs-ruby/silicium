@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'test_helper'
 require 'algebra'
 
 class AlgebraTest < Minitest::Test
@@ -244,5 +244,42 @@ class AlgebraTest < Minitest::Test
   def test_polynom_parser_exception
     assert_raises(NameError){ polynom_parser(-3*x**3-2*x**2-x**1-1) }
   end
+
+  ##
+  #Euler function tests
+  def test_euler_small
+    assert_equal(eul_f(502),250,"Euler function failure on small num")
+  end
+
+  def test_euler_large
+    assert_equal(eul_f(424242),108864,"Euler function failure on large num")
+  end
+
+  def test_euler_prime
+    assert_equal(eul_f(613),612,"Euler function failure on prime num")
+  end
+
+  def test_euler_bydef
+    assert_equal(eul_f(1),1,"Euler function failure by definition")
+  end
+
+  def test_euler_neg
+    assert_raises(RuntimeError){puts eul_f(-1)}
+  end
+
+  ##
+  # Dixon's algorithm tests
+  def test_dixon_large
+    assert(dix_factor(89755).all?{|num| 89755%num == 0},"Dixons fact failure on large number")
+  end
+
+  def test_dixon_small
+    assert(dix_factor(23449).all?{|num| 23449%num == 0},"Dixons fact failure on small number")
+  end
+
+  def test_dixon_prime
+    assert(dix_factor(113).first==113,"Dixon's fact failure on prime number")
+  end
+
 
 end
