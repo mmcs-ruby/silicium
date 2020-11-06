@@ -49,18 +49,18 @@ class PQueueTest < Minitest::Test
     assert_equal(ARY_TEST.size+1, q.size)
   end
 
-  def test_concat
-    q = PQueue.new(ARY_TEST)
-
-    ret = q.concat(ARY_TEST_2)
-    assert_equal(q, ret)
-    assert_equal(ARY_TEST.size+ARY_TEST_2.size, q.size)
-
-    q = PQueue.new(ARY_TEST)
-    r = PQueue.new(ARY_TEST_2)
-    q.concat(r)
-    assert_equal(ARY_TEST.size + ARY_TEST_2.size, q.size)
-  end
+  #def test_concat
+  #  q = PQueue.new(ARY_TEST)
+  #
+  # ret = q.concat(ARY_TEST_2)
+  # assert_equal(q, ret)
+  # assert_equal(ARY_TEST.size+ARY_TEST_2.size, q.size)
+  #
+  # q = PQueue.new(ARY_TEST)
+  #  r = PQueue.new(ARY_TEST_2)
+  # q.concat(r)
+  # assert_equal(ARY_TEST.size + ARY_TEST_2.size, q.size)
+  #end
 
   def test_clear
     q = PQueue.new(ARY_TEST).clear
