@@ -9,6 +9,10 @@ class Test < Minitest::Test
 	include Silicium::Plotter
 	include Dice
 
+	def test_gcd
+		assert_equal gcd(20,6), 	 2
+	end
+
 	def test_factorial
 		assert_equal factorial(10), 3628800
 	end

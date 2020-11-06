@@ -6,6 +6,20 @@ include Silicium::Plotter
 
 module Combinatorics
 
+  ##
+  #  gcd(a, b)+ return greatest common divisor of a and b
+  ## gcd(20,6)   # => 2
+  ## gcd(50,10)  # => 10
+  ## gcd(69,9)   # => 3
+  def gcd(a, b)
+    if a % b == 0
+      b
+    else
+      gcd(b, a % b)
+    end
+  end
+
+
   def factorial(n)
     (1..n).inject(:*) || 1
   end
