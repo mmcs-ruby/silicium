@@ -122,7 +122,7 @@ module Silicium
     # Be wary, as with other factorisation algorithms, you should consider checking if number is prime, to reduce possibility of worst case
     def dix_factor(n)
       # Technically, evaluating base inside gives higher performance && reduces precision problems, but this base is generally enough to factorise most useful numbers. Just don't launch space shuttles based on this function
-      base = [2,3,5,7,11,13]
+      base = [2,3,5,7,11]
       pairs = []
 
       # Getting start value, rounding to nearest integer
@@ -168,6 +168,7 @@ module Silicium
     # Evaluates Euler's totient function for given n.
     # This algorithm offers roughly O(sqrt(n)) complexity
     def eul_f(n)
+      
       if n<=0
         raise "Euler's function can't be evaluated for n less then 1"
       end
