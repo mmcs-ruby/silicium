@@ -154,10 +154,77 @@ class AlgebraTest < Minitest::Test
     assert_equal_as_sets(['2.0*x**0', '4.0*x**6+0.0*x**5+0.0*x**4+2.0*x**3-1.0*x**2+0.0*x**1+1.0*x**0'], rez_division)
   end
 
+  def test_mine
+    div = @polynom_div.polynom_division("1*x**3-1*x**2-11*x**1-4*x**0","1*x**2+3*x**1+1*x**0")[0]
+    assert_equal("1.0*x**1-4.0*x**0", div)
+  end
+
+
+  def test_gcd_1
+    gcd = @polynom_div.polynom_gcd("1.0*x**4+0.0*x**3+0.0*x**2+0.0*x**1-1*x**0", "1.0*x**2+0.0*x**1-1*x**0")
+    assert_equal("1.0*x**2+0.0*x**1-1.0*x**0", gcd)
+  end
+
+  def test_gcd_2
+    gcd = @polynom_div.polynom_gcd("1*x**4+1*x**3-3*x**2-4*x**1-1*x**0","1*x**3+1*x**2-1*x**1-1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0",gcd)
+  end
+
+  def test_gcd_3
+    gcd = @polynom_div.polynom_gcd("1*x**3+1*x**2-1*x**1-1*x**0","1*x**4+1*x**3-3*x**2-4*x**1-1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0",gcd)
+  end
+
+  def test_gcd_4
+    gcd = @polynom_div.polynom_gcd("1*x**2+0*x**2-1*x**0","1*x**1+1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0", gcd)
+  end
+
+  def test_gcd_5
+    gcd = @polynom_div.polynom_gcd("1*x**1+1*x**0","1*x**2+0*x**2-1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0", gcd)
+  end
+
+  def test_gcd_6
+    gcd = @polynom_div.polynom_gcd("2*x**5-3*x**4+0*x**3+0*x**2-5*x**1-6*x**0","2*x**5-3*x**4+0*x**3+0*x**2-5*x**1-6*x**0")
+    assert_equal("1.0*x**5-1.5*x**4+0.0*x**3+0.0*x**2-2.5*x**1-3.0*x**0", gcd)
+  end
+
+  def test_gcd_7
+    gcd = @polynom_div.polynom_gcd("2*x**6+4*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0",'1*x**3-1**x**2+0*x**1+0*x**0')
+    assert_equal("1.0*x**0",gcd)
+  end
+
+  def test_gcd_8
+    gcd = @polynom_div.polynom_gcd("-3*x**3-2*x**2-1*x**1-1*x**0",'1*x**2+0*x**1-1*x**0')
+    assert_equal("1.0*x**0",gcd)
+  end
+
+  def test_gcd_9
+    gcd = @polynom_div.polynom_gcd("1*x**4+3*x**3-1*x**2-4*x**1-3*x**0",'3*x**3+10*x**2+2*x**1-3*x**0')
+    assert_equal("1.0*x**1+3.0*x**0",gcd)
+  end
+
+  def test_gcd_10
+    gcd = @polynom_div.polynom_gcd("4*x**5-23*x**4+47*x**3-1*x**2-48*x**1-36*x**0",'4*x**3-15*x**2+5*x**1+18*x**0')
+    assert_equal("1.0*x**1-2.0*x**0",gcd)
+  end
+
+  def test_gcd_11
+    gcd = @polynom_div.polynom_gcd('4*x**3-15*x**2+5*x**1+18*x**0',"4*x**5-23*x**4+47*x**3-1*x**2-48*x**1-36*x**0")
+    assert_equal("1.0*x**1-2.0*x**0",gcd)
+  end
+
+  def test_gcd_if_this_works_then_its_amazing
+    gcd = @polynom_div.polynom_gcd("2*x**6+1*x**5-4*x**4+15*x**3+5*x**2-2*x**1-1*x**0",'2*x**4+5*x**3+0*x**2-1*x**1+0*x**0')
+    assert_equal("1.0*x**2+2.0*x**1-1.0*x**0",gcd)
+  end
+
   def test_how_work_polynom_parser_1
     rez_parsing = @polynom_div.polynom_parser('2*x**6+4*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0')
-    assert_equal_as_sets([2.0, 4.0, 0.0, 0.0, 1.0, 0.0, 1.0], rez_parsing)
+    assert_equal_as_sets([2.0, 4.0, 0.0, 0.0, -1.0, 0.0, 1.0], rez_parsing)
   end
+
 
   def test_how_work_polynom_parser_2
     rez_parsing = @polynom_div.polynom_parser('1')
