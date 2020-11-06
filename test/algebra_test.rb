@@ -1,4 +1,4 @@
-require 'test_helper'
+require_relative 'test_helper'
 require 'algebra'
 
 class AlgebraTest < Minitest::Test
@@ -269,11 +269,11 @@ class AlgebraTest < Minitest::Test
 
   ##
   # Dixon's algorithm tests
-  def test_dixon_large
-    assert(dix_factor(89755).all?{|num| 89755%num == 0},"Dixons fact failure on large number")
+  def test_dixon_small
+    assert(dix_factor(8975).all?{|num| 8975%num == 0},"Dixons fact failure on large number")
   end
 
-  def test_dixon_small
+  def test_dixon_large
     assert(dix_factor(23449).all?{|num| 23449%num == 0},"Dixons fact failure on small number")
   end
 
