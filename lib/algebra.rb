@@ -168,7 +168,7 @@ module Silicium
     # Evaluates Euler's totient function for given n.
     # This algorithm offers roughly O(sqrt(n)) complexity
     def eul_f(n)
-      
+
       if n<=0
         raise "Euler's function can't be evaluated for n less then 1"
       end
