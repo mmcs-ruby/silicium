@@ -172,7 +172,6 @@ module Silicium
       if n<=0
         raise "Euler's function can't be evaluated for n less then 1"
       end
-
       #This line also covers situation of F(1)=1 by definition
       result = n
 
@@ -187,7 +186,6 @@ module Silicium
           result -= result/i
         end
       end
-
       #Due to initially having result = n, we do this to set max result to n-1 instead
       if n>1
         result -= result/n
