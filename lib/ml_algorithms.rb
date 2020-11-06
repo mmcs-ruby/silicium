@@ -67,7 +67,7 @@ module BackPropogation
 
     def self.parse_string(left, right, i_str, stack)
       if stack.empty? || PRIORITY[stack.last] < PRIORITY[left]
-        polish_parser(right, stack)
+        polish_parser(right, stack.push(left))
       else 
         stack.pop + ' ' + polish_parser(i_str, stack) 
       end

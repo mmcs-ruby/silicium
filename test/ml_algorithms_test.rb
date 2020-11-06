@@ -37,14 +37,14 @@ class MLAlgorithmsTest < SiliciumTest
     test_graph = ComputationalGraph.new("(x*W1+b1)*W2+b2")
     300.times do
       dummy_loss = 0.5*(true_val - test_graph.forward_pass(variables))
-      grad = test_graph.BackwardPass(dummy_loss)
+      grad = test_graph.backward_pass(dummy_loss)
       variables["W1"] += grad["W1"]*learn_rate
       variables["W2"] += grad["W2"]*learn_rate
       variables["b1"] += grad["b1"]*learn_rate
       variables["b2"] += grad["b2"]*learn_rate
     end
 
-    res = (test_graph.ForwardPass(variables)-true_val).abs< 0.0001
+    res = (test_graph.forward_pass(variables)-true_val).abs< 0.0001
     assert_equal(res,true)
   end
 
