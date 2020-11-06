@@ -270,11 +270,11 @@ class AlgebraTest < Minitest::Test
   ##
   # Dixon's algorithm tests
   def test_dixon_small
-    assert(dix_factor(8975).all?{|num| 8975%num == 0},"Dixons fact failure on large number")
+    assert(dix_factor(8975).all?{|num| 8975%num == 0},"Dixons fact failure on small number")
   end
 
   def test_dixon_large
-    assert(dix_factor(23449).all?{|num| 23449%num == 0},"Dixons fact failure on small number")
+    assert(dix_factor(23449).all?{|num| 23449%num == 0},"Dixons fact failure on large number")
   end
 
   def test_dixon_prime
