@@ -52,6 +52,33 @@ module Silicium
 
       end
 
+      # x : array of data points
+      # y : array of f(x)
+      # r : the node to interpolate at
+      def self.newton_polynomials(x, y, r)
+        check_variables(x, y, r)
+        a = Array[]
+        y.each do |elem|
+          a << elem
+        end
+        for j in 1..x.length - 1
+          i = x.length - 1
+          while i != j - 1
+            a[i] = (a[i] - a[i - 1]) / (x[i] - x[i - j])
+            i -= 1
+          end
+        end
+
+        n = a.length - 1
+        res = a[n]
+        i = n - 1
+        while i != -1
+          res = res * (r - x[i]) + a[i]
+          i -= 1
+        end
+        res
+      end
+
     end
 
   end
