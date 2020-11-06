@@ -130,17 +130,7 @@ module Silicium
 
       #First loop generates pairs of values for factorisation
       (start..n).each do |i|
-
-        #Finding related squares
-        (0..base.length-1).each do |j|
-          lhs = i**2 % n
-          rhs = base[j]**2 % n
-
-          #If the numbers are two related squares, we can add them to array
-          if lhs==rhs
-            pairs.push([i,base[j]])
-          end
-        end
+        pairs+=dix_factor_loop(n,i,base)
       end
       #Storage for future results
       res = []
@@ -164,17 +154,29 @@ module Silicium
 
     end
 
+    def dix_factor_loop(n,i,base)
+      #Finding related squares
+      pairs = []
+      (0..base.length-1).each do |j|
+        lhs = i**2 % n
+        rhs = base[j]**2 % n
+
+        #If the numbers are two related squares, we can add them to array
+        if lhs==rhs
+          pairs.push([i,base[j]])
+        end
+      end
+      pairs
+    end
+
     ##
     # Evaluates Euler's totient function for given n.
     # This algorithm offers roughly O(sqrt(n)) complexity
     def eul_f(n)
-
-      if n<=0
-        raise "Euler's function can't be evaluated for n less then 1"
-      end
+      #Small check if n can be used in Euler's function
+      pos(n)
       #This line also covers situation of F(1)=1 by definition
       result = n
-
       #Main evaluation. Instead of increasing whenever number fits the criteria, we consider maximum possible n=n-1
       #With this we reduce result by variable, whenever we see smaller number that is also a divisor, reducing possible res
       #by amount of values, also divisible by it
@@ -190,8 +192,13 @@ module Silicium
       if n>1
         result -= result/n
       end
-
       result
+    end
+
+    def pos(n)
+      if n<=0
+        raise "Euler's function can't be evaluated for n less then 1"
+      end
     end
 
     ##
