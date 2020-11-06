@@ -1013,4 +1013,103 @@ class GraphTest < SiliciumTest
                              {v: 'two', i: [0, 'two']}])
     assert_equal [[0, :one, 'two']], g.find_strongly_connected_components
   end
+
+  def test_dijkstra_1
+    g = UnorientedGraph.new([{v: 1, i: [2, 3, 6]},
+                             {v: 2, i: [3, 4]},
+                             {v: 3, i: [6, 4]},
+                             {v: 4, i: [5]},
+                             {v: 6, i: [5]}
+                            ])
+    g.label_edge!(1, 2, 7)
+    g.label_edge!(1, 3, 9)
+    g.label_edge!(1, 6, 14)
+    g.label_edge!(2, 3, 10)
+    g.label_edge!(2, 4, 15)
+    g.label_edge!(3, 6, 2)
+    g.label_edge!(3, 4, 11)
+    g.label_edge!(4, 5, 6)
+    g.label_edge!(6, 5, 9)
+    dijkstra=dijkstra_algorithm(g, 1)
+    assert_equal dijkstra["labels"] , {1 => 0, 2 => 7, 3 => 9, 6 => 11, 4 => 20, 5 => 20}
+    paths=dijkstra['paths']
+    assert_equal paths[1],[1]
+    assert_equal paths[2],[1,2]
+    assert_equal paths[3],[1,3]
+    assert_equal paths[4],[1,3,4]
+    assert_equal paths[5],[1,3,6,5]
+    assert_equal paths[6],[1,3,6]
+  end
+
+  def test_dijkstra_2
+    g = OrientedGraph.new([{v: 1, i: [2, 3, 4, 5]},
+                           {v: 4, i: [2, 3]},
+                           {v: 5, i: [1, 3, 4]},
+                          ])
+    g.label_edge!(1, 2, 10)
+    g.label_edge!(1, 3, 30)
+    g.label_edge!(1, 4, 50)
+    g.label_edge!(1, 5, 10)
+    g.label_edge!(4, 2, 40)
+    g.label_edge!(4, 3, 20)
+    g.label_edge!(5, 1, 10)
+    g.label_edge!(5, 3, 10)
+    g.label_edge!(5, 4, 30)
+    dijkstra=dijkstra_algorithm(g, 1)
+    assert_equal dijkstra["labels"] , {1 => 0, 2 => 10, 3 => 20, 4 => 40, 5 => 10}
+    paths=dijkstra['paths']
+    assert_equal paths[1],[1]
+    assert_equal paths[2],[1,2]
+    assert_equal paths[3],[1,5,3]
+    assert_equal paths[4],[1,5,4]
+    assert_equal paths[5],[1,5]
+  end
+
+  def test_dijkstra_3
+    g = UnorientedGraph.new([{v: 1, i: [2, 3]},
+                             {v: 2, i: [3]},
+                             {v: 3, i: [4, 5, 6]},
+                             {v: 4, i: [5]},
+                             {v: 5, i: [6]}
+                            ])
+    g.label_edge!(1, 2, 4)
+    g.label_edge!(1, 3, 4)
+    g.label_edge!(2, 3, 2)
+    g.label_edge!(3, 4, 3)
+    g.label_edge!(3, 5, 6)
+    g.label_edge!(3, 6, 1)
+    g.label_edge!(4, 5, 2)
+    g.label_edge!(5, 6, 3)
+    dijkstra=dijkstra_algorithm(g, 1)
+    assert_equal dijkstra["labels"] ,{1 => 0, 2 => 4, 3 => 4, 6 => 5, 4 => 7, 5 => 8}
+    paths=dijkstra['paths']
+    assert_equal paths[1],[1]
+    assert_equal paths[2],[1,2]
+    assert_equal paths[3],[1,3]
+    assert_equal paths[4],[1,3,4]
+    assert_equal paths[5],[1,3,6,5]
+    assert_equal paths[6],[1,3,6]
+  end
+
+  def test_dijkstra_err
+    g = UnorientedGraph.new([{v: 1, i: [2, 3]},
+                             {v: 2, i: [3]},
+                             {v: 3, i: [4, 5, 6]},
+                             {v: 4, i: [5]},
+                             {v: 5, i: [6]}
+                            ])
+    g.label_edge!(1, 2, 4)
+    g.label_edge!(1, 3, 4)
+    g.label_edge!(2, 3, 2)
+    g.label_edge!(3, 4, 3)
+    g.label_edge!(3, 5, 6)
+    g.label_edge!(3, 6, 1)
+    g.label_edge!(4, 5, 2)
+    g.label_edge!(5, 6, 3)
+
+    assert_raises "Graph does not contains vertex 7" do
+      dijkstra_algorithm(g, 7)
+    end
+  end
+  
 end
