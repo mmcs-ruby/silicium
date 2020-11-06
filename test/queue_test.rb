@@ -139,12 +139,6 @@ class PQueueTest < Minitest::Test
     q.pop
     assert_equal(ARY_TEST, ary)
 
-    ary = ARY_TEST.dup
-    q = PQueue.new([1])
-    q.concat(ary)
-    q.pop
-    assert_equal(ARY_TEST, ary)
-
     q = PQueue.new(ARY_TEST)
     r = q.dup
     q.pop
@@ -165,11 +159,11 @@ class PQueueTest < Minitest::Test
     q << 17
     assert_equal(q.to_a, [5,17,25,100])
     q << 0
-    assert_equal(q.to_a, [0,5, 7,25,100])
+    assert_equal(q.to_a, [0,5,17,25,100])
     q << -5
-    assert_equal(q.to_a, [-5,0,5, 7,25,100])
+    assert_equal(q.to_a, [-5,0,5,17,25,100])
     q << 100
-    assert_equal(q.to_a, [-5,0,5, 7,25,100,100])
+    assert_equal(q.to_a, [-5,0,5,17,25,100,100])
   end
 
 
