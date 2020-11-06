@@ -89,6 +89,8 @@ Or install it yourself as:
 
     Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
     
+    Algorithm of Kruskal: kruskal_mst(graph)
+    
 ### Plotter
 
 #### Determine your function
