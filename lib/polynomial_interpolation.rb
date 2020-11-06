@@ -26,20 +26,55 @@ module Silicium
         result
       end
 
-      ##
-      # helper for lagrange_polynomials
+
+      # x : array of data points
+      # y : array of f(x)
+      # r : the node to interpolate at
+      def self.newton_polynomials(x, y, r)
+        check_variables(x, y, r)
+        a = Array[]
+        y.each do |elem|
+          a << elem
+        end
+        for j in 1..x.length - 1
+          i = x.length - 1
+          while i != j - 1
+            a[i] = (a[i] - a[i - 1]) / (x[i] - x[i - j])
+            i -= 1
+          end
+        end
+
+        n = a.length - 1
+        res = a[n]
+        i = n - 1
+        while i != -1
+          res = res * (r - x[i]) + a[i]
+          i -= 1
+        end
+        res
+      end
+
+
+      # helper
       def self.check_variables(x, y, z)
+        check_types(x, y, z)
+        check_arrays(x, y)
+      end
 
-        if x.class != Array || y.class != Array
-          raise ArgumentError, 'Wrong type of variables x or y'
-        end
-
-        if x.empty? ||  y.empty?
-          raise ArgumentError, 'Arrays are empty'
-        end
+      #helper for helper
+      def self.check_arrays(x, y)
 
         if x.size < 2  ||  x.size < 2
           raise ArgumentError, 'Arrays are too small'
+        end
+
+      end
+
+      #helper for helper
+      def self.check_types(x, y, z)
+
+        if x.class != Array || y.class != Array
+          raise ArgumentError, 'Wrong type of variables x or y'
         end
 
         if z.class.superclass != Numeric
