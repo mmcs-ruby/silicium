@@ -189,16 +189,20 @@ module Silicium
         end
       end
       #Due to initially having result = n, we do this to set max result to n-1 instead
-      if n>1
-        result -= result/n
-      end
-      result
+      eul_helper(n,result)
     end
 
     def pos(n)
       if n<=0
         raise "Euler's function can't be evaluated for n less then 1"
       end
+    end
+
+    def eul_helper(n,result)
+      if n>1
+        result -= result/n
+      end
+      result
     end
 
     ##
