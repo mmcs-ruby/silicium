@@ -23,18 +23,14 @@ module Silicium
         end
         token = copy_str.split(/[-+]/)
         (0..copy_str.size-1).each do |i|
-          if copy_str[i] == '-' || copy_str[i] == '+'
-            sgn_array.push(copy_str[i])
-          end
+          sgn_array.push(copy_str[i]) if copy_str[i] == '-' || copy_str[i] == '+'
         end
         size = token.size - 1
-        coeff = Array.new                 # Array of coefficients
+        coeff = []                 # Array of coefficients
         (0..size).each do |i|
           degree = token[i].split('*')    # Split by '*' to get coefficient and degree
           degree[0] == 'x' ? coeff[i] = 1.0 : coeff[i] = degree[0].to_f
-          if sgn_array[i] == '-'
-            coeff[i] *= -1
-          end
+          coeff[i] *= -1 if sgn_array[i] == '-'
         end
         coeff
       end
@@ -45,9 +41,7 @@ module Silicium
         res_exp = ""
         (0..res_size-1).each do |i|
           res_exp += ((coeff_res[i].ceil(3)).to_s+"*x**"+(res_size - i - 1).to_s)
-          if sgn_array[i+1] != '-'
-            res_exp += sgn_array[i+1]
-          end
+          res_exp += sgn_array[i+1] if sgn_array[i+1] != '-'
         end
         res_exp
       end
@@ -57,14 +51,10 @@ module Silicium
         c = coeff_1.size
         rem_exp = ""
         (0..c-1).each do |i|
-          if coeff_1[i] >= 0.0
-            rem_exp += '+'
-          end
+          rem_exp += '+' if coeff_1[i] >= 0.0
           rem_exp += ((coeff_1[i].ceil(3)).to_s+"*x**"+(c - i - 1).to_s)
         end
-        if rem_exp[0] == '+'
-          rem_exp[0] = ''
-        end
+        rem_exp[0] = '' if rem_exp[0] == '+'
         rem_exp
       end
 

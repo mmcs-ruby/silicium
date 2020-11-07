@@ -35,17 +35,13 @@ module Silicium
         @post_order = []
         @visited = []
 
-        graph.nodes.each do |node|
-          dfs(node) unless @visited.include?(node)
-        end
+        graph.nodes.each { |node| dfs(node) unless @visited.include?(node)}
       end
 
       private
       def dfs(node)
         @visited << node
-        node.adjacents.each do |adj_node|
-          dfs(adj_node) unless @visited.include?(adj_node)
-        end
+        node.adjacents.each { |adj_node| dfs(adj_node) unless @visited.include?(adj_node)}
 
         @post_order << node
       end
