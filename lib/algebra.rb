@@ -394,6 +394,72 @@ module Silicium
           ''
         end
       end
+
+
+##Gauss–Seidel method is an iterative method used to solve a system of linear equations
+      def gauss_seidel(a,b,eps)
+        n = a.length
+        x = Array.new(n,0)
+
+        @s1 = 0.0
+        @s2 = 0.0
+        @s3 = 0.0
+
+        converge = false
+        main_helper(converge, x,a,b,n,eps)
+        x
+      end
+
+
+
+      def helper (n,a,x_new,x,b)
+        (0...n).each do |i|
+          (0..i).each do |j|
+            @s1 += a[i][j] * x_new[j]
+          end
+          (i+1...n).each do |j|
+            @s2 += a[i][j] * x[j]
+          end
+
+          x_new[i] = (b[i] - @s1 - @s2) / a[i][i]
+        end
+        x_new
+      end
+
+      def extra_helper (n,x_new,x)
+        (0...n).each do |i|
+
+          @s3 += x_new[i] - x[i]
+          @s3 = @s3 ** 2
+        end
+        @s3
+      end
+
+      def round_helper (n,x)
+        (0...n).each do |i|
+          x[i] = x[i].round
+        end
+        x
+      end
+
+
+      def main_helper (converge, x,a,b,n,eps)
+
+        until converge
+
+          x_new = x
+          helper(n,a,x_new,x,b)
+
+          extra_helper(n,x_new,x)
+
+          converge = Math::sqrt(@s3) <= eps ? true : false
+          x = x_new
+
+        end
+        round_helper(n,x)
+        x
+      end
+      
     end
   end
 end
