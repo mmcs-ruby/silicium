@@ -1,9 +1,11 @@
-require './test/test_helper'
+require 'test_helper'
 
 require 'geometry'
+require 'geometry3d'
 
 class GeometryTest < Minitest::Test
   include Silicium::Geometry
+  include Silicium::Geometry3d
 
   def test_oriented_area
     assert_equal(-12, oriented_area(Point.new(-2, -1), Point.new(1, 2), Point.new(2, -1)))
