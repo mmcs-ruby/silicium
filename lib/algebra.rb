@@ -406,24 +406,40 @@ module Silicium
         @s3 = 0.0
 
         converge = false
-        main_helper(converge, x,a,b,n,eps)
+        until converge
+
+          x_new = x
+          (0...n).each do |i|
+            helper_helper_1(i,a,x_new)
+            helper_helper_2(i,n,a,x)
+
+            x_new[i] = (b[i] - @s1 - @s2) / a[i][i]
+          end
+
+          extra_helper(n,x_new,x)
+
+          converge = Math::sqrt(@s3) <= eps ? true : false
+          x = x_new
+
+        end
+        round_helper(n,x)
+
         x
       end
 
 
+      def helper_helper_1(i,a,x_new)
 
-      def helper (n,a,x_new,x,b)
-        (0...n).each do |i|
-          (0..i).each do |j|
-            @s1 += a[i][j] * x_new[j]
-          end
-          (i+1...n).each do |j|
-            @s2 += a[i][j] * x[j]
-          end
-
-          x_new[i] = (b[i] - @s1 - @s2) / a[i][i]
+        (0..i).each do |j|
+          @s1 += a[i][j] * x_new[j]
         end
-        x_new
+      end
+
+      def helper_helper_2(i,n,a,x)
+        (i+1...n).each do |j|
+          @s2 += a[i][j] * x[j]
+        end
+
       end
 
       def extra_helper (n,x_new,x)
@@ -439,24 +455,6 @@ module Silicium
         (0...n).each do |i|
           x[i] = x[i].round
         end
-        x
-      end
-
-
-      def main_helper (converge, x,a,b,n,eps)
-
-        until converge
-
-          x_new = x
-          helper(n,a,x_new,x,b)
-
-          extra_helper(n,x_new,x)
-
-          converge = Math::sqrt(@s3) <= eps ? true : false
-          x = x_new
-
-        end
-        round_helper(n,x)
         x
       end
       
