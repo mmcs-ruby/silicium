@@ -28,18 +28,16 @@ module Silicium
 
       def self.d_dt_for_theta0(plot, theta0, theta1)
         result = 0.0 
-        plot.each do |x, y|
-          result += (theta0 + theta1 * x) - y
-        end 
-        return result
+        plot.each { |x, y| result += (theta0 + theta1 * x) - y }
+
+        result
       end
 
       def self.d_dt_for_theta1(plot, theta0, theta1)
          result = 0 
-         plot.each do |x, y|
-           result += ((theta0 + theta1 * x) - y) * x
-         end
-         return result
+         plot.each { |x, y| result += ((theta0 + theta1 * x) - y) * x }
+
+         result
       end
 
     end 
@@ -65,7 +63,7 @@ module Silicium
         array = calculate([bias, epsilon, array, alpha, plot, old_bias, m])
 
         return array.map! {|x| x * div + avg_x } if scaling
-        return array
+        array
       end
 
       private
@@ -82,15 +80,14 @@ module Silicium
           raise "Divergence" if params[0] > params[5]
           params[5] = params[0]
         end
-        return params[2]
+        params[2]
       end
 
       def self.d_dt(plot, old_array, i)
         sum = 0.0 
-        plot.each do |x, y|  
-          sum += (func(old_array, x) - y) * (i + 1) * (x ** i)
-        end 
-        return sum
+        plot.each { |x, y| sum += (func(old_array, x) - y) * (i + 1) * (x ** i) }
+
+        sum
       end 
       
       def self.func(array, x)
@@ -100,7 +97,7 @@ module Silicium
           sum += elem * (x ** i)
           i += 1
         end 
-        return sum
+        sum
       end 
       
       def self.feature_scaled_plot(given_plot, n)
@@ -132,4 +129,3 @@ pol_plot1 = {0 => 2, -1 => -2, -2 => -8, -3 => -16, 1 => 4, 2 => 4, 3 => 2, 4 =>
 pol_plot2 = {-5 => 170, -4 => 97, -3 => 50, -2 => 23, -1 => 10, 0 => 5, 1 => 2, 2 => -5, 3 => -22, 4 => -55, 5 => -110}
 
 res = Silicium::Regression::PolynomialRegressionByGradientDescent::feature_scaled_plot(pol_plot2, 3)
-p res

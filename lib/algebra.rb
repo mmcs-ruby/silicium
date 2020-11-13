@@ -53,9 +53,8 @@ module Silicium
     def polycop(str)
       @letter_var = nil
       parsed = str.split(/[-+]/)
-      parsed.each do |term|
-        return false unless valid_term?(term)
-      end
+      parsed.each { |term| return false unless valid_term?(term) }
+
       true
     end
 
@@ -126,9 +125,7 @@ module Silicium
         tokens = split_by_op(str)
         cf = Array.new(0.0)
         deg = 0
-        tokens.each do |term|
-          deg = process_term(term, cf, deg)
-        end
+        tokens.each { |term| deg = process_term(term, cf, deg) }
         insert_zeroes(cf, deg) unless deg.zero?
         cf.reverse
       end
@@ -148,9 +145,7 @@ module Silicium
 
       def split_by_neg(pos_tokens)
         res = []
-        pos_tokens.each do |token|
-          res.concat(keep_split(token, '-'))
-        end
+        pos_tokens.each { |token| res.concat(keep_split(token, '-')) }
         res
       end
 
@@ -222,7 +217,7 @@ module Silicium
             edge_neg = x
           end
         end
-        return [edge_pos, edge_neg]
+        [edge_pos, edge_neg]
       end
 
 ##
@@ -234,23 +229,19 @@ module Silicium
         major = find_major(level, cf_dif[level])
         cur_root_count[level] = 0
         # main loop
-        (0..cur_root_count[level - 1]).each do |i|
-          step_up_loop([i, major, level, root_dif, cf_dif, cur_root_count])
-        end
+        (0..cur_root_count[level - 1]).each { |i| step_up_loop([i, major, level, root_dif, cf_dif, cur_root_count]) }
       end
 
       def step_up_loop(arr_pack)
         i, major, level, root_dif, cf_dif, cur_root_count = arr_pack
         edge_left, left_val, sign_left = form_left([i, major, level, root_dif, cf_dif])
 
-        if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
-          return
-        end
+        return if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
+
         edge_right, right_val, sigh_right = form_right([i, major, level, root_dif, cf_dif, cur_root_count])
 
-        if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
-          return
-        end
+        return if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
+
         return if sigh_right == sign_left
         edge_neg, edge_pos = sign_left.negative? ? [edge_left, edge_right] : [edge_right, edge_left]
         root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, cf_dif[level])
@@ -377,9 +368,7 @@ module Silicium
       def coef_to_str(coef)
         n = coef.length - 1
         s = ''
-        (0..n).each do |i|
-          s += coef_to_str_inner(coef, i, s) unless coef[i].zero?
-        end
+        (0..n).each { |i| s += coef_to_str_inner(coef, i, s) unless coef[i].zero? }
         s
       end
 
