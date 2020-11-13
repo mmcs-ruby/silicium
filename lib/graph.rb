@@ -13,10 +13,8 @@ module Silicium
     # Class represents oriented graph
     class OrientedGraph
       def initialize(initializer = [])
-        @vertices = {}
-        @edge_labels = {}
-        @vertex_labels = {}
-        @edge_number = 0
+        @vertices = {}; @vertex_labels = {}
+        @edge_labels = {}; @edge_number = 0
         initializer.each do |v|
           add_vertex!(v[:v])
           v[:i].each do |iv|
@@ -30,9 +28,7 @@ module Silicium
       ##
       # Adds vertex to graph
       def add_vertex!(vertex_id)
-        if @vertices.has_key?(vertex_id)
-          return
-        end
+        if @vertices.has_key?(vertex_id); return end
         @vertices[vertex_id] = [].to_set
       end
 
@@ -147,10 +143,8 @@ module Silicium
       ##
       # Reverses graph
       def reverse!
-        v = {}
-        l = {}
+        l = {}; v = {}
         @vertices.keys.each { |from| v[from] = [].to_set }
-
         @vertices.keys.each do |from|
           @vertices[from].each do |to|
             v[to] << from
@@ -159,8 +153,7 @@ module Silicium
             end
           end
         end
-        @vertices = v
-        @edge_labels = l
+        @vertices = v; @edge_labels = l
       end
 
 
