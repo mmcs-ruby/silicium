@@ -162,6 +162,11 @@ And finally you can type:
 #### Result
 The result for ```TopologicalSortClass.new(graph).post_order.map(&:to_s)``` is [2, 1]
 
+
+    Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
+    
+    Algorithm of Kruskal: kruskal_mst(graph)
+    
 ### Plotter
 
 #### Determine your function
