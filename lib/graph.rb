@@ -1,6 +1,3 @@
-#require 'set'
-#require 'silicium'
-
 require_relative 'graph/dfs'
 require_relative 'graph/scc'
 require_relative 'graph/kruskal'
@@ -10,7 +7,6 @@ module Silicium
     Pair = Struct.new(:first, :second)
 
     class GraphError < Error
-
     end
 
     ##
@@ -69,7 +65,6 @@ module Silicium
         unless @vertices.has_key?(from) && @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
-
         @edge_labels[Pair.new(from, to)] = label
       end
 
@@ -80,7 +75,6 @@ module Silicium
         unless @vertices.has_key?(vertex)
           raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
-
         @vertex_labels[vertex] = label
       end
 
@@ -91,7 +85,6 @@ module Silicium
         if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
-
         @edge_labels[Pair.new(from, to)]
       end
 
@@ -169,19 +162,19 @@ module Silicium
         @vertices = v
         @edge_labels = l
       end
-      ##
+
+
       # Returns array of vertices
       def vertices
         @vertices
       end
 
-      ##
       # Returns labels of edges
       def edge_labels
         @edge_labels
       end
 
-      ##
+
       # Returns labels of vertices
       def vertex_labels
         @vertex_labels
