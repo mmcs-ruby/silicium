@@ -136,6 +136,39 @@ Same goes for the case with unoriented graph (note that missing edges will be ad
      g.find_strongly_connected_components
 ```
 * Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
+
+
+* Topological sort
+
+#### Description
+Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for every directed edge *u v*, vertex *u* comes before *v* in the ordering.
+
+#### How to use
+For you to have a topologically sorted graph, you need to create an object of the class ```Graph```:
+``` ruby
+    graph = Graph.new
+```
+Then you need to add vertices to this graph using the class ```Node```:
+``` ruby
+    graph.nodes << (node1 = Node.new(1))
+    graph.nodes << (node2 = Node.new(2))
+```
+Due to the fact that only a directed graph can be sorted topologically, it is necessary to add an edge:
+``` ruby
+    graph.add_edge(node1, node2)
+```
+And finally you can type:
+``` ruby
+    TopologicalSortClass.new(graph)
+```
+
+#### Result
+The result for ```TopologicalSortClass.new(graph).post_order.map(&:to_s)``` is [2, 1]
+
+
+    Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
+    
+    Algorithm of Kruskal: kruskal_mst(graph)
     
 ### GraphVisualiser
 
@@ -165,6 +198,7 @@ show_window
 #### Result
 
 ![Alt-текст](./oriented_graph.png "Result")
+
 
 
 ### Plotter
@@ -294,6 +328,15 @@ s.percentage # {3=>0.004629629629629629, 4=>0.013888888888888888, 5=>0.027777777
 s.throw   # getting random score (from 3 to 18)
 
 s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
+```
+### Optimization
+
+#### Karatsuba multiplication
+The Karatsuba algorithm is a fast multiplication algorithm. It reduces the multiplication of two n-digit numbers to at most ![formula](https://render.githubusercontent.com/render/math?math=\Theta(n^{1.58}))  single-digit multiplications in general. It is therefore faster than the traditional algorithm, which requires ![formula](https://render.githubusercontent.com/render/math?math=\Theta(n^{2})) single-digit products.
+
+##### Example:
+```ruby
+   karatsuba(15, 15) #returns 225
 ```
 
 ## Development

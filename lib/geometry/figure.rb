@@ -36,9 +36,8 @@ module Silicium
     class Rectangle < Figure
 
       def initialize(p1, p2, p3, p4)
-        unless valid?(p1, p2, p3, p4)
-          raise ArgumentError, 'This is not a rectangle.'
-        end
+        raise ArgumentError, 'This is not a rectangle.' unless valid?(p1, p2, p3, p4)
+
         @side1 = distance_point_to_point2d(p1, p2)
         @side2 = distance_point_to_point2d(p2, p3)
         @side3 = distance_point_to_point2d(p3, p4)

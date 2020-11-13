@@ -18,4 +18,12 @@ class Minitest::Test
       assert_includes actual, elem
     end
   end
+
+  def assert_equal_arrays(expected, actual)
+    expected.zip(actual).each {|x, y| assert_equal x, y  }
+  end
+
+  def assert_equal_arrays_in_delta(expected, actual, delta)
+    expected.zip(actual).each {|x, y| assert_in_delta x, y, delta}
+  end
 end
