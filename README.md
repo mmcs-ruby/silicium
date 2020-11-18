@@ -301,7 +301,7 @@ The Karatsuba algorithm is a fast multiplication algorithm. It reduces the multi
 ```
 
 #### Dixon's factorialisation
-Dixon's factorialisation is factorisation function, offering a way to relatively fast generate array of all non-trivial divisors of a number. 
+Dixon's factorialisation is factorisation function, offering a way to relatively fast generate array of non-trivial divisors of a number. 
 
 ##### Example:
 ```ruby
