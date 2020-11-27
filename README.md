@@ -317,3 +317,21 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Silicium project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/silicium/blob/master/CODE_OF_CONDUCT.md).
+
+### Method Gauss–Seidel
+Use the-Gauss Seidel Method to solve a system of linear equations
+
+Members containing x are written to an array of arrays in a. Free members are written in b. Condition for ending the Seidel iteration process when the epsilon accuracy is reached.
+
+Example 
+```
+gauss_seidel(a,b,eps)
+g = gauss_seidel(([[0.13,0.22,-0.33,-0.07],[0,0.45,-0.23,0.07],[0.11,0,-0.08,0.18],[0.08,0.09,0.33,0.21]]),[-0.11,0.33,-0.85,1.7], 0.001)
+
+```
+
+Answer:
+
+```
+g = [-1,1,9,-6]
+```
