@@ -22,6 +22,28 @@ class GraphTest < SiliciumTest
     assert_equal(g.vertex_number, 0)
   end
 
+  def test_get_vertex_labels
+    g = OrientedGraph.new([{ v: 0,     i: [:one] },
+                           { v: :one,  i: [0, 'two'] },
+                           { v: 'two', i: [0, 'two'] }])
+
+    g.label_vertex!(0,'null')
+    g.label_vertex!(:one,'one')
+    g.label_vertex!('two','two')
+    assert_equal({0 => 'null', :one => 'one', 'two' => 'two'},g.vertex_labels)
+  end
+
+  def test_get_edge_labels
+    g = OrientedGraph.new([{ v: 0,     i: [:one] },
+                           { v: :one,  i: [0, 'two'] },
+                           { v: 'two', i: [0, 'two'] }])
+
+    g.label_edge!(0,:one,'null to one')
+    g.label_edge!(:one,0,'one to null')
+    g.label_edge!('two','two','two to two')
+    assert_equal({Pair.new(0, :one) => 'null to one', Pair.new(:one, 0) => 'one to null', Pair.new('two', 'two') => 'two to two'},g.edge_labels)
+  end
+
   def test_advanced_constructor
     g = OrientedGraph.new([{ v: 0,     i: [:one] },
                            { v: :one,  i: [0, 'two'] },

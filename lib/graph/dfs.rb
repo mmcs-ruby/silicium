@@ -23,9 +23,7 @@ module Silicium
       return if visited[node]
 
       visited[node] = true
-      graph.vertices[node].each do |child|
-        stack.push(child)
-      end
+      graph.vertices[node].each { |child| stack.push(child) }
     end
 
     def dfs_traverse(graph, start)
@@ -38,11 +36,7 @@ module Silicium
     def dfs_traverse_recursive(graph, node, visited, traversed)
       visited[node] = true
       traversed.push(node)
-      graph.vertices[node].each do |child|
-        unless visited[child]
-          dfs_traverse_recursive(graph, child, visited, traversed)
-        end
-      end
+      graph.vertices[node].each { |child| dfs_traverse_recursive(graph, child, visited, traversed) unless visited[child] }
     end
   end
 end

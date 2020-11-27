@@ -100,40 +100,40 @@ class SiliciumTest < Minitest::Test
   end
 
   def test_hook_jeeves_params_1
-    vals = (hook_jeeves([-4], [1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0]  + 5})
+    vals = (hook_jeeves([-4], [1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0] + 5})
     assert_in_delta vals[0], -0.25, 0.01
   end
 
   def test_hook_jeeves_params_1_new_atm
-    vals = (hook_jeeves([5], [1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0]  + 5})
+    vals = (hook_jeeves([5], [1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0] + 5})
     assert_in_delta vals[0], -0.25, 0.01
   end
 
   def test_hook_jeeves_params_1_new_atm2
-    vals = (hook_jeeves([5], [-1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0]  + 5})
+    vals = (hook_jeeves([5], [-1], 0.001) {|x| 8 * x[0] * x[0] + 4 * x[0] + 5})
     assert_in_delta vals[0], -0.25, 0.01
   end
 
   def test_hook_jeeves_params_2
-    vals = (hook_jeeves([-6, 0], [-1, 2], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]})
-    assert_in_delta vals[0], -8.0/3, 0.01
-    assert_in_delta vals[1], -4.0/3, 0.01
+    vals = (hook_jeeves([-6, 0], [-1, 2], 0.001) {|x| x[0] * x[0] + 4 * x[0] + 5 - x[0] * x[1] + x[1] * x[1]})
+    assert_in_delta vals[0], -8.0 / 3, 0.01
+    assert_in_delta vals[1], -4.0 / 3, 0.01
   end
 
   def test_hook_jeeves_params_2_new_atm
-    vals = (hook_jeeves([12, -5], [5, 3], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]})
-    assert_in_delta vals[0], -8.0/3, 0.01
-    assert_in_delta vals[1], -4.0/3, 0.01
+    vals = (hook_jeeves([12, -5], [5, 3], 0.001) {|x| x[0] * x[0] + 4 * x[0] + 5 - x[0] * x[1] + x[1] * x[1]})
+    assert_in_delta vals[0], -8.0 / 3, 0.01
+    assert_in_delta vals[1], -4.0 / 3, 0.01
   end
 
   def test_hook_jeeves_params_2_new_atm_2
-    vals = (hook_jeeves([-10, 10], [6, 6], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1]})
-    assert_in_delta vals[0], -8.0/3, 0.01
-    assert_in_delta vals[1], -4.0/3, 0.01
+    vals = (hook_jeeves([-10, 10], [6, 6], 0.001) {|x| x[0] * x[0] + 4 * x[0] + 5 - x[0] * x[1] + x[1] * x[1]})
+    assert_in_delta vals[0], -8.0 / 3, 0.01
+    assert_in_delta vals[1], -4.0 / 3, 0.01
   end
 
   def test_hook_jeeves_params_3
-    vals = hook_jeeves([0, 1, 2], [1, 1, 1], 0.001) {|x| x[0] * x[0] + 4 * x[0]  + 5 - x[0] * x[1] + x[1] * x[1] + x[2] * x[2] * x[2] - x[1] * x[2] - 3 * x[2] * x[2]}
+    vals = hook_jeeves([0, 1, 2], [1, 1, 1], 0.001) {|x| x[0] * x[0] + 4 * x[0] + 5 - x[0] * x[1] + x[1] * x[1] + x[2] * x[2] * x[2] - x[1] * x[2] - 3 * x[2] * x[2]}
     assert_in_delta vals[0], -2, 0.01
     assert_in_delta vals[1], 0, 0.01
     assert_in_delta vals[2], 2, 0.01
@@ -235,6 +235,46 @@ class SiliciumTest < Minitest::Test
 
   def test_annealing_cond
     assert(annealing_cond(2, 4, 100, 1))
+  end
+
+  def test_make_equal_1
+    assert_equal [1, 0], make_equal(10, 2)
+  end
+
+  def test_make_equal_2
+    assert_equal [1, 0], make_equal(10, 3)
+  end
+
+  def test_make_equal_3
+    assert_equal [123, 456], make_equal(123_456, 6)
+  end
+
+  def test_make_equal_4
+    assert_equal [12, 3456], make_equal(123_456, 8)
+  end
+
+  def test_compute_karatsuba_1
+    assert_equal 84_999_999_999_880_000_000_000_076, compute_karatsuba(76, 41, 85, 12)
+  end
+
+  def test_compute_karatsuba_2
+    assert_equal 225, compute_karatsuba(25, 36, 1, 1)
+  end
+
+  def test_karatsuba_1
+    assert_equal 2500, karatsuba(25, 100)
+  end
+
+  def test_karatsuba_2
+    assert_equal 123_456_789_123_456_789_123_456_789 * 123_456_789_123_456_789_123_456_789, karatsuba(123_456_789_123_456_789_123_456_789, 123_456_789_123_456_789_123_456_789)
+  end
+
+  def test_karatsuba_3
+    assert_equal 123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789 * 123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789, karatsuba(123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789, 123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789)
+  end
+
+  def test_karatsuba_4
+    assert_equal 123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789 * 123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789, karatsuba(123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789, 123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789_123_456_789)
   end
 
 end

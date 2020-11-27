@@ -1,6 +1,3 @@
-#require 'set'
-#require 'silicium'
-
 require_relative 'graph/dfs'
 require_relative 'graph/scc'
 require_relative 'graph/kruskal'
@@ -10,17 +7,14 @@ module Silicium
     Pair = Struct.new(:first, :second)
 
     class GraphError < Error
-
     end
 
     ##
     # Class represents oriented graph
     class OrientedGraph
       def initialize(initializer = [])
-        @vertices = {}
-        @edge_labels = {}
-        @vertex_labels = {}
-        @edge_number = 0
+        @vertices = {}; @vertex_labels = {}
+        @edge_labels = {}; @edge_number = 0
         initializer.each do |v|
           add_vertex!(v[:v])
           v[:i].each do |iv|
@@ -34,9 +28,7 @@ module Silicium
       ##
       # Adds vertex to graph
       def add_vertex!(vertex_id)
-        if @vertices.has_key?(vertex_id)
-          return
-        end
+        if @vertices.has_key?(vertex_id); return end
         @vertices[vertex_id] = [].to_set
       end
 
@@ -69,7 +61,6 @@ module Silicium
         unless @vertices.has_key?(from) && @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
-
         @edge_labels[Pair.new(from, to)] = label
       end
 
@@ -80,7 +71,6 @@ module Silicium
         unless @vertices.has_key?(vertex)
           raise GraphError.new("Graph does not contain vertex #{vertex}")
         end
-
         @vertex_labels[vertex] = label
       end
 
@@ -91,7 +81,6 @@ module Silicium
         if !@vertices.has_key?(from) || ! @vertices[from].include?(to)
           raise GraphError.new("Graph does not contain edge (#{from}, #{to})")
         end
-
         @edge_labels[Pair.new(from, to)]
       end
 
@@ -139,15 +128,10 @@ module Silicium
       # Deletes vertex from graph
       def delete_vertex!(vertex)
         if has_vertex?(vertex)
-          @vertices.keys.each do |key|
-            delete_edge!(key, vertex)
-          end
+          @vertices.keys.each { |key| delete_edge!(key, vertex) }
           @vertices.delete(vertex)
           @vertex_labels.delete(vertex)
-
-          @vertices.keys.each do |key|
-            @edge_labels.delete(Pair.new(vertex, key))
-          end
+          @vertices.keys.each { |key| @edge_labels.delete(Pair.new(vertex, key)) }
         end
       end
       ##
@@ -159,12 +143,8 @@ module Silicium
       ##
       # Reverses graph
       def reverse!
-        v = Hash.new()
-        l = {}
-        @vertices.keys.each do |from|
-          v[from] = [].to_set
-        end
-
+        l = {}; v = {}
+        @vertices.keys.each { |from| v[from] = [].to_set }
         @vertices.keys.each do |from|
           @vertices[from].each do |to|
             v[to] << from
@@ -173,22 +153,31 @@ module Silicium
             end
           end
         end
-        @vertices = v
-        @edge_labels = l
+        @vertices = v; @edge_labels = l
       end
-      ##
+
+
       # Returns array of vertices
       def vertices
         @vertices
+      end
+
+      # Returns labels of edges
+      def edge_labels
+        @edge_labels
+      end
+
+
+      # Returns labels of vertices
+      def vertex_labels
+        @vertex_labels
       end
 
       protected
       ##
       # Adds edge to graph
       def protected_add_edge!(from, to)
-        if @vertices.has_key?(from) && @vertices.has_key?(to)
-          @vertices[from] << to
-        end
+        @vertices[from] << to if @vertices.has_key?(from) && @vertices.has_key?(to)
       end
       ##
       # Deletes edge from graph
@@ -234,9 +223,7 @@ module Silicium
       visited[start] = true
       until queue.empty? do
         node = queue.pop
-        if node == goal
-          return true
-        end
+        return true if node == goal
         add_to_queue(graph, queue, node, visited)
       end
       false
@@ -244,12 +231,12 @@ module Silicium
     ##
     # Adds to queue not visited vertices
     def add_to_queue(graph, queue, node, visited)
-    graph.vertices[node].each do |child|
-      unless visited[child]
-        queue.push(child)
-        visited[child] = true
+      graph.vertices[node].each do |child|
+        unless visited[child]
+          queue.push(child)
+          visited[child] = true
+        end
       end
-    end
     end
     ##
     # Checks if graph is connected
@@ -279,11 +266,7 @@ module Silicium
     # Passes graph's vertices and marks them visited
     def dfu(graph, vertice, visited)
       visited[vertice] = true
-      graph.vertices[vertice].each do |item|
-        unless visited[item]
-          dfu(graph, item, visited)
-        end
-      end
+      graph.vertices[vertice].each { |item| dfu(graph, item, visited) unless visited[item] }
     end
 
     def add_edge!(mst, edge, label)
@@ -300,9 +283,7 @@ module Silicium
     def graph_to_sets(graph)
       labels = {}
       graph.vertices.keys.each do |from|
-        graph.adjacted_with(from).each do |to|
-          labels[Pair.new(from, to)] = graph.get_edge_label(from, to)
-        end
+        graph.adjacted_with(from).each { |to| labels[Pair.new(from, to)] = graph.get_edge_label(from, to) }
       end
       labels.to_set.sort_by { |elem| elem[1] }.to_h
     end
@@ -310,9 +291,7 @@ module Silicium
     def sum_labels(graph)
       labels = 0
       graph.vertices.keys.each do |from|
-        graph.adjacted_with(from).each do |to|
-          labels += graph.get_edge_label(from, to)
-        end
+        graph.adjacted_with(from).each { |to| labels += graph.get_edge_label(from, to) }
       end
       labels / 2
     end
@@ -330,9 +309,7 @@ module Silicium
       paths = {}
       initialize_labels_and_paths(graph, labels,paths,starting_vertex)
       while unvisited_vertices.size > 0
-        unvisited_vertices.sort do |a, b|
-          compare_labels a, b, labels
-        end
+        unvisited_vertices.sort { |a, b| compare_labels(a, b, labels) }
         vertex = unvisited_vertices.first
         vertex[1].each do |adj|
           new_label = labels[vertex[0]] + graph.get_edge_label(vertex[0], adj)
@@ -357,7 +334,7 @@ module Silicium
       labels[starting_vertex] = 0
     end
 
-    def compare_labels a, b, labels
+    def compare_labels(a, b, labels)
       return -1 if labels[b[0]] == -1
       return 1 if labels[a[0]] == -1
       return labels[a[0]] <=> labels[b[0]]

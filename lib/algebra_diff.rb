@@ -7,7 +7,7 @@ module Silicium
       ##
       # +differentiate(str)+ differentiates given string
       def differentiate(str)
-        return dif_2(str)
+        dif_2(str)
       end
 
       ##
@@ -17,7 +17,7 @@ module Silicium
         while(str[i] != ch) && (i != str.length)
           i+=1
         end
-        return i
+        i
       end
 
       ##
@@ -28,12 +28,10 @@ module Silicium
         stop = true
         while i != str.length && stop
           stop, kind_of_a_stack = find_closing_bracket_inner(str,i,kind_of_a_stack)
-          if !stop
-            return i
-          end
+          return i if !stop
           i+=1
         end
-        return i
+        i
       end
 
       def find_closing_bracket_inner(str,i,kind_of_a_stack)
@@ -41,11 +39,9 @@ module Silicium
           kind_of_a_stack += 1
         elsif str[i] ==  ')'
           kind_of_a_stack -= 1
-          if kind_of_a_stack == 0
-            return [false, kind_of_a_stack]
-          end
+          return [false, kind_of_a_stack] if kind_of_a_stack == 0
         end
-        return [true, kind_of_a_stack]
+        [true, kind_of_a_stack]
       end
 
       ##
@@ -57,7 +53,7 @@ module Silicium
         end
         str = str[0,ind] + '#' + ind_hash.to_s + str[ind2+1,str.length-ind2-1]
         ind_hash += 1
-        return [str, var_hash, ind_hash, ind]
+        [str, var_hash, ind_hash, ind]
       end
 
       ##
@@ -72,35 +68,31 @@ module Silicium
           end
           ind = first_char_from(str, '(', 0)
         end
-        return [str, var_hash]
+        [str, var_hash]
       end
 
       ##
       # +fill_variables(str)+
       def fill_variables(str)
-        var_hash = Hash.new
+        var_hash = {}
         ind_hash = 0
         if (str.include?('('))
           ind = first_char_from(str, '(', 0)
           str,var_hash = fill_variables_loop(str,var_hash,ind_hash,ind)
         end
-        return [str, var_hash]
+        [str, var_hash]
       end
 
       ##
       # +extract_variables(str,var_hash)+
       def extract_variables(str,var_hash)
         ind = str[/#(\d+)/,1]
-        if (ind.nil?)
-          return str
-        end
+        return str if (ind.nil?)
         cur_var = var_hash[ind.to_i]
         while(true)
           str.sub!(/#(\d+)/,cur_var)
           ind = str[/#(\d+)/,1]
-          if (ind.nil?)
-            return str
-          end
+          return str if (ind.nil?)
           cur_var = var_hash[ind.to_i]
         end
       end
@@ -132,7 +124,7 @@ module Silicium
           a_char = a[a.length - 1]
           a = eval(a[0,a.length-1]).to_s
         end
-        return [a, a_char]
+        [a, a_char]
       end
 
       ##
@@ -145,7 +137,7 @@ module Silicium
           c_char = c[0]
           c = eval(c[1,c.length-1]).to_s
         end
-        return [c, c_char]
+        [c, c_char]
       end
 
       ##
@@ -157,9 +149,7 @@ module Silicium
           return eval(a+a_char+"1"+c_char+c).to_s
         else
           new_b = '**' + (b[2,b.length - 2].to_i - 1).to_s
-          if new_b == '**1'
-            new_b = ''
-          end
+          new_b = '' if new_b == '**1'
           return eval(a+a_char+b[2,b.length - 2]+c_char+c).to_s + '*x' + new_b
         end
       end
@@ -227,7 +217,7 @@ module Silicium
           cur_el_1 = str[reg,1]
           cur_el_2 = str[reg,2]
         end
-        return str
+        str
       end
 
       ##
@@ -239,7 +229,7 @@ module Silicium
           str.sub!(reg1,cur_el)
           cur_el = str[reg1,1]
         end
-        return str
+        str
       end
 
       ##
@@ -261,7 +251,6 @@ module Silicium
           end
         end
         str = run_difs(str)
-        return str
       end
 
     end
