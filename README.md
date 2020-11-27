@@ -329,6 +329,39 @@ s.throw   # getting random score (from 3 to 18)
 
 s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
 ```
+
+### Machine Learnign Algorithms
+
+### Backpropogation 
+When you need to compute a gradient value for a really huge expression, that a good practise to use a backpropogation algorithm to enhance the speed and quality of work. First, you needed a construct a Computational Graph, what makes our works more effective than it will be by using a  common Gradient Decent
+```ruby
+my_graph = Comp_Graph.new("(x*W1+b1)*W2+b2")
+```
+Than, we initialize our parametrs:
+```ruby
+    variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0]
+```
+Finally, we can start to start training! The values will pass forward throw the graph and return the result of results of neural net(in theory)
+```ruby
+    computed_value = my_graph.ForwardPass(variables)
+```
+
+When it's done, we can use it to compute the curreny of result by loss function(at this example it's just a half of difference between values) and than start to move back, but now we compute the gradient value
+```ruby
+    trivial_loss = (expected_value - computed_value) * 0.5
+    grad =  my_graph.BackwardPass(trivial_loss)
+```
+
+That's it! The last thing to do is apply gradient value to inserted parametrs, depended on value of learning speed(learn_rate)
+```ruby
+    learn_rate = 0.01
+    variables["W1"] += grad["W1"]*learn_rate
+    variables["W2"] += grad["W2"]*learn_rate
+    variables["b1"] += grad["b1"]*learn_rate
+    variables["b2"] += grad["b2"]*learn_rate
+```
+After a lot of repeating we will move closer to the perfect values of hyperparametrs in the net
+
 ### Optimization
 
 #### Karatsuba multiplication
@@ -338,6 +371,7 @@ The Karatsuba algorithm is a fast multiplication algorithm. It reduces the multi
 ```ruby
    karatsuba(15, 15) #returns 225
 ```
+
 
 ## Development
 
