@@ -1,4 +1,4 @@
-require 'test/test_helper'
+require 'test_helper'
 require 'method_gauss_and_kramer'
 
 class TestKramer < Minitest::Test
