@@ -148,6 +148,92 @@ using the middle rectangle method:
 using the trapezoid method: 
 `NumericalIntegration.trapezoid(4, 5) {  |x| 1 / x  }`
 
+=======
+###Geometry 
+Module with geometry functions and geometry structures
+How to initialize the line with two points:
+```
+ line = Line2dCanon.new(point1, point2)
+```
+How to initialize the line with coefficients:
+```
+line.initialize_with_coefficients(a, b, c)
+```
+How to check if two lines are parallel:
+```
+line1.parallel?(line2)
+```
+How to check if two lines are intersecting:
+```
+line1.intersecting?(line2)
+```
+How to check if two lines are perpendicular:
+```
+line1.perpendicular?(line2)
+```
+How to get the distance between two parallel lines:
+```
+line1.distance_between_parallel_lines(line2)
+```
+How to check if the point is on segment:
+```
+line.check_point_on_segment(point)
+```
+How to check if array of points is on the same line:
+```
+line.array_of_points_is_on_line(array_of_points)
+```
+How to get a distance from point to line:
+```
+distance_point_to_line(point)
+```
+How to get a distance from point to plane:
+```
+plane.distance_point_to_plane(point)
+```
+How to check if the point is on plane:
+```
+plane.point_is_on_plane?(point)
+```
+
+How to initialize a plane with 3 points:
+```
+plane = Plane3d.new(point1, point2, point3)
+```
+How to initialize a plane with coefficients:
+```
+plane.initialize_with_coefficients(a,b,c,d)
+```
+How to get the distance between parallel planes:
+```
+plane1.distance_between_parallel_planes(plane2)
+```
+How to check if two planes are perpendicular:
+```
+perpendicular?(other_plane)
+```
+How to check if two planes are intersecting in 3-dimensional space:
+```
+plane1.intersecting?(plane2)
+```
+How to check if two planes are parallel in 3-dimensional space:
+```
+plane1.parallel?(plane2)
+```
+How to get a normal vector:
+```
+norm = vector_a.norm_vector(point2, point3)
+```
+How to check if two vectors are collinear:
+
+```
+  vector1.collinear?(vector2)
+```
+How to get a vector multiplication of two vectors:
+```
+  vector1.vector_multiplication(vector2)
+```
+
 ### Theory of probability
 
 #### Combinatorics
