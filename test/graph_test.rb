@@ -17,6 +17,19 @@ class GraphTest < SiliciumTest
   # {v: 'two', i: [0, 'two']}])
   # end
 
+  def test_bfs
+    adj_matrix = [
+        [0, 0, 1, 0, 1, 0],
+        [0, 0, 1, 0, 0, 1],
+        [0, 0, 0, 1, 0, 0],
+        [0, 0, 0, 0, 1, 1],
+        [0, 0, 1, 0, 1, 0],
+        [0, 1, 0, 0, 0, 0]
+    ]
+    assert_equal(bfs(adj_matrix, 0, 4), true)
+  end
+
+
   def test_default_constructor
     g = OrientedGraph.new
     assert_equal(g.vertex_number, 0)
