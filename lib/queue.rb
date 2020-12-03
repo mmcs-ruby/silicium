@@ -53,24 +53,24 @@ class PQueue
 
   # добавление сразу нескольких элементов
   # параметр elems должен удовлетворять to_a(~массив)
-  def concat(elems)
-   if empty?
-     if elems.kind_of?(PQueue)
-      initialize_copy(elems)
-    else
-      replace(elems)
-     end
-   else
-     if elems.kind_of?(PQueue)
-      @que.concat(elems.que)
-      sort!
-    else
-      @que.concat(elems.to_a)
-      sort!
-    end
-  end
-  return self
-  end
+  #def concat(elems)
+  #  if empty?
+  #    if elems.kind_of?(PQueue)
+  #     initialize_copy(elems)
+  #   else
+  #     replace(elems)
+  #    end
+  #  else
+  #    if elems.kind_of?(PQueue)
+  #     @que.concat(elems.que)
+  #     sort!
+  #   else
+  #     @que.concat(elems.to_a)
+  #     sort!
+  #   end
+  # end
+  # return self
+  # end
 
   # возвращает первые n элементов очереди с головы, очередь преобразовывается
   def take(n=@size)
