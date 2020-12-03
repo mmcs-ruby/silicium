@@ -49,18 +49,18 @@ class PQueueTest < Minitest::Test
     assert_equal(ARY_TEST.size+1, q.size)
   end
 
-  #def test_concat
-  #  q = PQueue.new(ARY_TEST)
-  #
-  # ret = q.concat(ARY_TEST_2)
-  # assert_equal(q, ret)
-  # assert_equal(ARY_TEST.size+ARY_TEST_2.size, q.size)
-  #
-  # q = PQueue.new(ARY_TEST)
-  #  r = PQueue.new(ARY_TEST_2)
-  # q.concat(r)
-  # assert_equal(ARY_TEST.size + ARY_TEST_2.size, q.size)
-  #end
+  def test_concat
+   q = PQueue.new(ARY_TEST)
+
+  ret = q.concat(ARY_TEST_2)
+  assert_equal(q, ret)
+  assert_equal(ARY_TEST.size+ARY_TEST_2.size, q.size)
+
+  q = PQueue.new(ARY_TEST)
+   r = PQueue.new(ARY_TEST_2)
+  q.concat(r)
+  assert_equal(ARY_TEST.size + ARY_TEST_2.size, q.size)
+  end
 
   def test_clear
     q = PQueue.new(ARY_TEST).clear
@@ -76,11 +76,6 @@ class PQueueTest < Minitest::Test
     q = PQueue.new(ARY_TEST)
     q.replace(PQueue.new(ARY_TEST_2))
     assert_equal(ARY_TEST_2.size, q.size)
-  end
-
-  def test_inspect
-    assert_equal("<PQueue: size=#{ARY_TEST.size}, top=#{ARY_TEST.max}>",
-                 PQueue.new(ARY_TEST).inspect)
   end
 
   def test_to_a
@@ -139,10 +134,6 @@ class PQueueTest < Minitest::Test
     q.pop
     assert_equal(ARY_TEST, ary)
 
-    q = PQueue.new(ARY_TEST)
-    r = q.dup
-    q.pop
-    #    assert_not_equal(q, r)
   end
 
   def test_reheap
