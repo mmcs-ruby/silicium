@@ -47,7 +47,7 @@ Same goes for the case with unoriented graph (note that missing edges will be ad
 ```ruby
     g = UnorientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: [0, 'two']},
-                           {v: 'two', i: [0, 'two']}])``
+                           {v: 'two', i: [0, 'two']}])
 ```
 
 #### Graph Methods:
@@ -192,6 +192,22 @@ using the middle rectangle method:
 
 using the trapezoid method: 
 `NumericalIntegration.trapezoid(4, 5) {  |x| 1 / x  }`
+
+### Polynomial interpolation 
+Library `polynomial_interpolation` 
+includes methods for two types of polynomial such 
+Lagrange polynomial and Newton polynomial
+
+Each function accepts 3 parameters, such as 
+array of data points, array returned by function
+and the node to interpolate. 
+
+using the lagrange_polynomials method: 
+`lagrange_polynomials([-1, 0, 1, 4], [-7, -1, 1, 43], 2 )`
+
+using the newton_polynomials method: 
+`newton_polynomials([-1, 0, 1, 2], [-9, -4, 11, 78],  0.1 )`
+
 
 ### Theory of probability
 

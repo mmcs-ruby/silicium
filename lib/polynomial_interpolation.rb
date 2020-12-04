@@ -8,7 +8,23 @@ module Silicium
       ##
       # x : array of data points
       # y : array returned by function
-      # z : interpolation point
+      # z : the node to interpolate
+      def self.lagrange_polynomials(x , y , z )
+        check_variables(x, y, z)
+        result = 0.0
+        y.each_index do |j|
+          p1 = 1.0
+          p2 = 1.0
+          x.each_index do |i|
+            if i != j
+              p1 = p1 * (z - x[i])
+              p2 = p2 * (x[j] - x[i])
+            end
+          end
+          result = result + y[j] * p1 / p2
+        end
+        result
+      end
       def self.lagrange_polynomials(x , y , z )
         check_variables(x, y, z)
         result = 0.0
@@ -28,8 +44,8 @@ module Silicium
 
 
       # x : array of data points
-      # y : array of f(x)
-      # r : the node to interpolate at
+      # y : array returned by function
+      # r : the node to interpolate
       def self.newton_polynomials(x, y, r)
         check_variables(x, y, r)
         a = Array[]
