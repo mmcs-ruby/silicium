@@ -8,6 +8,21 @@ class Test < Minitest::Test
 	include Combinatorics
 	include Silicium::Plotter
 	include Dice
+	include BernoulliTrials
+
+	def test_bernoulli_formula_and_laplace_theorem
+		assert_in_delta bernoulli_formula_and_laplace_theorem(5,3,100, 93), 0.0394, 0.0001
+		assert_in_delta bernoulli_formula_and_laplace_theorem(6,4, 0.2), 0.0153, 0.0001
+		assert_in_delta bernoulli_formula_and_laplace_theorem(400, 280, 0.75), 0.0033, 0.0001
+		assert_in_delta bernoulli_formula_and_laplace_theorem(100, 13, 100, 15), 0.095, 0.001
+	end
+
+	def test_gaussian_function
+		assert_in_delta gaussian_function(-0.23), 0.3885, 0.0001
+		assert_in_delta gaussian_function(1.82), 0.0761, 0.0001
+		assert_in_delta gaussian_function(0), 0.3989, 0.0001
+		assert_in_delta gaussian_function(3.99), 0.0001, 0.0001
+	end
 
 	def test_factorial
 		assert_equal factorial(10), 3628800

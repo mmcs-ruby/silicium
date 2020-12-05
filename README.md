@@ -47,7 +47,7 @@ Same goes for the case with unoriented graph (note that missing edges will be ad
 ```ruby
     g = UnorientedGraph.new([{v: 0,     i: [:one]},
                            {v: :one,  i: [0, 'two']},
-                           {v: 'two', i: [0, 'two']}])``
+                           {v: 'two', i: [0, 'two']}])
 ```
 
 #### Graph Methods:
@@ -261,6 +261,50 @@ s.percentage # {3=>0.004629629629629629, 4=>0.013888888888888888, 5=>0.027777777
 s.throw   # getting random score (from 3 to 18)
 
 s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
+```
+## Module BernoulliTrials
+
+Module allows find the probability of an event occurring a certain number of times for any number of independent trials.
+
+```
+n - count of independent trials
+k - count of successful events
+p - probability of succesful event (k / n)
+q - probability of bad event (1 - p)
+
+We have either the probability of event (p) or datas to calculate it (p = suc / all)
+
+For small n probability is calculated by the Bernoulli formula C(n,k) * (p ^ k) * (q ^ (n-k))
+For big n probability is calsulated by the Laplace theorem f((k - n*p)/sqrt(n*p*q)) / sqrt(n*p*q) 
+Auxiliary Gaussian function F(x) = exp(-(x^2/2)) / sqrt(2*PI), F(-x) = F(x)
+
+Laplace theorem give satisfactory approximation for n*p*q > 9
+```
+
+Example
+
+```
+--- Number 1 ---
+Probability of making a detail of excellent quality is 0.75.
+Probability that out of 400 parts, 280 will be of high quality.
+
+n = 400, k = 280, p = 0.75, q = 0.25
+
+n * p * q > 9, that Laplace theorem
+
+F((280-300) / sqrt(75)) = F(-2.31) = F(2.31) = F(exp(-(2.31^2)/2) / sqrt(2*3.14)) = 0.0277
+P = 0.0277 / sqrt(75) = 0.0032
+
+--- Number 2 ---
+Of 100 batteries, 7 breaks down during a year of storage.
+Choose 5 batteries at random. 
+Probability that among them 3 are serviceable.
+
+n = 5, k = 3, all = 100, suc = 7
+p = 7 / 100 = 0.07, q = 0.93
+
+n * p * q < 9, that Bernoulli formula
+P = C(5,3) * (0.93^3) * (0.07^2) = 0.0394
 ```
 
 ## Development

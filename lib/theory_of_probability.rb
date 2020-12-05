@@ -222,3 +222,30 @@ module Dice
 
   end
 end
+
+module BernoulliTrials
+
+  include Combinatorics
+  include Math
+
+  def bernoulli_formula_and_laplace_theorem(n, k, all, suc = -1)
+    if suc != -1
+      p = suc.fdiv all
+    else
+      p = all
+    end
+    q = 1 - p
+    if n * p * q < 9         # Laplace theorem give satisfactory approximation for n*p*q > 9, else Bernoulli formula
+      combination(n, k) * (p ** k) * (q ** (n - k))          # Bernoulli formula C(n,k) * (p ^ k) * (q ^ (n-k))
+    else
+      gaussian_function((k - n * p).fdiv sqrt(n * p * q)).fdiv(sqrt(n * p * q))        # Laplace theorem φ((k - n*p)/sqrt(n*p*q)) / sqrt(n*p*q)
+    end
+  end
+
+  def gaussian_function(x)
+    if x < 0           # φ(-x) = φ(x)
+      x * -1
+    end
+    a = exp(-(x ** 2) / 2).fdiv sqrt(2 * PI)      # φ(x) = exp(-(x^2/2)) / sqrt(2*π)
+  end
+end
