@@ -260,7 +260,23 @@ using the middle rectangle method:
 using the trapezoid method: 
 `NumericalIntegration.trapezoid(4, 5) {  |x| 1 / x  }`
 
-=======
+
+### Polynomial interpolation 
+Library `polynomial_interpolation` 
+includes methods for two types of polynomial such 
+Lagrange polynomial and Newton polynomial
+
+Each function accepts 3 parameters, such as 
+array of data points, array returned by function
+and the node to interpolate. 
+
+using the lagrange_polynomials method: 
+`lagrange_polynomials([-1, 0, 1, 4], [-7, -1, 1, 43], 2 )`
+
+using the newton_polynomials method: 
+`newton_polynomials([-1, 0, 1, 2], [-9, -4, 11, 78],  0.1 )`
+
+
 ###Geometry 
 Module with geometry functions and geometry structures
 How to initialize the line with two points:
@@ -345,6 +361,7 @@ How to get a vector multiplication of two vectors:
 ```
   vector1.vector_multiplication(vector2)
 ```
+
 
 ### Theory of probability
 
