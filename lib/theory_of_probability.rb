@@ -36,9 +36,7 @@ module Combinatorics
 
   def fact(n, k)
     res = [1,1,1]
-    if n > 1
-      fact_n_greater_1(n, k, res)
-    end
+    fact_n_greater_1(n, k, res) if n > 1
     res
   end
 
@@ -52,12 +50,8 @@ module Combinatorics
   end
 
   def determining_i(arr, res)
-    if arr[0] == arr[1] - arr[2]
-      res[1] = arr[3]
-    end
-    if arr[0] == arr[2]
-      res[2] = arr[3]
-    end
+    res[1] = arr[3] if arr[0] == arr[1] - arr[2]
+    res[2] = arr[3] if arr[0] == arr[2]
   end
 
 end
@@ -169,12 +163,10 @@ module Dice
       m = 0
       sum = 0
       q = Queue.new
-      h1 = Hash.new
+      h1 = {}
       while m < arr2.size
         sum = m_0([sum, n, m], q, h, arr1)
-        if q.size > arr2.size or m > 0
-          sum -= q.pop
-        end
+        sum -= q.pop if q.size > arr2.size || m > 0
         h1[arr1[n] + arr2[m]] = sum
         arr3 << (arr1[n] + arr2[m])
         nmarr = n_less_arr1_size(n, arr1, m)
@@ -202,23 +194,48 @@ module Dice
     end
 
     def count_chance_sum
-      h = Hash.new
-      @pons[0].sides.each do |item|
-        h[item] = 1
-      end
+      h = {}
+      @pons[0].sides.each { |item| h[item] = 1 }
       arr3 = @pons[0].sides
       for i in 1..@pons.size - 1
         arr1 = arr3
-        arr3 = Array.new
+        arr3 = []
         arr2 = @pons[i].sides
         h1 = count_chance_sum_chances_step(arr1, arr2, arr3, h)
         h = h1
       end
-      res = Hash.new
+      res = {}
       fchance = @pons.inject(1) { |mult, item| mult * item.csides }
       arr3.each {|item| res[item] = Float(h[item]) / fchance}
       res
     end
 
+  end
+end
+
+module BernoulliTrials
+
+  include Combinatorics
+  include Math
+
+  def bernoulli_formula_and_laplace_theorem(n, k, all, suc = -1)
+    if suc != -1
+      p = suc.fdiv all
+    else
+      p = all
+    end
+    q = 1 - p
+    if n * p * q < 9         # Laplace theorem give satisfactory approximation for n*p*q > 9, else Bernoulli formula
+      combination(n, k) * (p ** k) * (q ** (n - k))          # Bernoulli formula C(n,k) * (p ^ k) * (q ^ (n-k))
+    else
+      gaussian_function((k - n * p).fdiv sqrt(n * p * q)).fdiv(sqrt(n * p * q))        # Laplace theorem φ((k - n*p)/sqrt(n*p*q)) / sqrt(n*p*q)
+    end
+  end
+
+  def gaussian_function(x)
+    if x < 0           # φ(-x) = φ(x)
+      x * -1
+    end
+    a = exp(-(x ** 2) / 2).fdiv sqrt(2 * PI)      # φ(x) = exp(-(x^2/2)) / sqrt(2*π)
   end
 end

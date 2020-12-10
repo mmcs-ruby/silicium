@@ -82,15 +82,15 @@ module Silicium
       #
       # @return Tuple <code>[order, component]</code> of params changed during current step of DFS.
       def scc_dfs_second(v, component, order, transposed)
-      order.delete v
-      component << v
-      transposed[v].each do |adj|
-        if order.include? adj
-          order,component = scc_dfs_second adj, component, order, transposed
+        order.delete v
+        component << v
+        transposed[v].each do |adj|
+          if order.include? adj
+            order, component = scc_dfs_second adj, component, order, transposed
+          end
         end
+        [order, component]
       end
-      [order,component]
-    end
     end
   end
 
