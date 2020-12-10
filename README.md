@@ -550,6 +550,50 @@ The Karatsuba algorithm is a fast multiplication algorithm. It reduces the multi
 ```
 
 
+### Priority Queue
+
+#### Initialization
+```
+q = PQueue.new()
+q = PQueue.new([2,4,5])  # q=2,4,5
+```
+#### Add elements
+```
+q << 1                   # q=1,2,4,5
+q.push(3)                # q=1,2,3,4,5
+```
+#### Remove elements
+```
+q.pop()                  # remove maximum(head) element
+q.each_pop()             # remove all elements
+```
+#### Print queue with \n
+```
+puts q.to_a              # to_a = queue to array
+```
+#### Minimum(tail) element of queue
+```
+q.bottom
+```
+#### Maximum(head) element of queue
+```
+q.top
+```
+#### Replace element
+```
+q.replace([1,3,5,7])     # replace all element with [1,3,5,7]
+```
+#### Copy of queue
+```
+ary = [1,2,3].dup
+q = PQueue.new(ary)      # q=1,2,3
+```
+#### Is this item in the queue?
+```
+q.include?(8)            # false
+q.include?(1)            # true
+```
+
 
 ## Development
 
