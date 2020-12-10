@@ -80,9 +80,7 @@ module Silicium
         x_end = left_upper.x + width - 1
         y_end = left_upper.y + height - 1
         (left_upper.x..x_end).each do |i|
-          (left_upper.y..y_end).each do |j|
-            @image[i, j] = color
-          end
+          (left_upper.y..y_end).each { |j| @image[i, j] = color }
         end
       end
 
@@ -212,7 +210,6 @@ module Silicium
       a *= mul
       b *= mul
       return [a, -(get :width) * 1.1].max / mul, [b, (get :width) * 1.1].min / mul
-
     end
 
     ##

@@ -50,6 +50,7 @@ Same goes for the case with unoriented graph (note that missing edges will be ad
                            {v: 'two', i: [0, 'two']}])
 ```
 
+=======
 #### Graph Methods:
 * Add vertex to your graph:
 ```ruby
@@ -134,6 +135,72 @@ Same goes for the case with unoriented graph (note that missing edges will be ad
 ```ruby
      g.find_strongly_connected_components
 ```
+* Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
+
+
+* Topological sort
+
+#### Description
+Topological sorting for Directed Acyclic Graph (DAG) is a linear ordering of vertices such that for every directed edge *u v*, vertex *u* comes before *v* in the ordering.
+
+#### How to use
+For you to have a topologically sorted graph, you need to create an object of the class ```Graph```:
+``` ruby
+    graph = Graph.new
+```
+Then you need to add vertices to this graph using the class ```Node```:
+``` ruby
+    graph.nodes << (node1 = Node.new(1))
+    graph.nodes << (node2 = Node.new(2))
+```
+Due to the fact that only a directed graph can be sorted topologically, it is necessary to add an edge:
+``` ruby
+    graph.add_edge(node1, node2)
+```
+And finally you can type:
+``` ruby
+    TopologicalSortClass.new(graph)
+```
+
+#### Result
+The result for ```TopologicalSortClass.new(graph).post_order.map(&:to_s)``` is [2, 1]
+
+
+    Algorithm of Dijkstra: dijkstra_algorythm!(graph, starting_vertex)
+    
+    Algorithm of Kruskal: kruskal_mst(graph)
+    
+### GraphVisualiser
+
+#### Set window size
+	
+```ruby
+change_window_size(1000, 600)
+```
+
+#### Set graph
+	
+```ruby
+graph = OrientedGraph.new([{v: :one, i:  [:one, :two, :four]},
+                           {v: :two, i:[ :one, :two]},
+                           {v: :five, i:[ :one,:three, :four]},
+                           {v: :four, i:[ :one, :four]},
+                           {v: :three, i:[ :one, :two]}])
+set_graph(graph)
+```
+
+#### Show your graph
+	
+```ruby
+show_window
+```
+
+#### Result
+
+![Alt-текст](./oriented_graph.png "Result")
+
+
+
 ### Plotter
 
 #### Determine your function
@@ -192,6 +259,92 @@ using the middle rectangle method:
 
 using the trapezoid method: 
 `NumericalIntegration.trapezoid(4, 5) {  |x| 1 / x  }`
+
+=======
+###Geometry 
+Module with geometry functions and geometry structures
+How to initialize the line with two points:
+```
+ line = Line2dCanon.new(point1, point2)
+```
+How to initialize the line with coefficients:
+```
+line.initialize_with_coefficients(a, b, c)
+```
+How to check if two lines are parallel:
+```
+line1.parallel?(line2)
+```
+How to check if two lines are intersecting:
+```
+line1.intersecting?(line2)
+```
+How to check if two lines are perpendicular:
+```
+line1.perpendicular?(line2)
+```
+How to get the distance between two parallel lines:
+```
+line1.distance_between_parallel_lines(line2)
+```
+How to check if the point is on segment:
+```
+line.check_point_on_segment(point)
+```
+How to check if array of points is on the same line:
+```
+line.array_of_points_is_on_line(array_of_points)
+```
+How to get a distance from point to line:
+```
+distance_point_to_line(point)
+```
+How to get a distance from point to plane:
+```
+plane.distance_point_to_plane(point)
+```
+How to check if the point is on plane:
+```
+plane.point_is_on_plane?(point)
+```
+
+How to initialize a plane with 3 points:
+```
+plane = Plane3d.new(point1, point2, point3)
+```
+How to initialize a plane with coefficients:
+```
+plane.initialize_with_coefficients(a,b,c,d)
+```
+How to get the distance between parallel planes:
+```
+plane1.distance_between_parallel_planes(plane2)
+```
+How to check if two planes are perpendicular:
+```
+perpendicular?(other_plane)
+```
+How to check if two planes are intersecting in 3-dimensional space:
+```
+plane1.intersecting?(plane2)
+```
+How to check if two planes are parallel in 3-dimensional space:
+```
+plane1.parallel?(plane2)
+```
+How to get a normal vector:
+```
+norm = vector_a.norm_vector(point2, point3)
+```
+How to check if two vectors are collinear:
+
+```
+  vector1.collinear?(vector2)
+```
+How to get a vector multiplication of two vectors:
+```
+  vector1.vector_multiplication(vector2)
+```
 
 ### Theory of probability
 
@@ -307,6 +460,80 @@ n * p * q < 9, that Bernoulli formula
 P = C(5,3) * (0.93^3) * (0.07^2) = 0.0394
 ```
 
+
+### Matrix
+
+#### Method Gauss and Kramer
+
+We have added Two methods for solving a system of linear equations: Gauss and Kramer.
+
+The Gauss method is implemented as a function, and the Kramer rule is implemented as a method for the Matrix class.
+
+To use the Gauss method, you need to call it with a single argument-the matrix whose roots you want to find.
+
+##### Example 
+```ruby
+gauss_method_sol(Matrix[[1,2,3,4,5],[0,1,-1,2,3],[0,1,-1,2,3],[0,2,-2,4,6]].row_vectors
+```
+##### Answer
+```ruby
+[-1,3,0,0]
+```
+
+To use Kramer's rule, you need to call it as a method of the Matrix class with an array argument containing the values of each expression of a system of linear equations
+##### Example 
+```ruby
+Matrix[[2, -5, 3], [4, 1, 4], [1, 2, -8]].kramer([7,21,-11]
+```
+##### Answer
+```ruby
+[3,1,2]
+```
+
+### Machine Learnign Algorithms
+
+### Backpropogation 
+When you need to compute a gradient value for a really huge expression, that a good practise to use a backpropogation algorithm to enhance the speed and quality of work. First, you needed a construct a Computational Graph, what makes our works more effective than it will be by using a  common Gradient Decent
+```ruby
+my_graph = Comp_Graph.new("(x*W1+b1)*W2+b2")
+```
+Than, we initialize our parametrs:
+```ruby
+    variables = Hash["x",1.0,"W1",1.0,"b1",1.0,"W2",1.0,"b2",1.0]
+```
+Finally, we can start to start training! The values will pass forward throw the graph and return the result of results of neural net(in theory)
+```ruby
+    computed_value = my_graph.ForwardPass(variables)
+```
+
+When it's done, we can use it to compute the curreny of result by loss function(at this example it's just a half of difference between values) and than start to move back, but now we compute the gradient value
+```ruby
+    trivial_loss = (expected_value - computed_value) * 0.5
+    grad =  my_graph.BackwardPass(trivial_loss)
+```
+
+That's it! The last thing to do is apply gradient value to inserted parametrs, depended on value of learning speed(learn_rate)
+```ruby
+    learn_rate = 0.01
+    variables["W1"] += grad["W1"]*learn_rate
+    variables["W2"] += grad["W2"]*learn_rate
+    variables["b1"] += grad["b1"]*learn_rate
+    variables["b2"] += grad["b2"]*learn_rate
+```
+After a lot of repeating we will move closer to the perfect values of hyperparametrs in the net
+
+### Optimization
+
+#### Karatsuba multiplication
+The Karatsuba algorithm is a fast multiplication algorithm. It reduces the multiplication of two n-digit numbers to at most ![formula](https://render.githubusercontent.com/render/math?math=\Theta(n^{1.58}))  single-digit multiplications in general. It is therefore faster than the traditional algorithm, which requires ![formula](https://render.githubusercontent.com/render/math?math=\Theta(n^{2})) single-digit products.
+
+##### Example:
+```ruby
+   karatsuba(15, 15) #returns 225
+```
+
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
@@ -324,3 +551,21 @@ The gem is available as open source under the terms of the [MIT License](https:/
 ## Code of Conduct
 
 Everyone interacting in the Silicium project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/silicium/blob/master/CODE_OF_CONDUCT.md).
+
+### Method Gauss–Seidel
+Use the-Gauss Seidel Method to solve a system of linear equations
+
+Members containing x are written to an array of arrays in a. Free members are written in b. Condition for ending the Seidel iteration process when the epsilon accuracy is reached.
+
+Example 
+```
+gauss_seidel(a,b,eps)
+g = gauss_seidel(([[0.13,0.22,-0.33,-0.07],[0,0.45,-0.23,0.07],[0.11,0,-0.08,0.18],[0.08,0.09,0.33,0.21]]),[-0.11,0.33,-0.85,1.7], 0.001)
+
+```
+
+Answer:
+
+```
+g = [-1,1,9,-6]
+```

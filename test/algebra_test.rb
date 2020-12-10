@@ -154,10 +154,77 @@ class AlgebraTest < Minitest::Test
     assert_equal_as_sets(['2.0*x**0', '4.0*x**6+0.0*x**5+0.0*x**4+2.0*x**3-1.0*x**2+0.0*x**1+1.0*x**0'], rez_division)
   end
 
+  def test_mine
+    div = @polynom_div.polynom_division("1*x**3-1*x**2-11*x**1-4*x**0","1*x**2+3*x**1+1*x**0")[0]
+    assert_equal("1.0*x**1-4.0*x**0", div)
+  end
+
+
+  def test_gcd_1
+    gcd = @polynom_div.polynom_gcd("1.0*x**4+0.0*x**3+0.0*x**2+0.0*x**1-1*x**0", "1.0*x**2+0.0*x**1-1*x**0")
+    assert_equal("1.0*x**2+0.0*x**1-1.0*x**0", gcd)
+  end
+
+  def test_gcd_2
+    gcd = @polynom_div.polynom_gcd("1*x**4+1*x**3-3*x**2-4*x**1-1*x**0","1*x**3+1*x**2-1*x**1-1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0",gcd)
+  end
+
+  def test_gcd_3
+    gcd = @polynom_div.polynom_gcd("1*x**3+1*x**2-1*x**1-1*x**0","1*x**4+1*x**3-3*x**2-4*x**1-1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0",gcd)
+  end
+
+  def test_gcd_4
+    gcd = @polynom_div.polynom_gcd("1*x**2+0*x**2-1*x**0","1*x**1+1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0", gcd)
+  end
+
+  def test_gcd_5
+    gcd = @polynom_div.polynom_gcd("1*x**1+1*x**0","1*x**2+0*x**2-1*x**0")
+    assert_equal("1.0*x**1+1.0*x**0", gcd)
+  end
+
+  def test_gcd_6
+    gcd = @polynom_div.polynom_gcd("2*x**5-3*x**4+0*x**3+0*x**2-5*x**1-6*x**0","2*x**5-3*x**4+0*x**3+0*x**2-5*x**1-6*x**0")
+    assert_equal("1.0*x**5-1.5*x**4+0.0*x**3+0.0*x**2-2.5*x**1-3.0*x**0", gcd)
+  end
+
+  def test_gcd_7
+    gcd = @polynom_div.polynom_gcd("2*x**6+4*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0",'1*x**3-1**x**2+0*x**1+0*x**0')
+    assert_equal("1.0*x**0",gcd)
+  end
+
+  def test_gcd_8
+    gcd = @polynom_div.polynom_gcd("-3*x**3-2*x**2-1*x**1-1*x**0",'1*x**2+0*x**1-1*x**0')
+    assert_equal("1.0*x**0",gcd)
+  end
+
+  def test_gcd_9
+    gcd = @polynom_div.polynom_gcd("1*x**4+3*x**3-1*x**2-4*x**1-3*x**0",'3*x**3+10*x**2+2*x**1-3*x**0')
+    assert_equal("1.0*x**1+3.0*x**0",gcd)
+  end
+
+  def test_gcd_10
+    gcd = @polynom_div.polynom_gcd("4*x**5-23*x**4+47*x**3-1*x**2-48*x**1-36*x**0",'4*x**3-15*x**2+5*x**1+18*x**0')
+    assert_equal("1.0*x**1-2.0*x**0",gcd)
+  end
+
+  def test_gcd_11
+    gcd = @polynom_div.polynom_gcd('4*x**3-15*x**2+5*x**1+18*x**0',"4*x**5-23*x**4+47*x**3-1*x**2-48*x**1-36*x**0")
+    assert_equal("1.0*x**1-2.0*x**0",gcd)
+  end
+
+  def test_gcd_if_this_works_then_its_amazing
+    gcd = @polynom_div.polynom_gcd("2*x**6+1*x**5-4*x**4+15*x**3+5*x**2-2*x**1-1*x**0",'2*x**4+5*x**3+0*x**2-1*x**1+0*x**0')
+    assert_equal("1.0*x**2+2.0*x**1-1.0*x**0",gcd)
+  end
+
   def test_how_work_polynom_parser_1
     rez_parsing = @polynom_div.polynom_parser('2*x**6+4*x**5+0*x**4+0*x**3-1*x**2+0*x**1+1*x**0')
-    assert_equal_as_sets([2.0, 4.0, 0.0, 0.0, 1.0, 0.0, 1.0], rez_parsing)
+    assert_equal_as_sets([2.0, 4.0, 0.0, 0.0, -1.0, 0.0, 1.0], rez_parsing)
   end
+
 
   def test_how_work_polynom_parser_2
     rez_parsing = @polynom_div.polynom_parser('1')
@@ -176,6 +243,58 @@ class AlgebraTest < Minitest::Test
 
   def test_polynom_parser_exception
     assert_raises(NameError){ polynom_parser(-3*x**3-2*x**2-x**1-1) }
+  end
+
+
+
+  def test_gauss_seidel_1
+
+    assert_equal([1,2,-1,1],gauss_seidel(([[10,-1,2,0], [-1,11,-1,3], [2,-1,10,-1], [0,3,-1,8]]), [6,25,-11,15], 0.5 ))
+  end
+
+  def test_gauss_seidel_2
+
+    assert_equal([1,1,1,1],gauss_seidel(([[20.9,1.2,2.1,0.9],[1.2,21.2,1.5,2.5],[2.1,1.5,19.8,1.3],[0.9,2.5,1.3,32.1]]),[21.70,27.46, 28.76,49.72], 0.0001))
+  end
+
+
+  def test_gauss_seidel_3
+
+    assert_equal([22,27, 29,50],gauss_seidel(([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]),[21.70,27.46, 28.76,49.72], 0.0001))
+  end
+
+  def test_gauss_seidel_4
+
+    assert_equal([15,-3,58,-15],gauss_seidel(([[0.08,-0.03,0,-0.04],[0,0.31,0.27,-0.08],[0.33,0,-0.07,0.21],[0.11,0,0.03,0.58]]),[1.2,-0.81,0.92,-0.17], 0.001)
+    )
+  end
+
+
+  def test_gauss_seidel_5
+
+    assert_equal([-1,1,9,-6],gauss_seidel(([[0.13,0.22,-0.33,-0.07],[0,0.45,-0.23,0.07],[0.11,0,-0.08,0.18],[0.08,0.09,0.33,0.21]]),[-0.11,0.33,-0.85,1.7], 0.001)
+    )
+  end
+
+
+  def test_gauss_seidel_6
+
+    assert_equal([15,-3,58,-15],gauss_seidel(([[0.08,-0.03,0,-0.04],[0,0.31,0.27,-0.08],[0.33,0,-0.07,0.21],[0.11,0,0.03,0.58]]),[1.2,-0.81,0.92,-0.17], 0.001)
+    )
+  end
+
+
+  def test_gauss_seidel_7
+
+    assert_equal([-5,-14,-74,-262],gauss_seidel(([[0.23,-0.04,0.21,-0.18],[0.45,-0.23,0.06,0],[0.26,0.34,-0.11,0],[0.05,-0.26,0.34,-0.12]]),[-1.24,0.88,-0.62,1.17], 0.001)
+    )
+  end
+
+
+  def test_gauss_seidel_8
+
+    assert_equal([0,5,-7,-22],gauss_seidel(([[0.52,0.08,0,0.13],[0.07,-0.38,-0.05,0.41],[0.04,0.42,0.11,-0.07],[0.17,0.18,-0.13,0.19]]),[0.22,-1.8,1.3,-0.33], 0.001)
+    )
   end
 
 end

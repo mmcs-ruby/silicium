@@ -53,9 +53,8 @@ module Silicium
     def polycop(str)
       @letter_var = nil
       parsed = str.split(/[-+]/)
-      parsed.each do |term|
-        return false unless valid_term?(term)
-      end
+      parsed.each { |term| return false unless valid_term?(term) }
+
       true
     end
 
@@ -126,9 +125,7 @@ module Silicium
         tokens = split_by_op(str)
         cf = Array.new(0.0)
         deg = 0
-        tokens.each do |term|
-          deg = process_term(term, cf, deg)
-        end
+        tokens.each { |term| deg = process_term(term, cf, deg) }
         insert_zeroes(cf, deg) unless deg.zero?
         cf.reverse
       end
@@ -148,9 +145,7 @@ module Silicium
 
       def split_by_neg(pos_tokens)
         res = []
-        pos_tokens.each do |token|
-          res.concat(keep_split(token, '-'))
-        end
+        pos_tokens.each { |token| res.concat(keep_split(token, '-')) }
         res
       end
 
@@ -222,7 +217,7 @@ module Silicium
             edge_neg = x
           end
         end
-        return [edge_pos, edge_neg]
+        [edge_pos, edge_neg]
       end
 
 ##
@@ -234,23 +229,19 @@ module Silicium
         major = find_major(level, cf_dif[level])
         cur_root_count[level] = 0
         # main loop
-        (0..cur_root_count[level - 1]).each do |i|
-          step_up_loop([i, major, level, root_dif, cf_dif, cur_root_count])
-        end
+        (0..cur_root_count[level - 1]).each { |i| step_up_loop([i, major, level, root_dif, cf_dif, cur_root_count]) }
       end
 
       def step_up_loop(arr_pack)
         i, major, level, root_dif, cf_dif, cur_root_count = arr_pack
         edge_left, left_val, sign_left = form_left([i, major, level, root_dif, cf_dif])
 
-        if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
-          return
-        end
+        return if hit_root([level, edge_left, left_val, root_dif, cur_root_count])
+
         edge_right, right_val, sigh_right = form_right([i, major, level, root_dif, cf_dif, cur_root_count])
 
-        if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
-          return
-        end
+        return if hit_root([level, edge_right, right_val, root_dif, cur_root_count])
+
         return if sigh_right == sign_left
         edge_neg, edge_pos = sign_left.negative? ? [edge_left, edge_right] : [edge_right, edge_left]
         root_dif[level][cur_root_count[level]] = binary_root_finder(level, edge_neg, edge_pos, cf_dif[level])
@@ -377,9 +368,7 @@ module Silicium
       def coef_to_str(coef)
         n = coef.length - 1
         s = ''
-        (0..n).each do |i|
-          s += coef_to_str_inner(coef, i, s) unless coef[i].zero?
-        end
+        (0..n).each { |i| s += coef_to_str_inner(coef, i, s) unless coef[i].zero? }
         s
       end
 
@@ -394,6 +383,70 @@ module Silicium
           ''
         end
       end
+
+
+##Gauss–Seidel method is an iterative method used to solve a system of linear equations
+      def gauss_seidel(a,b,eps)
+        n = a.length
+        x = Array.new(n,0)
+
+        @s1 = 0.0
+        @s2 = 0.0
+        @s3 = 0.0
+
+        converge = false
+        until converge
+
+          x_new = x
+          (0...n).each do |i|
+            helper_helper_1(i,a,x_new)
+            helper_helper_2(i,n,a,x)
+
+            x_new[i] = (b[i] - @s1 - @s2) / a[i][i]
+          end
+
+          extra_helper(n,x_new,x)
+
+          converge = Math::sqrt(@s3) <= eps ? true : false
+          x = x_new
+
+        end
+        round_helper(n,x)
+
+        x
+      end
+
+
+      def helper_helper_1(i,a,x_new)
+
+        (0..i).each do |j|
+          @s1 += a[i][j] * x_new[j]
+        end
+      end
+
+      def helper_helper_2(i,n,a,x)
+        (i+1...n).each do |j|
+          @s2 += a[i][j] * x[j]
+        end
+
+      end
+
+      def extra_helper (n,x_new,x)
+        (0...n).each do |i|
+
+          @s3 += x_new[i] - x[i]
+          @s3 = @s3 ** 2
+        end
+        @s3
+      end
+
+      def round_helper (n,x)
+        (0...n).each do |i|
+          x[i] = x[i].round
+        end
+        x
+      end
+      
     end
   end
 end
