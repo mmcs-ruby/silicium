@@ -24,6 +24,10 @@ class Test < Minitest::Test
 		assert_in_delta gaussian_function(3.99), 0.0001, 0.0001
 	end
 
+	def test_gcd
+		assert_equal gcd(20,6), 	 2
+	end
+
 	def test_factorial
 		assert_equal factorial(10), 3628800
 	end
