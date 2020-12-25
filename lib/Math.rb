@@ -17,36 +17,31 @@ public def swap(a,b)
   a=b
   b=temp
 end
-#алгоритм Хоара - быстрая сортировка
 def quick_sort(a, first, last)
-  i=first
-  j=last
-  x=a[(first+last)/2]
-  while (i<=j)
-    while (a[i] < x)
-      i+=1
-    end
-    while (a[j] > x)
-      j-=1
-    end
-    if(i <= j)
-      if (a[i] > a[j])
-        b=a[j]
-        a[j]=a[i]
-        a[i]=b
-      end
-      i+=1
-      j-=1
-    end
+  if first < last
+    p = partition(a, first, last)
+    quick_sort(a, first, p)
+    quick_sort(a, p + 1, last)
   end
-  if (i < last)
-    quick_sort(a, i, last)
-  end
-  if (first < j)
-    quick_sort(a, first, j)
-  end
+end
 
-  return a
+def partition(a, low, high)
+    pivot= a[(low + high) / 2]
+    i= low
+    j= high
+    while true do
+    while a[i] < pivot
+      i= i + 1
+      while a[j] > pivot
+        j= j - 1
+        if i >= j
+          return j
+          swap(a[i],a[j])
+        end
+      end
+    end
+    end
 end
   end
   end
+#алгоритм Хоара - быстрая сортировка

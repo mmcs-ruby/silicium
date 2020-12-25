@@ -1,13 +1,16 @@
 module Silicium
   module Tarjan
+    def init_array_with_zero(a)
+      a.each do |item|
+        item=0
+      end
+    end
 
     def tarjan_alg(graph)
       #алгоритм Тарьяна. Получаем граф как после топологической сортировки
       top_sort = []
       states = Array(graph.size)
-      states.each do |item|
-        item = 0 #0,1,2 - аналог white, grey, black
-      end
+      init_array_with_zero(states)
       while true
         node_search = nil
         (0..graph.size - 1).each { |i|
