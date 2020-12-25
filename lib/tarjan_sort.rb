@@ -10,20 +10,20 @@ module Silicium
       #алгоритм Тарьяна. Получаем граф как после топологической сортировки
       top_sort = []
       states = Array(graph.size)
-      init_array_with_zero(states)
+      #init_array_with_zero(states)
       while true
         node_search = nil
-        (0..graph.size - 1).each { |i|
+        (0..graph.size - 1).each do |i|
           if states[i] == 0
             node_search = i
           end
           if node_search == nil
             return top_sort.reverse
           end
-          if (!TarjanDepth(graph, node_search, states, top_sort))
+          if (!tarjan_depth(graph, node_search, states, top_sort))
             return nil
           end
-        }
+        end
       end
       top_sort.reverse
       return top_sort

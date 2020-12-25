@@ -32,16 +32,17 @@ def partition(a, low, high)
     while true do
     while a[i] < pivot
       i= i + 1
+    end
       while a[j] > pivot
         j= j - 1
-        if i >= j
-          return j
+       end
+    if i >= j
+      return j
+    end
           swap(a[i],a[j])
-        end
       end
     end
     end
 end
-  end
-  end
+
 #алгоритм Хоара - быстрая сортировка
