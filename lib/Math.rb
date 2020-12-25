@@ -25,24 +25,32 @@ def quick_sort(a, first, last)
   end
 end
 
-def partition(a, low, high)
-    pivot= a[(low + high) / 2]
-    i= low
-    j= high
-    while true do
-    while a[i] < pivot
-      i= i + 1
-    end
-      while a[j] > pivot
-        j= j - 1
-       end
-    if i >= j
-      return j
-    end
-          swap(a[i],a[j])
+    def partition(a, low, high)
+      pivot= a[(low + high) / 2]
+      i= low
+      j= high
+      while true do
+        i=add_inc(a, i, pivot)
+        j=dec_j(a,j,pivot)
+        if i >= j
+          return j
+        end
+        swap(a[i],a[j])
       end
     end
+    def add_inc(a,i,pivot)
+      while a[i]>pivot
+        i+=1;
+      end
+      return i;
     end
+    def dec_j(a, j, pivot)
+      while a[j]>pivot
+        j-=1
+      end
+      return j;
+    end
+  end
 end
 
 #алгоритм Хоара - быстрая сортировка
