@@ -1,8 +1,10 @@
 require "test/unit"
+require 'test_helper'
 require 'test/unit/assertions'
-require 'tarjanSortAlgorithm'
-class TestSequence < Test::Unit::TestCase
-def testTarjanAlg
+require 'tarjan_sort'
+class TarjanTest < Minitest::Test
+  include Silicium::Tarjan
+def test_tarjan_alg
   n = 5
   g = Array(n)
   g[0] = [2, 1]
@@ -11,7 +13,7 @@ def testTarjanAlg
   g[3] = [4]
   g[4] = []
   f=[0,1,2,3,4]
-  assert_equal(f,TarjanAlg(g))
+  assert_equal(f,tarjan_alg(g))
 end
 def testSortTarjan
   g=Array(5)
@@ -22,6 +24,6 @@ def testSortTarjan
   g[4] = []
   f=[0,1,2,3,4]
   t=SortTarjan.new(g.size())
-  assert_equal(f, t.TarjianAlg(g))
+  assert_equal(f, t.tarjan_Alg(g))
 end
 end
