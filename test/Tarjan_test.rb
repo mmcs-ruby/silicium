@@ -1,6 +1,4 @@
-require "test/unit"
 require 'test_helper'
-require 'test/unit/assertions'
 require 'tarjan_sort'
 class TarjanTest < Minitest::Test
   include Silicium::Tarjan

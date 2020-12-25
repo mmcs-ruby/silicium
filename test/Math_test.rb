@@ -1,5 +1,3 @@
-require "test/unit"
-require 'test/unit/assertions'
 require 'Math'
 require 'test_helper'
 class MathTest < Minitest::Test

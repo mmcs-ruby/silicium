@@ -1,7 +1,7 @@
-require "test/unit"
-require 'test/unit/assertions'
+require 'test_helper'
 require 'DSU'
-class TestSequence < Test::Unit::TestCase
+class DSUTest < Minitest::Test
+  include Silicium::Dsu
 def testDSUU
   dd=DSUU.new(6)
   dd.make_set(1)
