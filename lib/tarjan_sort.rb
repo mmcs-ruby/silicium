@@ -1,5 +1,6 @@
 module Silicium
   module Tarjan
+
     def init_array_with_zero(a)
       a.each do |item|
         item=0

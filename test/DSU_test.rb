@@ -1,8 +1,9 @@
-require 'test_helper'
+require_relative 'test_helper'
 require 'DSU'
+
 class DSUTest < Minitest::Test
   include Silicium::Dsu
-def testDSUU
+def test_DSUU
   dd=DSUU.new(6)
   dd.make_set(1)
   dd.make_set(2)

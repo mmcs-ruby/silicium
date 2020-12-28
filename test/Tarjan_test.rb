@@ -1,5 +1,6 @@
-require 'test_helper'
-require 'tarjan_sort'
+require_relative 'test_helper'
+require  'tarjan_sort'
+
 class TarjanTest < Minitest::Test
   include Silicium::Tarjan
 def test_tarjan_alg
@@ -13,7 +14,7 @@ def test_tarjan_alg
   f=[0,1,2,3,4]
   assert_equal(f,tarjan_alg(g))
 end
-def testSortTarjan
+def test_SortTarjan
   g=Array(5)
   g[0] = [2, 1]
   g[1] = [3, 2]

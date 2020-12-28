@@ -1,5 +1,6 @@
 module Silicium
   module Dsu
+
 #реализация системы непересекающихся множеств
 class DSUU
   attr_accessor :parent, :rank
