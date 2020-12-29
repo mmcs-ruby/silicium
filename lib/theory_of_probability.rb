@@ -222,3 +222,60 @@ module Dice
 
   end
 end
+
+module Distribution
+
+  ##
+  # return binomial coefficient for
+  #   n - number of tests (n >= 0)
+  #   k - number of successful tests (k > 0)
+    def binomial_coefficient(n, k)
+      factorial(n) / (factorial(n - k) * factorial(k))
+    end
+
+  ##
+  # return binomial function for
+  #    n - number of tests (n >= 0)
+  #    p - probability of success (from 0 to 1 inclusive)
+  #    k - number of successful tests (k >= 0 and k < n)
+  #
+  # return -1 if the input data conditions are not met
+    def binomial_func(n, p, k )
+      if (n <= 0 || p < 0 || p > 1 || k > n)
+      return -1
+      end
+      binomial_coefficient(n, k) * p**k * (1 - p)**(n - k)
+    end
+
+  ##
+  # return sum binomial functions for k = from 0 to floor of y
+  #   n - number of tests (n >= 0)
+  #   p - probability of success (from 0 to 1 inclusive)
+  #   y - numbers of successful tests from 0 to floor of y (y > 0 and y < n)
+  #
+  # return -1 if the input data conditions are not met
+    def binomial_distribution(n, p, y)
+      if (n <= 0 || p <= 0 || p > 1 || y < 0 || y > n )
+        return -1
+      end
+      res = 0
+      0.upto(y.floor()) { |i| res += binomial_func(n, p, i) }
+      res
+    end
+
+  ##
+  # return Poisson function for
+  #   n - number of tests (n >= 0)
+  #   p - probability of success (from 0 to 1 inclusive)
+  #   k - number of successful tests (k >= 0 and k < n)
+  #
+  # return -1 if the input data conditions are not met
+    def poisson_func(n, p, k)
+      if (n <= 0 || p <= 0 || p > 1 || k < 0 || k > n )
+        return -1
+      end
+      la = n * p
+      (la**k) / factorial(k) * Math::E**(-la)
+    end
+
+end

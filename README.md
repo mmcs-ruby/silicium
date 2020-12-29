@@ -263,6 +263,42 @@ s.throw   # getting random score (from 3 to 18)
 s.make_graph_by_plotter(xsize, ysize) # creates a graph in 'tmp/percentage.png'
 ```
 
+#### Module Distribution
+Module for probability distribution
+
+  n - number of tests (n >= 0)
+  
+  p - probability of success (from 0 to 1 inclusive)
+  
+  k - number of successful tests (0 <= k < n)
+  
+* Binomial coefficient
+
+```
+# n! / ((n - k)! * k!)
+# -1 if the input data conditions are not met
+    binomial_coefficient(n, k) 
+```
+* Binomial function
+
+```
+# binomial coefficient * p^k * p^(n-k)
+# -1 if the input data conditions are not met
+    binomial_func(n, p, k ) 
+```
+* Binomial distribution
+
+```
+# sum Binomial function for k = 0 to y (0 <= y <= n)
+# -1 if the input data conditions are not met
+    binomial_distribution(n, p, y) 
+```
+* Poisson function
+```
+    # la = n * p  
+    # la^k / k! * e^(-la)
+    poisson_func(n, p, k ) 
+```
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
