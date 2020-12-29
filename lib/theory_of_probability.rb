@@ -254,6 +254,7 @@ module Distribution
   #   y - numbers of successful tests from 0 to floor of y (y > 0 and y < n)
   #
   # return -1 if the input data conditions are not met
+  #
     def binomial_distribution(n, p, y)
       if (n <= 0 || p <= 0 || p > 1 || y < 0 || y > n )
         return -1
