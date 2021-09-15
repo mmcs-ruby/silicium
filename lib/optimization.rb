@@ -1,4 +1,3 @@
-require "silicium"
 require 'fast_matrix'
 
 module Silicium

@@ -1,4 +1,3 @@
-require 'silicium'
 require 'plotter'
 require 'chunky_png'
 
@@ -236,6 +235,6 @@ module BernoulliTrials
     if x < 0           # φ(-x) = φ(x)
       x * -1
     end
-    a = exp(-(x ** 2) / 2).fdiv sqrt(2 * PI)      # φ(x) = exp(-(x^2/2)) / sqrt(2*π)
+    exp(-(x ** 2) / 2).fdiv sqrt(2 * PI)      # φ(x) = exp(-(x^2/2)) / sqrt(2*π)
   end
 end

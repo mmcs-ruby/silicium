@@ -1,4 +1,3 @@
-require 'silicium'
 require 'chunky_png'
 require 'ruby2d'
 require 'ruby2d/window'
