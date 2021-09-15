@@ -3,7 +3,7 @@ require 'graph_visualizer'
 
 class GraphVisualizerTest < Minitest::Test
   include Silicium::GraphVisualizer
-  include Silicium::Graphs
+
 
   def test_window_size
     change_window_size(500, 300)
@@ -39,7 +39,7 @@ class GraphVisualizerTest < Minitest::Test
     change_vertices_radius(20)
     change_label_size(15)
 
-    graph = OrientedGraph.new([{v: :one, i: [ :one, :two, :four]},
+    graph = Silicium::Graphs::OrientedGraph.new([{v: :one, i: [ :one, :two, :four]},
                                       {v: :two, i:[ :one, :two]},
                                       {v: :five, i:[ :one,:three, :four]},
                                       {v: :four, i:[ :one, :four]},

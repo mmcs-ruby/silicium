@@ -431,7 +431,7 @@ module Silicium
 
       end
 
-      def extra_helper (n,x_new,x)
+      def extra_helper(n,x_new,x)
         (0...n).each do |i|
 
           @s3 += x_new[i] - x[i]
@@ -440,7 +440,7 @@ module Silicium
         @s3
       end
 
-      def round_helper (n,x)
+      def round_helper(n,x)
         (0...n).each do |i|
           x[i] = x[i].round
         end

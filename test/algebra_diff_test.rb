@@ -1,10 +1,7 @@
 require 'test_helper'
-require 'algebra'
-require 'algebra_diff'
 
 class AlgebraDiffTest < Minitest::Test
   include Silicium::Algebra
-
   def setup
     @diff = Differentiation.new
   end

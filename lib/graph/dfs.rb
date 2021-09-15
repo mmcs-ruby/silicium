@@ -1,4 +1,3 @@
-require 'silicium'
 module Silicium
   module Graphs
 

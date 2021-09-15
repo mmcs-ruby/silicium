@@ -544,7 +544,7 @@ class GeometryTest < Minitest::Test
     assert(!plane.point_is_on_plane?(Point3d.new(0, 0, 0)))
   end
 
-  def test_point_is_on_plane
+  def test_point_is_on_plane2
     a = Point3d.new(5, -3, 10)
     b = Point3d.new(-1, 2, 4)
     c = Point3d.new(3, 3, -1)

@@ -6,4 +6,3 @@ gemspec
 gem 'fast_matrix'
 gem 'chunky_png'
 gem 'ruby2d'
-gem 'fast_matrix'

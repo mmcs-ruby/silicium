@@ -1,7 +1,5 @@
-require 'silicium'
 require 'chunky_png'
 require 'ruby2d'
-
 
 module Silicium
   ##
@@ -68,6 +66,7 @@ module Silicium
     ##
     # A class representing canvas for plotting bar charts and function graphs
     class Image
+      include Silicium::Geometry
       ##
       # Creates a new plot with chosen +width+ and +height+ parameters
       # with background colored +bg_color+
@@ -149,8 +148,8 @@ module Silicium
 
     CENTER_X = Window.width / 2
     CENTER_Y = Window.height / 2
-        
-    mul = 100/1
+
+
 
     ##
     # draws axes
@@ -245,7 +244,11 @@ module Silicium
 
     # @param [Integer] sc
     def set_scale(sc)
-      mul = sc
+      @mul = sc
+    end
+
+    def mul
+      @mul || 100
     end
 
   end

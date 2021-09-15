@@ -1,18 +1,11 @@
-require 'silicium'
 require 'chunky_png'
 require 'ruby2d'
 require 'ruby2d/window'
-
-
 module Silicium
-  #
-  #
-  #
   module GraphVisualizer
     include Silicium::Graphs
     include Ruby2D
 
-    public
 
     ##
     # Changes window size
