@@ -4,9 +4,9 @@ SimpleCov.start
 $LOAD_PATH.unshift File.expand_path("../lib", __dir__)
 
 require "silicium"
-
+require 'graph'
 require "silicium/sparse"
-
+require 'geometry'
 require "numerical_integration"
 
 require "minitest/autorun"

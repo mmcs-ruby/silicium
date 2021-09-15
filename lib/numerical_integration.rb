@@ -64,7 +64,7 @@ module Silicium
     # from +a+ to +b+ of +block+ with +n+ segmentations
     def self.left_rect_integration_n(a, b, n, &block)
       dx = (b - a) / n.to_f
-      result = amount_calculation(a, [0, n], dx, &block)
+      amount_calculation(a, [0, n], dx, &block)
     end
 
     ##
@@ -79,7 +79,7 @@ module Silicium
     # from +a+ to +b+ of +block+ with +n+ segmentations
     def self.right_rect_integration_n(a, b, n, &block)
       dx = (b - a) / n.to_f
-      result = amount_calculation(a, [1, n + 1], dx, &block)
+      amount_calculation(a, [1, n + 1], dx, &block)
     end
 
     ##
